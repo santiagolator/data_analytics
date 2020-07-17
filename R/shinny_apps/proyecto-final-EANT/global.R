@@ -1,0 +1,1 @@
+load(file = "./data/global.RData")
