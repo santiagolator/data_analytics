@@ -7,13 +7,10 @@
 #    http://shiny.rstudio.com/
 #
 
-library("shiny")
-library("tidyverse")
-library("ggplot2")
-library("viridis")
-library("hrbrthemes")
-library("shinythemes")
-
+## Librerias
+# library("tidyverse")
+# library("shinythemes")
+# library("shinyWidgets")
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
@@ -27,25 +24,27 @@ shinyUI(fluidPage(
     
     # Subtitulo
     
-    p("Este proyecto tiene como objetivo principal visibilizar las diferencias existentes entre la distribución de trabajo del hogar y en los salarios percibidos en el mercado laboral según el género."),
+    p("Trabajo final curso Data Analytics - EANT 2020."),
     
     # Salto de linea
     br(),
 
     # Sidebar with a slider input for number of bins
     tabsetPanel(
-        tabPanel("Problema", ## TAB 1 - Problema
+        tabPanel("Abstract", ## TAB 1 - Problema
                  fluidRow(
                      br(),
                      column(1),
                      column(10,
                          h4("Problema"),
-                         h5("Los roles de género son construcciones sociales que, si bien se han ido flexibilizando, continúan conservando cierta vigencia dentro de nuestra cultura. Los históricos papeles de hombre proveedor y mujer cuidadora, a pesar de haber perdido fuerza, siguen siendo parte de las representaciones y el imaginario colectivo. En las últimas décadas la mujer se introdujo en el mercado laboral buscando un equilibrio entre éste y el trabajo doméstico. 
-En el presente proyecto pretendemos analizar la desigualdad de género en el trabajo remunerado y no remunerado, a través del análisis de la brecha salarial y la participación de hombres y mujeres en el trabajo doméstico. Acotamos el estudio a la Ciudad Autónoma de Buenos Aires.
-"),
+                         h5("Los roles de género son construcciones sociales que, si bien se han ido flexibilizando, continúan conservando cierta vigencia dentro de nuestra cultura."),
+                         h5("Los históricos papeles de hombre proveedor y mujer cuidadora, a pesar de haber perdido fuerza, siguen siendo parte de las representaciones y el imaginario colectivo."),
+                         h5("En las últimas décadas la mujer se introdujo en el mercado laboral buscando un equilibrio entre éste y el trabajo doméstico"),
                          br(),
                          h4("Objetivos del proyecto"),
-                         h5("Este proyecto tiene como objetivo principal visibilizar las diferencias existentes en la distribución de trabajo del hogar y tareas de cuidado, y en los salarios percibidos en el mercado laboral según género. Se intenta contribuir a la discusión actual sobre la desigualdad de género y los roles establecidos."),
+                         h5("En el presente proyecto pretendemos analizar la desigualdad de género en el trabajo remunerado y no remunerado, a través del análisis de la brecha salarial y la participación de hombres y mujeres en el trabajo doméstico."),
+                         h5("Nuestro objetivo principal visibilizar las diferencias existentes tanto en la distribución de trabajo del hogar y tareas de cuidado, como en los salarios percibidos en el mercado laboral según género. Se intenta contribuir a la discusión actual sobre la desigualdad de género y los roles establecidos."),
+                         h5("Acotamos el estudio a la Ciudad Autónoma de Buenos Aires."),
                          br(),
                          h4("Fuentes de datos"),
                          tags$div(tags$ul(
@@ -58,64 +57,92 @@ En el presente proyecto pretendemos analizar la desigualdad de género en el tra
                              tags$li(
                                  tags$a(href="https://www.indec.gob.ar/indec/web/Institucional-Indec-BasesDeDatos", "Encuesta Permanente de Hogares (EPH - INDEC")
                                  )
-                         ))                         
+                         )),
+                         br(),
+                         br()
                             ),
                      column(1)
                  )), 
         tabPanel("Trabajo no remunerado", ## TAB 2 - Trabajo no remunerado
                  br(),
-                 tabsetPanel(
+                 tabsetPanel( ## SUB TABSET
                      tabPanel("Grupo de edad", ## TAB 2.1 - Grupo Edad
                               br(),
                               sidebarLayout(
                                   sidebarPanel(
-                                      checkboxGroupInput( ## Checkbox SEXO
+                                      
+                                      checkboxGroupButtons( ## Checkbox SEXO
                                           inputId = "sexo",
                                           label = "Seleccione el sexo",
                                           choiceValues = unique(df_sin_total$sexo),
                                           choiceNames = c("Mujeres", "Varones"),
-                                          selected = unique(df_sin_total$sexo)[1:2]
-                                      ),
-                                      checkboxGroupInput(  ## Checkbox GRUPO EDAD
+                                          selected = unique(df_sin_total$sexo)[1:2],
+                                          justified = TRUE
+                                      ), ## cierre checkbox
+                                      
+                                      pickerInput(  ## Dropdown GRUPO EDAD
                                           inputId = "grupo_edad",
                                           label = "Seleccione el grupo de edad",
                                           choices = unique(df_sin_total$grupo_edad),
-                                          selected = unique(df_sin_total$grupo_edad)[1:5]
-                                      )                                      
+                                          selected = unique(df_sin_total$grupo_edad)[1:5],
+                                          multiple = TRUE
+                                      ) ## cierre dropdown                                     
                                       
-                                  ),
+                                  ), ## Cierre sidebarPanel
+                                  
                                   mainPanel(plotOutput(outputId = "graph_grupo_edad")) ## Plot output - GRUPO EDAD
-                              )),
+                              
+                                  ) ## cierre sidebarLayout
+                              
+                              ), ## cierre TAB 2.1
                      
                      tabPanel("Nivel de instruccion", ## TAB 2.2 - Nivel instruccion
                               br(),
                               sidebarLayout(
                                   sidebarPanel(
-                                      checkboxGroupInput( ## Checkbox SEXO
+                                      
+                                      checkboxGroupButtons( ## Checkbox SEXO
                                           inputId = "sexo2",
                                           label = "Seleccione el sexo",
                                           choiceValues = unique(df_2_sin_total$sexo),
                                           choiceNames = c("Mujeres", "Varones"),
-                                          selected = unique(df_2_sin_total$sexo)[1:2]                                      
-                                  ),
-                                  checkboxGroupInput( ## Checkbox NIVEL INSTRUCCION
+                                          selected = unique(df_2_sin_total$sexo)[1:2],
+                                          justified = TRUE
+                                  ), ## cierre checkbox
+                                  
+                                  pickerInput( ## dropdown NIVEL INSTRUCCION
                                       inputId = "nivel_instruccion",
                                       label = "Seleccione el grado de educacion",
-                                      choiceValues = unique(df_2_sin_total$nivel_instruccion),
-                                      choiceNames = c("Hasta secundario incompleto", "Secundario completo y superior incompleto", "Superior completo y mas"),
-                                      selected = unique(df_2_sin_total$nivel_instruccion)[1:3]                                      
-                                  ),
-                                  sliderInput( ## Slider promedio horas
+                                      choices = unique(df_2_sin_total$nivel_instruccion),
+                                      #choiceValues = unique(df_2_sin_total$nivel_instruccion),
+                                      #choiceNames = c("Hasta secundario incompleto", "Secundario completo y superior incompleto", "Superior completo y mas"),
+                                      selected = unique(df_2_sin_total$nivel_instruccion)[1:3],
+                                      multiple = TRUE
+                                  ), ## cierre dropdown
+                                  
+                                  sliderTextInput( ## Slider promedio horas
                                       inputId = "prom_horas",
                                       label = "Seleccione el promedio de horas",
-                                      min = min(df_2_sin_total$promedio_hs_diarias),
-                                      max = max(df_2_sin_total$promedio_hs_diarias),
-                                      value = c(min(df_2_sin_total$promedio_hs_diarias),max(df_2_sin_total$promedio_hs_diarias))
-                                      )                                  
-                                  ),
+                                      #min = min(df_2_sin_total$promedio_hs_diarias),
+                                      #max = max(df_2_sin_total$promedio_hs_diarias),
+                                      #value = c(min(df_2_sin_total$promedio_hs_diarias),max(df_2_sin_total$promedio_hs_diarias))
+                                      choices = sort(df_2_sin_total$promedio_hs_diarias),
+                                      selected = c(min(df_2_sin_total$promedio_hs_diarias),max(df_2_sin_total$promedio_hs_diarias)),
+                                      from_min = min(df_2_sin_total$promedio_hs_diarias),
+                                      from_max = max(df_2_sin_total$promedio_hs_diarias)-1,
+                                      to_min = min(df_2_sin_total$promedio_hs_diarias)+1,
+                                      to_max = max(df_2_sin_total$promedio_hs_diarias),
+                                      dragRange = TRUE,
+                                      hide_min_max = TRUE
+                                      ) ## cierre slider 
+                                  
+                                  ), ## cierre sidebar
+                                  
                                   mainPanel(plotOutput(outputId = "graph_nivel_instruccion"))  ## Plot output - Nivel instruccion
                                   
-                              )),
+                              ) ## cierre sidebarLayout
+                              
+                              ), ## Cierre TAB 2.2
                      
                      
                      
@@ -123,37 +150,226 @@ En el presente proyecto pretendemos analizar la desigualdad de género en el tra
                               br(),
                               sidebarLayout(
                                   sidebarPanel(
-                                      checkboxGroupInput( ## Checkbox SEXO
+                                      
+                                      checkboxGroupButtons( ## Checkbox SEXO
                                           inputId = "sexo3",
                                           label = "Seleccione el sexo",
                                           choiceValues = unique(df_3_sin_total$sexo),
                                           choiceNames = c("Mujeres", "Varones"),
-                                          selected = unique(df_3_sin_total$sexo)[1:2]                                      
-                                      ),
-                                      checkboxGroupInput( ## Checkbox QUINTIL
+                                          selected = unique(df_3_sin_total$sexo)[1:2],
+                                          justified = TRUE
+                                      ), ## cierre checkbox
+                                      
+                                      pickerInput( ## dropdown QUINTIL
                                           inputId = "quintil",
                                           label = "Seleccione el quintil de ingreso",
-                                          choiceValues = unique(df_3_sin_total$quintil_ing_familiar),
-                                          choiceNames = c("1°", "2°","3°","4°","5°"),
-                                          selected = unique(df_3_sin_total$quintil_ing_familiar)[1:5]                                      
-                                      ),
-                                      sliderInput( ## Slider promedio horas
+                                          #choiceValues = unique(df_3_sin_total$quintil_ing_familiar),
+                                          #choiceNames = c("1°", "2°","3°","4°","5°"),
+                                          choices = unique(df_3_sin_total$quintil_ing_familiar),
+                                          selected = unique(df_3_sin_total$quintil_ing_familiar)[1:length(unique(df_3_sin_total$quintil_ing_familiar))],
+                                          multiple = TRUE
+                                      ), ## cierre dropdown
+                                      
+                                      sliderTextInput( ## Slider promedio horas
                                           inputId = "prom_horas2",
                                           label = "Seleccione el promedio de horas",
-                                          min = min(df_3_sin_total$promedio_hs_diarias),
-                                          max = max(df_3_sin_total$promedio_hs_diarias),
-                                          value = c(min(df_3_sin_total$promedio_hs_diarias),max(df_3_sin_total$promedio_hs_diarias))
-                                      )                                       
-                                  ),
+                                          choices = sort(df_3_sin_total$promedio_hs_diarias),
+                                          selected = c(min(df_3_sin_total$promedio_hs_diarias),max(df_3_sin_total$promedio_hs_diarias)),
+                                          from_min = min(df_3_sin_total$promedio_hs_diarias),
+                                          from_max = max(df_3_sin_total$promedio_hs_diarias)-1,
+                                          to_min = min(df_3_sin_total$promedio_hs_diarias)+1,
+                                          to_max = max(df_3_sin_total$promedio_hs_diarias),
+                                          dragRange = TRUE,
+                                          hide_min_max = TRUE
+                                      ) ## cierre slider
+                                      
+                                  ), ## cierre sidebarPanel
+                                  
                                   mainPanel(plotOutput(outputId = "graph_quintil"))  ## Plot output - Nivel instruccion
                                   
-                              )
-                              ) 
+                              )## cierre sidebarLayout
+                              
+                              ) ## Cierre TAB 2.3
                      
-                 )),
+                 ) ## Cierre SUB TABSETPANEL
+                 
+                 ), ## Cierre TAB 2
         
-        tabPanel("Brecha salarial"), ## TAB 3 - Brecha salarial
         
-        tabPanel("Creditos") ## TAB 4 - Creditos y bibliografia
+        tabPanel("Brecha salarial", ## TAB 3 - Brecha salarial
+                 br(),
+                 tabsetPanel( ## SUB TABSETPANEL
+                     tabPanel("Normalizado", ## TAB 3.1 Normalizado
+                              br(),
+                              sidebarLayout(
+                                  sidebarPanel(
+                                      
+                                      sliderTextInput( ## Slider año
+                                          inputId = "anio_1",
+                                          label = "Seleccione año",
+                                          choices = sort(df_5$anio),
+                                          selected = c(max(df_5$anio)-15,max(df_5$anio)),
+                                          from_min = min(df_5$anio),
+                                          from_max = max(df_5$anio)-1,
+                                          to_min = min(df_5$anio)+1,
+                                          to_max = max(df_5$anio),
+                                          animate = TRUE,
+                                          dragRange = TRUE,
+                                          hide_min_max = TRUE
+                                      ), ## Cierre slider
+                                      
+                                      h6("Se muestra adicionalmente linea de tendencia y grado de confianza")
+                                      
+                                  ), ## cierre sidebarPanel
+                                  
+                                  mainPanel(plotOutput(outputId = "graph_brecha_norm"))
+                                  
+                              ) ## Cierre sidebarLayout
+                         
+                     ), ## Cierre TAB 3.1
+                     
+                     tabPanel("Fuente de ingresos", ## TAB 3.2 Fuente de ingresos
+                              br(),
+                              sidebarLayout(
+                                  sidebarPanel(
+                                      
+                                      pickerInput( ## dropdown grupo de edad
+                                          inputId = "grupo_edad2",
+                                          label = "Seleccione el grupo de edad",
+                                          choices = unique(df_6_sin_total$grupo_edad),
+                                          selected = unique(df_6_sin_total$grupo_edad)[1:length(unique(df_6_sin_total$grupo_edad))],
+                                          multiple = TRUE
+                                      ), ## cierre dropdown
+                                      
+                                      pickerInput( ## dropdown fuente de ingresos
+                                          inputId = "fuente_ing",
+                                          label = "Seleccione la fuente de ingresos",
+                                          choices = unique(df_6_sin_total$fuente_ingresos),
+                                          selected = unique(df_6_sin_total$fuente_ingresos)[1:length(unique(df_6_sin_total$fuente_ingresos))],
+                                          multiple = TRUE
+                                      ), ## cierre dropdown
+                                      
+                                      sliderTextInput( ## Slider brecha
+                                          inputId = "brecha",
+                                          label = "Seleccione valor brecha",
+                                          choices = round(sort(df_6_sin_total$brecha_ing)),
+                                          selected = c(min(round(df_6_sin_total$brecha_ing)),max(round(df_6_sin_total$brecha_ing))),
+                                          from_min = min(round(df_6_sin_total$brecha_ing)),
+                                          from_max = max(round(df_6_sin_total$brecha_ing))-1,
+                                          to_min = min(round(df_6_sin_total$brecha_ing))+1,
+                                          to_max = max(round(df_6_sin_total$brecha_ing)),
+                                          dragRange = TRUE,
+                                          hide_min_max = TRUE
+                                      ), ## cierre slider
+                                      
+                                      sliderTextInput( ## Slider anio
+                                          inputId = "anio_2",
+                                          label = "Seleccione año",
+                                          choices = sort(df_6_sin_total$anio),
+                                          selected = c(min(df_6_sin_total$anio),max(df_6_sin_total$anio)),
+                                          from_min = min(df_6_sin_total$anio),
+                                          from_max = max(df_6_sin_total$anio),
+                                          to_min = min(df_6_sin_total$anio),
+                                          to_max = max(df_6_sin_total$anio),
+                                          animate = TRUE,
+                                          dragRange = TRUE,
+                                          hide_min_max = TRUE
+                                      ) ## cierre slider
+                                      
+                                  ), ## Cierre sidebarPanel
+                                  
+                                  mainPanel(plotOutput(outputId = "graph_brecha_fuente"))
+                                  
+                              ) ## Cierre sidebarLayout
+                         
+                     ), ## Cierre TAB 3.2
+                     
+                     tabPanel("Rama de actividad", ## TAB 3.3 Rama de actividad
+                              br(),
+                              sidebarLayout(
+                                  sidebarPanel(
+                                      
+                                      pickerInput( ## dropdown rama
+                                          inputId = "rama",
+                                          label = "Seleccione la rama de actividad",
+                                          choices = unique(df_7_sin_total$rama),
+                                          selected = df_7_sin_total$rama[1:length(unique(df_7_sin_total$rama))],
+                                          multiple = TRUE
+                                      ), ## cierre dropdown rama
+                                      
+                                      sliderTextInput( ## Slider brecha
+                                          inputId = "brecha_2",
+                                          label = "Seleccione valor brecha",
+                                          choices = round(sort(df_7_sin_total$brecha_ing)),
+                                          selected = c(min(round(df_7_sin_total$brecha_ing)),max(round(df_7_sin_total$brecha_ing))),
+                                          from_min = min(round(df_7_sin_total$brecha_ing)),
+                                          from_max = max(round(df_7_sin_total$brecha_ing)),
+                                          to_min = min(round(df_7_sin_total$brecha_ing)),
+                                          to_max = max(round(df_7_sin_total$brecha_ing)),
+                                          dragRange = TRUE,
+                                          hide_min_max = TRUE
+                                      ) ## cierre slider
+                                    
+                                  ), ## cierre sidebarPanel
+                                  
+                                  mainPanel(plotOutput(outputId = "graph_brecha_rama"))
+                                  
+                              ) ## cierre sidebarLayout
+                              
+                         
+                     ) ## Cierre TAB 3.3
+                     
+                 ) ## Cierre SUB TABSETPANEL 
+                 
+                 ), ## Cierre TAB 3
+        
+        
+        
+        tabPanel("Creditos",
+                 fluidRow(
+                     br(),
+                     column(1),
+                     column(10, ## columna principal
+                            h4("Autores"),
+                            h5("Lorem ipsum"),
+                            tags$hr(),
+                            
+                            h4("Bibliografia"),
+                            h5("Lorem ipsum"),
+                            tags$hr(),
+                            
+                            h4("Codigo"),
+                            br(),
+                            h5("Paquetes"),
+                            h6("Lorem ipsum"),
+                            br(),
+                            h5("Repositorio"),
+                            h6("Lorem ipsum")
+                            
+                            ) ## Cierre columna principal
+                     
+                 )) ## TAB 4 - Creditos y bibliografia
         )
 ))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
