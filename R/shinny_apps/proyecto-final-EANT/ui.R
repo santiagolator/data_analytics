@@ -334,7 +334,7 @@ shinyUI(fluidPage(
                       tags$p("Laureano Fuentes")
                   ),
                   tags$li(
-                      tags$p("Santiago Lator ", "[", icon("github"), a(href = "https://github.com/santiagolator", "Github"),"|", icon("linkedin"), a(href ="https://www.linkedin.com/in/santiago-lator-arias-291879153/", "Linkedin") , "]")
+                      tags$p("Santiago Lator ", HTML('&nbsp;'),"[", icon("github"), a(href = "https://github.com/santiagolator", "Github"),"|", icon("linkedin"), a(href ="https://www.linkedin.com/in/santiago-lator-arias-291879153/", "Linkedin") , "]")
                   )
               ) ## cierre tags lista
           ),
@@ -346,6 +346,7 @@ shinyUI(fluidPage(
 
           h4("Codigo"),
           p("El lenguaje elegido para el desarrollo del proyecto es R, y el IDE que vamos a utilizar es ", a(href = "https://www.r-project.org/about.html", "RStudio", .noWS = "outside"), .noWS = c("after-begin", "before-end")),
+          br(),
           h5("Paquetes"),
           tags$div( ## tag div
             tags$ul( ## tags lista
