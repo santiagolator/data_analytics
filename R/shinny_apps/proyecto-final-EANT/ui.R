@@ -322,7 +322,22 @@ shinyUI(fluidPage(
         column(
           10, ## columna principal
           h4("Autores"),
-          h5("Lorem ipsum"),
+          tags$div( ## tag div
+              tags$ul( ## tags lista
+                  tags$li(
+                      tags$p("Ailén Rocío Ventaja")
+                  ),
+                  tags$li(
+                      tags$p("Alejandro Ingercher")
+                  ),
+                  tags$li(
+                      tags$p("Laureano Fuentes")
+                  ),
+                  tags$li(
+                      tags$p("Santiago Lator ", "[", icon("github"), a(href = "https://github.com/santiagolator", "Github"),"|", icon("linkedin"), a(href ="https://www.linkedin.com/in/santiago-lator-arias-291879153/", "Linkedin") , "]")
+                  )
+              ) ## cierre tags lista
+          ),
           tags$hr(),
 
           h4("Bibliografia"),
@@ -359,7 +374,7 @@ shinyUI(fluidPage(
                 tags$a(href = "https://github.com/yixuan/showtext", "showtext")
               )
             ) ## cierre tags lista
-          ),
+          ), ## cierre tag div
           br(),
           h5("Repositorio"),
           tags$div( ## tag div
