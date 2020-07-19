@@ -47,7 +47,8 @@ shinyUI(fluidPage(
                          h5("Acotamos el estudio a la Ciudad Autónoma de Buenos Aires."),
                          br(),
                          h4("Fuentes de datos"),
-                         tags$div(tags$ul(
+                         tags$div( ## tag div
+                             tags$ul( ## tags lista
                              tags$li(
                                  tags$a(href="https://data.buenosaires.gob.ar", "Buenos Aires data (GCBA)")
                                  ),
@@ -55,9 +56,10 @@ shinyUI(fluidPage(
                                  tags$a(href="https://www.estadisticaciudad.gob.ar","Sistema de indicadores de Género (GCBA)")
                                  ),
                              tags$li(
-                                 tags$a(href="https://www.indec.gob.ar/indec/web/Institucional-Indec-BasesDeDatos", "Encuesta Permanente de Hogares (EPH - INDEC")
+                                 tags$a(href="https://www.indec.gob.ar/indec/web/Institucional-Indec-BasesDeDatos", "Encuesta Permanente de Hogares (EPH - INDEC)")
                                  )
-                         )),
+                         ) ## cierre tags lista
+                         ), ## cierre tag div
                          br(),
                          br()
                             ),
@@ -331,7 +333,7 @@ shinyUI(fluidPage(
         
         
         
-        tabPanel("Creditos",
+        tabPanel("Creditos", ## TAB 4 - Creditos y bibliografia
                  fluidRow(
                      br(),
                      column(1),
@@ -347,14 +349,51 @@ shinyUI(fluidPage(
                             h4("Codigo"),
                             br(),
                             h5("Paquetes"),
-                            h6("Lorem ipsum"),
+                            tags$div( ## tag div
+                                tags$ul( ## tags lista
+                                    tags$li(
+                                        tags$a(href="https://www.tidyverse.org/", "tidyverse")
+                                    ),
+                                    tags$li(
+                                        tags$a(href="https://www.estadisticaciudad.gob.ar","ggplot2")
+                                    ),
+                                    tags$li(
+                                        tags$a(href="https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html", "viridis")
+                                    ),
+                                    tags$li(
+                                        tags$a(href="https://github.com/hrbrmstr/hrbrthemes", "hrbrthemes")
+                                    ),
+                                    tags$li(
+                                        tags$a(href="https://shiny.rstudio.com/", "shiny")
+                                    ),
+                                    tags$li(
+                                        tags$a(href="https://rstudio.github.io/shinythemes/","shinythemes")
+                                    ),
+                                    tags$li(
+                                        tags$a(href="https://github.com/dreamRs/shinyWidgets", "shinyWidgets")
+                                    ),
+                                    tags$li(
+                                        tags$a(href="https://github.com/yixuan/showtext", "showtext")
+                                    )
+                                    
+                                ) ## cierre tags lista
+                            ),
                             br(),
                             h5("Repositorio"),
-                            h6("Lorem ipsum")
+                            tags$div( ## tag div
+                                tags$ul( ## tags lista
+                                    tags$li(
+                                        tags$a(href="https://github.com/santiagolator/data_analytics/tree/master/R/shinny_apps/proyecto-final-EANT", "Github")
+                                    )
+                                    
+                                ) ## cierre tags lista
+                            ), ## Cierre div
+                            br(),
+                            br()
                             
                             ) ## Cierre columna principal
                      
-                 )) ## TAB 4 - Creditos y bibliografia
+                 )) ## Cierre TAB 4 
         )
 ))
 

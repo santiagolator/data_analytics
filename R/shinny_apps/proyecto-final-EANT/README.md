@@ -33,7 +33,7 @@ Acotamos el estudio a la Ciudad Autónoma de Buenos Aires.
 
 ### Paquetes
 - [tidyverse](https://www.tidyverse.org/)
-- [ggplot2](https://ggplot2.tidyverse.org/])
+- [ggplot2](https://ggplot2.tidyverse.org/)
 - [viridis](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
 - [hrbrthemes](https://github.com/hrbrmstr/hrbrthemes)
 - [shiny](https://shiny.rstudio.com/)
