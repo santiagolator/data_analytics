@@ -27,10 +27,14 @@ Acotamos el estudio a la Ciudad Autónoma de Buenos Aires.
 # Creditos
 ## Autores
 
+- Ailén Rocío Ventaja
 
+- Alejandro Ingercher
 
+- Laureano Fuentes
 
-## Bibliografia
+- Santiago Lator [[Github](https://github.com/santiagolator) |  [Linkedin](https://www.linkedin.com/in/santiago-lator-arias-291879153/)]
+
 
 ## Codigo
 
