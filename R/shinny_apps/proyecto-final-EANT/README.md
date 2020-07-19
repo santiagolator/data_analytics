@@ -32,6 +32,17 @@ Acotamos el estudio a la Ciudad Autónoma de Buenos Aires.
 ## Codigo
 
 ### Paquetes
+- [tidyverse](https://www.tidyverse.org/)
+- [ggplot2](https://ggplot2.tidyverse.org/])
+- [viridis](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
+- [hrbrthemes](https://github.com/hrbrmstr/hrbrthemes)
+- [shiny](https://shiny.rstudio.com/)
+- [shinythemes](https://rstudio.github.io/shinythemes/)
+- [shinyWidgets](https://github.com/dreamRs/shinyWidgets)
+- [showtext](https://github.com/yixuan/showtext)
+
 
 ### Repositorio
+
+- [Github](https://github.com/santiagolator/data_analytics/tree/master/R/shinny_apps/proyecto-final-EANT)
 
