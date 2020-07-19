@@ -85,6 +85,7 @@ shinyUI(fluidPage(
                                           label = "Seleccione el grupo de edad",
                                           choices = unique(df_sin_total$grupo_edad),
                                           selected = unique(df_sin_total$grupo_edad)[1:5],
+                                          options = list(`actions-box` = TRUE),
                                           multiple = TRUE
                                       ) ## cierre dropdown                                     
                                       
@@ -117,6 +118,7 @@ shinyUI(fluidPage(
                                       #choiceValues = unique(df_2_sin_total$nivel_instruccion),
                                       #choiceNames = c("Hasta secundario incompleto", "Secundario completo y superior incompleto", "Superior completo y mas"),
                                       selected = unique(df_2_sin_total$nivel_instruccion)[1:3],
+                                      options = list(`actions-box` = TRUE),
                                       multiple = TRUE
                                   ), ## cierre dropdown
                                   
@@ -167,6 +169,7 @@ shinyUI(fluidPage(
                                           #choiceNames = c("1°", "2°","3°","4°","5°"),
                                           choices = unique(df_3_sin_total$quintil_ing_familiar),
                                           selected = unique(df_3_sin_total$quintil_ing_familiar)[1:length(unique(df_3_sin_total$quintil_ing_familiar))],
+                                          options = list(`actions-box` = TRUE),
                                           multiple = TRUE
                                       ), ## cierre dropdown
                                       
@@ -238,6 +241,7 @@ shinyUI(fluidPage(
                                           label = "Seleccione el grupo de edad",
                                           choices = unique(df_6_sin_total$grupo_edad),
                                           selected = unique(df_6_sin_total$grupo_edad)[1:length(unique(df_6_sin_total$grupo_edad))],
+                                          options = list(`actions-box` = TRUE),
                                           multiple = TRUE
                                       ), ## cierre dropdown
                                       
@@ -246,6 +250,7 @@ shinyUI(fluidPage(
                                           label = "Seleccione la fuente de ingresos",
                                           choices = unique(df_6_sin_total$fuente_ingresos),
                                           selected = unique(df_6_sin_total$fuente_ingresos)[1:length(unique(df_6_sin_total$fuente_ingresos))],
+                                          options = list(`actions-box` = TRUE),
                                           multiple = TRUE
                                       ), ## cierre dropdown
                                       
@@ -294,6 +299,7 @@ shinyUI(fluidPage(
                                           label = "Seleccione la rama de actividad",
                                           choices = unique(df_7_sin_total$rama),
                                           selected = df_7_sin_total$rama[1:length(unique(df_7_sin_total$rama))],
+                                          options = list(`actions-box` = TRUE),
                                           multiple = TRUE
                                       ), ## cierre dropdown rama
                                       
