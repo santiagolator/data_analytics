@@ -223,7 +223,7 @@ shinyUI(fluidPage(
                                           hide_min_max = TRUE
                                       ), ## Cierre slider
                                       
-                                      h6("Se muestra adicionalmente linea de tendencia y grado de confianza")
+                                      h6("Se muestra adicionalmente linea de tendencia")
                                       
                                   ), ## cierre sidebarPanel
                                   
@@ -347,7 +347,7 @@ shinyUI(fluidPage(
                             tags$hr(),
                             
                             h4("Codigo"),
-                            br(),
+                            p("El lenguaje elegido para el desarrollo del proyecto es R, y el IDE que vamos a utilizar es ", a(href="https://www.r-project.org/about.html", "RStudio", .noWS = "outside"), .noWS = c("after-begin", "before-end")),
                             h5("Paquetes"),
                             tags$div( ## tag div
                                 tags$ul( ## tags lista
