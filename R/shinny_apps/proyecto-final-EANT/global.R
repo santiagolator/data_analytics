@@ -10,12 +10,14 @@ library("tidyverse")
 library("ggplot2")
 library("viridis")
 
-#hrbrthemes::import_roboto_condensed()
+# hrbrthemes::import_roboto_condensed()
 
-font_add_google(name = "Roboto Condensed",
-                family = "Roboto Condensed",
-                regular.wt = 400,
-                bold.wt = 700)
+font_add_google(
+  name = "Roboto Condensed",
+  family = "Roboto Condensed",
+  regular.wt = 400,
+  bold.wt = 700
+)
 
 showtext_auto()
 

@@ -5,9 +5,9 @@ account: santiago-lator
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2589480
-bundleId: 3409198
+bundleId: 3409287
 url: https://santiago-lator.shinyapps.io/proyecto-final-EANT/
-when: 1595172649.75465
+when: 1595177026.5709
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: README.md
