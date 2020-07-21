@@ -40,7 +40,7 @@ shinyServer(function(input, output) {
       labs(
         title = "Trabajo no remunerado",
         subtitle = "Promedio horas diarias por grupo de edad\n",
-        caption = "\nAño: 2016\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/",
+        caption = "\nAño: 2016 - Ciudad Autonoma de Buenos Aires\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/",
         x = "\nGrupo de edad",
         y = "Prom. horas diarias\n"
       ) +
@@ -77,7 +77,7 @@ shinyServer(function(input, output) {
       labs(
         title = "Trabajo no remunerado",
         subtitle = "Promedio horas diarias por nivel de instruccion\n",
-        caption = "\nAño: 2016\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/",
+        caption = "\nAño: 2016 - Ciudad Autonoma de Buenos Aires\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/",
         x = "",
         y = "\nProm. horas diarias"
       ) +
@@ -114,7 +114,7 @@ shinyServer(function(input, output) {
       labs(
         title = "Trabajo no remunerado",
         subtitle = "Promedio horas diarias segun quintil de ingreso familiar\n",
-        caption = "\nAño: 2016\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/",
+        caption = "\nAño: 2016 - Ciudad Autonoma de Buenos Aires\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/",
         x = "",
         y = "Prom. horas diarias\n"
       ) +
@@ -141,7 +141,7 @@ shinyServer(function(input, output) {
       labs(
         title = "Brecha salarial",
         subtitle = "Relación entre los ingresos laborales mensuales de la ocupación principal, \nnormalizados por la cantidad de horas, de mujeres y varones\n",
-        caption = "\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/",
+        caption = "\nCiudad Autonoma de Buenos Aires\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/",
         x = "",
         y = ""
       ) +
@@ -179,7 +179,7 @@ shinyServer(function(input, output) {
       labs(
         title = "Brecha salarial",
         subtitle = "Relación entre el ingreso de las mujeres con respecto al de los varones\nsegún la fuente de ingresos y grupo de edad\n",
-        caption = "\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/",
+        caption = "\nCiudad Autonoma de Buenos Aires\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/",
         x = "",
         y = ""
       ) +
@@ -211,7 +211,7 @@ shinyServer(function(input, output) {
       labs(
         title = "Brecha salarial",
         subtitle = "Relación entre el ingreso promedio de las mujeres con respecto al de los varones según\nla rama de actividad a la que se dedica el establecimiento donde trabaja la persona",
-        caption = "\nAño: 2017\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/",
+        caption = "\nAño: 2017 - Ciudad Autonoma de Buenos Aires\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/",
         x = "",
         y = ""
       ) +
