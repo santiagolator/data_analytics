@@ -401,8 +401,8 @@ shinyUI(fluidPage(
           tags$hr(), ## ---------
 
           h4("Codigo"),
-          p("El lenguaje elegido para el desarrollo del proyecto es R, y el IDE que vamos a utilizar es ", a(href = "https://www.r-project.org/about.html", "RStudio", .noWS = "outside"), .noWS = c("after-begin", "before-end")),
-          br(),
+          p("El lenguaje elegido para el desarrollo del proyecto es R, y el IDE que vamos a utilizar es ", a(href = "https://www.r-project.org/about.html", "RStudio.", .noWS = "outside"), .noWS = c("after-begin", "before-end")),
+          #br(),
           h5("Paquetes"),
           tags$div( ## tag div
             tags$ul( ## tags lista
@@ -432,7 +432,7 @@ shinyUI(fluidPage(
               )
             ) ## cierre tags lista
           ), ## cierre tag div
-          br(),
+          #br(),
           h5("Repositorio"),
           tags$div( ## tag div
             tags$ul( ## tags lista
