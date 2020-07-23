@@ -187,7 +187,21 @@ shinyUI(fluidPage(
               ) ## cierre slider
             ), ## cierre sidebar
 
-            mainPanel(plotOutput(outputId = "graph_nivel_instruccion")) ## Plot output - Nivel instruccion
+            mainPanel(
+              br(),
+              h4("Trabajo no remunerado"),
+              h5("Promedio horas por nivel de instruccion"),
+              plotOutput(outputId = "graph_nivel_instruccion"), ## Plot output - Nivel instruccion
+              h6("Año: 2016 - Ciudad Autonoma de Buenos Aires"),
+              h6("Fuente: Buenos Aires Data - https://data.buenosaires.gob.ar/"),
+              br()
+              
+              
+              
+              ) ## Cierre mainPanel
+            
+            
+            
           ) ## cierre sidebarLayout
         ), ## Cierre TAB 2.2
 
@@ -232,7 +246,17 @@ shinyUI(fluidPage(
               ) ## cierre slider
             ), ## cierre sidebarPanel
 
-            mainPanel(plotOutput(outputId = "graph_quintil")) ## Plot output - Nivel instruccion
+            mainPanel(
+              br(),
+              h4("Trabajo no remunerado"),
+              h5("Promedio horas diarias segun quintinl de ingreso familiar"),
+              plotOutput(outputId = "graph_quintil"), ## Plot output - quintil ingreso
+              h6("Año: 2016 - Ciudad Autonoma de Buenos Aires"),
+              h6("Fuente: Buenos Aires Data - https://data.buenosaires.gob.ar/"),
+              br()
+                      
+            ) ## cierre MainPanel
+            
           ) ## cierre sidebarLayout
         ) ## Cierre TAB 2.3
       ) ## Cierre SUB TABSETPANEL
@@ -265,7 +289,17 @@ shinyUI(fluidPage(
               h6("Se muestra adicionalmente linea de tendencia")
             ), ## cierre sidebarPanel
 
-            mainPanel(plotOutput(outputId = "graph_brecha_norm"))
+            
+            mainPanel(
+                br(),
+                h4("Brecha salarial"),
+                h5("Relación entre los ingresos laborales mensuales de la ocupación principal, normalizados por la cantidad de horas, de mujeres y varones"),
+                plotOutput(outputId = "graph_brecha_norm"), ## Plot output - brecha normalizado
+                h6("Ciudad Autonoma de Buenos Aires\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/"),
+                br()
+                ) ## cierre mainPanel
+            
+            
           ) ## Cierre sidebarLayout
         ), ## Cierre TAB 3.1
 
@@ -320,7 +354,17 @@ shinyUI(fluidPage(
               ) ## cierre slider
             ), ## Cierre sidebarPanel
 
-            mainPanel(plotOutput(outputId = "graph_brecha_fuente"))
+            
+            mainPanel(
+              br(),
+              h4("Brecha salarial"),
+              h5("Relación entre el ingreso de las mujeres con respecto al de los varones según la fuente de ingresos y grupo de edad"),
+              plotOutput(outputId = "graph_brecha_fuente"), ## Plot output - brecha fuente ingreso
+              h6("Ciudad Autonoma de Buenos Aires\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/"),
+              br()
+              
+              ) ### cierre MainPanel
+            
           ) ## Cierre sidebarLayout
         ), ## Cierre TAB 3.2
 
@@ -352,7 +396,20 @@ shinyUI(fluidPage(
               ) ## cierre slider
             ), ## cierre sidebarPanel
 
-            mainPanel(plotOutput(outputId = "graph_brecha_rama"))
+            mainPanel(
+              br(),
+              h4("Brecha salarial"),
+              h5("Relación entre el ingreso promedio de las mujeres con respecto al de los varones según la rama de actividad a la que se dedica el establecimiento donde trabaja la persona"),
+              plotOutput(outputId = "graph_brecha_rama"), ## Plot output - brecha rama actividad
+              h6("Año: 2017 - Ciudad Autonoma de Buenos Aires"),
+              h6("Fuente: Buenos Aires Data - https://data.buenosaires.gob.ar/"),
+              br()
+                      
+                      
+                      ) ## cierre mainPanel
+            
+            
+            
           ) ## cierre sidebarLayout
         ) ## Cierre TAB 3.3
       ) ## Cierre SUB TABSETPANEL
