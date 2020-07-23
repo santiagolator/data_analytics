@@ -372,19 +372,33 @@ shinyUI(fluidPage(
                   )
               ) ## cierre tags lista
           ),
-          tags$hr(),
+          
+          tags$hr(), ## ---------
 
+
+          h4("Docente"),
+          tags$div(
+            tags$ul(
+              tags$li(
+                tags$p("Romina Méndez", HTML('&nbsp;'), "[ ", a(href = "https://eant.tech/", "EANT"), " ]")
+                
+              )
+            )
+          ),
+       
+          tags$hr(), ## ---------   
+          
           h4("Bibliografia"),
           tags$div(
             tags$ul(
               tags$li(
                 tags$p("D'ALESSANDRO, Mercedes (2019).", HTML('&nbsp;'), tags$i("Economia feminista. Las mujeres, el trabajo y el amor."), HTML('&nbsp;'), "Ciudad Autonoma de Buenos Aires: Sudamericana.")
-              
+                
+              )
             )
-            )
-            ),
+          ),
           
-          tags$hr(),
+          tags$hr(), ## ---------
 
           h4("Codigo"),
           p("El lenguaje elegido para el desarrollo del proyecto es R, y el IDE que vamos a utilizar es ", a(href = "https://www.r-project.org/about.html", "RStudio", .noWS = "outside"), .noWS = c("after-begin", "before-end")),
