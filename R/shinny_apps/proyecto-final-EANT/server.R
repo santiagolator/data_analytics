@@ -33,14 +33,14 @@ shinyServer(function(input, output) {
       coord_cartesian(ylim = c(0.5, 4.5)) +
       scale_color_manual(
         values = color_puntos,
-        name = "Sexo",
+        name = "Sexo   ",
         breaks = c("m", "v"),
-        labels = c("Mujeres", "Varones")
+        labels = c("  Mujeres ", "  Varones")
       ) +
       labs(
-        title = "Trabajo no remunerado",
-        subtitle = "Promedio horas diarias por grupo de edad\n",
-        caption = "\nAño: 2016 - Ciudad Autonoma de Buenos Aires\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/",
+        #title = "Trabajo no remunerado",
+        #subtitle = "Promedio horas diarias por grupo de edad\n",
+        #caption = "\nAño: 2016 - Ciudad Autonoma de Buenos Aires\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/",
         x = "\nGrupo de edad",
         y = "Prom. horas diarias\n"
       ) +
@@ -174,7 +174,7 @@ shinyServer(function(input, output) {
       # coord_flip() +
       scale_fill_manual(
         values = color_barras_2,
-        name = "Fuente ingresos"
+        name = "Fuente ingresos   "
       ) +
       labs(
         title = "Brecha salarial",
@@ -183,7 +183,8 @@ shinyServer(function(input, output) {
         x = "",
         y = ""
       ) +
-      theme_ipsum_rc() +
+      theme_ipsum_rc(base_family = "Roboto Condensed",
+                     subtitle_family = "Roboto Condensed") +
       theme(
         plot.title = element_text(hjust = 0),
         plot.subtitle = element_text(hjust = 0, size = 11),

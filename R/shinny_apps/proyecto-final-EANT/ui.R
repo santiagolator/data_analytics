@@ -118,8 +118,18 @@ shinyUI(fluidPage(
                 multiple = TRUE
               ) ## cierre dropdown
             ), ## Cierre sidebarPanel
-
-            mainPanel(plotOutput(outputId = "graph_grupo_edad")) ## Plot output - GRUPO EDAD
+            
+            mainPanel( ## inicio mainPanel
+              br(),
+              h4("Trabajo no remunerado"),
+              h5("Promedio horas diarias por grupo de edad"),
+              plotOutput(outputId = "graph_grupo_edad"), ## Plot output - GRUPO EDAD
+              h6("Año: 2016 - Ciudad Autonoma de Buenos Aires"),
+              h6("Fuente: Buenos Aires Data - https://data.buenosaires.gob.ar/"),
+              br()
+              
+              ) ## Cierre mainPanel
+            
           ) ## cierre sidebarLayout
         ), ## cierre TAB 2.1
 
