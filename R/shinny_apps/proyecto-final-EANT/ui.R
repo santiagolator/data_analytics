@@ -375,7 +375,15 @@ shinyUI(fluidPage(
           tags$hr(),
 
           h4("Bibliografia"),
-          h5("Lorem ipsum"),
+          tags$div(
+            tags$ul(
+              tags$li(
+                tags$p("D'ALESSANDRO, Mercedes (2019).", HTML('&nbsp;'), tags$i("Economia feminista. Las mujeres, el trabajo y el amor."), HTML('&nbsp;'), "Ciudad Autonoma de Buenos Aires: Sudamericana.")
+              
+            )
+            )
+            ),
+          
           tags$hr(),
 
           h4("Codigo"),
