@@ -22,3 +22,5 @@ font_add_google(
 showtext_auto()
 
 showtext_opts(dpi = 112)
+
+#hrbrthemes.loadfonts = T
