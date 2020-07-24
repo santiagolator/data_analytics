@@ -35,10 +35,15 @@ Acotamos el estudio a la Ciudad Autónoma de Buenos Aires.
 
 - Santiago Lator [[Github](https://github.com/santiagolator) |  [Linkedin](https://www.linkedin.com/in/santiago-lator-arias-291879153/)]
 
+## Docente
+- Romina Méndez [[EANT](https://eant.tech/)]
 
-## Codigo
+# Bibliografia
+- D'ALESSANDRO, Mercedes (2019). _Economia feminista. Las mujeres, el trabajo y el amor_, Ciudad Autonoma de Buenos Aires: Sudamericana.
 
-### Paquetes
+# Codigo
+
+## Paquetes
 
 - [tidyverse](https://www.tidyverse.org/)
 - [ggplot2](https://ggplot2.tidyverse.org/)
@@ -50,7 +55,7 @@ Acotamos el estudio a la Ciudad Autónoma de Buenos Aires.
 - [showtext](https://github.com/yixuan/showtext)
 
 
-### Repositorio
+## Repositorio
 
 - [Github](https://github.com/santiagolator/data_analytics/tree/master/R/shinny_apps/proyecto-final-EANT)
 
