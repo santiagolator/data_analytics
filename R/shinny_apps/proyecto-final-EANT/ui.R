@@ -137,7 +137,7 @@ shinyUI(fluidPage(
               h5("Promedio horas diarias por grupo de edad"),
               plotOutput(outputId = "graph_grupo_edad"), ## Plot output - GRUPO EDAD
               h6("Año: 2016 - Ciudad Autonoma de Buenos Aires"),
-              h6("Fuente: Buenos Aires Data - https://data.buenosaires.gob.ar/"),
+              tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
               br()
               
               ) ## Cierre mainPanel
@@ -193,7 +193,7 @@ shinyUI(fluidPage(
               h5("Promedio horas por nivel de instruccion"),
               plotOutput(outputId = "graph_nivel_instruccion"), ## Plot output - Nivel instruccion
               h6("Año: 2016 - Ciudad Autonoma de Buenos Aires"),
-              h6("Fuente: Buenos Aires Data - https://data.buenosaires.gob.ar/"),
+              tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
               br()
               
               
@@ -252,7 +252,7 @@ shinyUI(fluidPage(
               h5("Promedio horas diarias segun quintinl de ingreso familiar"),
               plotOutput(outputId = "graph_quintil"), ## Plot output - quintil ingreso
               h6("Año: 2016 - Ciudad Autonoma de Buenos Aires"),
-              h6("Fuente: Buenos Aires Data - https://data.buenosaires.gob.ar/"),
+              tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
               br()
                       
             ) ## cierre MainPanel
@@ -295,7 +295,8 @@ shinyUI(fluidPage(
                 h4("Brecha salarial"),
                 h5("Relación entre los ingresos laborales mensuales de la ocupación principal, normalizados por la cantidad de horas, de mujeres y varones"),
                 plotOutput(outputId = "graph_brecha_norm"), ## Plot output - brecha normalizado
-                h6("Ciudad Autonoma de Buenos Aires\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/"),
+                h6("Ciudad Autonoma de Buenos Aires"),
+                tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
                 br()
                 ) ## cierre mainPanel
             
@@ -360,7 +361,8 @@ shinyUI(fluidPage(
               h4("Brecha salarial"),
               h5("Relación entre el ingreso de las mujeres con respecto al de los varones según la fuente de ingresos y grupo de edad"),
               plotOutput(outputId = "graph_brecha_fuente"), ## Plot output - brecha fuente ingreso
-              h6("Ciudad Autonoma de Buenos Aires\nFuente: Buenos Aires Data - https://data.buenosaires.gob.ar/"),
+              h6("Ciudad Autonoma de Buenos Aires"),
+              tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
               br()
               
               ) ### cierre MainPanel
@@ -402,11 +404,9 @@ shinyUI(fluidPage(
               h5("Relación entre el ingreso promedio de las mujeres con respecto al de los varones según la rama de actividad a la que se dedica el establecimiento donde trabaja la persona"),
               plotOutput(outputId = "graph_brecha_rama"), ## Plot output - brecha rama actividad
               h6("Año: 2017 - Ciudad Autonoma de Buenos Aires"),
-              h6("Fuente: Buenos Aires Data - https://data.buenosaires.gob.ar/"),
+              tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
               br()
-                      
-                      
-                      ) ## cierre mainPanel
+              ) ## cierre mainPanel
             
             
             
