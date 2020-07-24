@@ -226,62 +226,62 @@ shinyServer(function(input, output) {
   }) ## Cierre grafico 6
   
   
-  ## Mapa 1 - Tasa participacion mujeres
-    output$map_tasa1 <- renderLeaflet({
-      
-     #tasa_participacion_m <- df_tidy$tasa_participacion_m
-      #tasa_participacion_v <- df_tidy$tasa_participacion_v
-      
-      #filteredData <- reactive({
-      #  quakes[quakes$mag >= input$range[1] & quakes$mag <= input$range[2],]
-      #})
- 
-    leaflet(data = argentina) %>%  ### inicio leaflet mapa 1
-      addProviderTiles("CartoDB.Positron") %>%
-      addPolygons(fillColor = ~pal(df_tidy$tasa_participacion_m), ### elemento cambiante
-                  fillOpacity = 0.8,
-                  color = "#BDBDC3",
-                  weight = 1,
-                  popup = popup_m)%>%
-      addLegend("bottomright", pal = pal, values = ~df_tidy$tasa_participacion_m, ### elemento cambiante
-                title = "Tasa de participacion de mujeres",
-                labFormat = labelFormat(suffix = "%"),
-                opacity = 1)
-    
-    # observe({
-    #   leafletProxy("map_tasa1", data = filteredData()) %>%
-    #     clearShapes() %>%
-    #     addPolygons(
-    #       fillColor = ~pal(input$tasa_mapa)
-    #     ) %>% 
-    #   addLegend(
-    #     "bottomright", pal = pal, values = ~input$tasa_mapa,
-    #     title = "Tasa de participacion de mujeres",
-    #     labFormat = labelFormat(suffix = "%"),
-    #     opacity = 1
-    #     )
-    # })
-    
-    
-  }) ## Fin Mapa 1
-    
-    
-
-
-  ## Mapa 2 - Tasa participacion varones
-    output$map_tasa2 <- renderLeaflet({
-
-    leaflet(data = argentina) %>%
-      addProviderTiles("CartoDB.Positron") %>%
-      addPolygons(fillColor = ~pal(df_tidy$tasa_participacion_v),
-                  fillOpacity = 0.8,
-                  color = "#BDBDC3",
-                  weight = 1,
-                  popup = popup_v) %>%
-      addLegend("bottomright", pal = pal, values = ~df_tidy$tasa_participacion_v,
-                title = "Tasa de participacion de varones",
-                labFormat = labelFormat(suffix = "%"),
-                opacity = 1)
-  }) ## Fin mapa 2
+  # ## Mapa 1 - Tasa participacion mujeres
+  #   output$map_tasa1 <- renderLeaflet({
+  #     
+  #    #tasa_participacion_m <- df_tidy$tasa_participacion_m
+  #     #tasa_participacion_v <- df_tidy$tasa_participacion_v
+  #     
+  #     #filteredData <- reactive({
+  #     #  quakes[quakes$mag >= input$range[1] & quakes$mag <= input$range[2],]
+  #     #})
+  # 
+  #   leaflet(data = argentina) %>%  ### inicio leaflet mapa 1
+  #     addProviderTiles("CartoDB.Positron") %>%
+  #     addPolygons(fillColor = ~pal(df_tidy$tasa_participacion_m), ### elemento cambiante
+  #                 fillOpacity = 0.8,
+  #                 color = "#BDBDC3",
+  #                 weight = 1,
+  #                 popup = popup_m)%>%
+  #     addLegend("bottomright", pal = pal, values = ~df_tidy$tasa_participacion_m, ### elemento cambiante
+  #               title = "Tasa de participacion de mujeres",
+  #               labFormat = labelFormat(suffix = "%"),
+  #               opacity = 1)
+  #   
+  #   # observe({
+  #   #   leafletProxy("map_tasa1", data = filteredData()) %>%
+  #   #     clearShapes() %>%
+  #   #     addPolygons(
+  #   #       fillColor = ~pal(input$tasa_mapa)
+  #   #     ) %>% 
+  #   #   addLegend(
+  #   #     "bottomright", pal = pal, values = ~input$tasa_mapa,
+  #   #     title = "Tasa de participacion de mujeres",
+  #   #     labFormat = labelFormat(suffix = "%"),
+  #   #     opacity = 1
+  #   #     )
+  #   # })
+  #   
+  #   
+  # }) ## Fin Mapa 1
+  #   
+  #   
+  # 
+  # 
+  # ## Mapa 2 - Tasa participacion varones
+  #   output$map_tasa2 <- renderLeaflet({
+  # 
+  #   leaflet(data = argentina) %>%
+  #     addProviderTiles("CartoDB.Positron") %>%
+  #     addPolygons(fillColor = ~pal(df_tidy$tasa_participacion_v),
+  #                 fillOpacity = 0.8,
+  #                 color = "#BDBDC3",
+  #                 weight = 1,
+  #                 popup = popup_v) %>%
+  #     addLegend("bottomright", pal = pal, values = ~df_tidy$tasa_participacion_v,
+  #               title = "Tasa de participacion de varones",
+  #               labFormat = labelFormat(suffix = "%"),
+  #               opacity = 1)
+  # }) ## Fin mapa 2
   
 })

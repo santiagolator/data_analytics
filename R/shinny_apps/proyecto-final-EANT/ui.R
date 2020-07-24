@@ -70,37 +70,37 @@ shinyUI(fluidPage(
       
     ), ## Cierre tabPanel
     
-    tabPanel(
-      "Situacion nacional",
-      br(),
-      tabsetPanel(
-        tabPanel("Tasa participacion",
-                 br(),
-                 navlistPanel(
-                              tabPanel("Mujeres",
-                                       leafletOutput(outputId = "map_tasa1")),
-                              
-                              # absolutePanel(top = 10, right = 10,
-                              #               selectInput(
-                              #                 inputId = "tasa_mapa", 
-                              #                 label = "Tasa participacion",
-                              #                 choices = c("Mujeres" = "tasa_participacion_m", 
-                              #                             "Varones" = "tasa_participacion_v")
-                              #               )
-                              # )
-                              
-                              
-                               tabPanel("Varones",
-                                        leafletOutput(outputId = "map_tasa2"))
-                              
-
-                 )
-
-      ),
-      tabPanel("Promedio horas")
-
-      )
-    ),
+    # tabPanel(
+    #   "Situacion nacional",
+    #   br(),
+    #   tabsetPanel(
+    #     tabPanel("Tasa participacion",
+    #              br(),
+    #              navlistPanel(
+    #                           tabPanel("Mujeres",
+    #                                    leafletOutput(outputId = "map_tasa1")),
+    #                           
+    #                           # absolutePanel(top = 10, right = 10,
+    #                           #               selectInput(
+    #                           #                 inputId = "tasa_mapa", 
+    #                           #                 label = "Tasa participacion",
+    #                           #                 choices = c("Mujeres" = "tasa_participacion_m", 
+    #                           #                             "Varones" = "tasa_participacion_v")
+    #                           #               )
+    #                           # )
+    #                           
+    #                           
+    #                            tabPanel("Varones",
+    #                                     leafletOutput(outputId = "map_tasa2"))
+    #                           
+    # 
+    #              )
+    # 
+    #   ),
+    #   tabPanel("Promedio horas")
+    # 
+    #   )
+    # ),
     
     
     tabPanel(
@@ -276,7 +276,7 @@ shinyUI(fluidPage(
                 inputId = "anio_1",
                 label = "Seleccione año",
                 choices = sort(df_5$anio),
-                selected = c(max(df_5$anio) - 15, max(df_5$anio)),
+                selected = c(min(df_5$anio), max(df_5$anio)),
                 from_min = min(df_5$anio),
                 from_max = max(df_5$anio) - 1,
                 to_min = min(df_5$anio) + 1,
