@@ -45,6 +45,7 @@ shinyServer(function(input, output) {
         y = "Prom. horas diarias\n"
       ) +
       theme_ipsum_rc() +
+      #theme_minimal() +
       theme(
         plot.title = element_text(hjust = 0),
         plot.subtitle = element_text(hjust = 0),
@@ -53,6 +54,9 @@ shinyServer(function(input, output) {
       )
   }) ## Fin grafico1
 
+  # output$tabla_1 = DT::renderDataTable({
+  #   df_sin_total
+  # })
 
   # Grafico 2 - Trabajo remunerado por NIVEL INSTRUCCION
   output$graph_nivel_instruccion <- renderPlot({

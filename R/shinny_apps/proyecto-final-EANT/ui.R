@@ -139,6 +139,10 @@ shinyUI(fluidPage(
               h6("Año: 2016 - Ciudad Autonoma de Buenos Aires"),
               tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
               br()
+              # ,
+              # br(),
+              # DT::dataTableOutput("tabla_1"),
+              # br()
               
               ) ## Cierre mainPanel
             
