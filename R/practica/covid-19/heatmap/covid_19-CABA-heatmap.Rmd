@@ -1,0 +1,57 @@
+# Dataset original
+
+```{r}
+df <- read.csv("https://cdn.buenosaires.gob.ar/datosabiertos/datasets/salud/casos-covid-19/casos_covid19.csv",
+         encoding = "UTF-8")
+```
+
+# Transformacion dataset
+
+```{r}
+library("tidyverse")
+
+df_tipo_contagio_edad_agrupado <- df %>%
+  filter(
+    !is.na(tipo_contagio),
+    !is.na(genero),
+    !is.na(edad),
+    clasificacion == "confirmado"
+  ) %>%
+  mutate(
+    grupo_edad = case_when(
+      edad <=18 ~ "0-18",
+      edad > 18 & edad <= 35 ~ "19-35",
+      edad > 35 & edad <= 50 ~ "36-50",
+      edad > 50 & edad <= 65 ~ "51-65",
+      edad > 65 & edad <= 80 ~ "66-80",
+      edad >= 80 ~ "Mas de 80",
+      is.na(edad) ~ "Edad\ndesconocida"
+    )
+  ) %>% 
+  count(grupo_edad, tipo_contagio, genero, name = "casos", sort = T)
+
+```
+# Plot
+```{r}
+library("ggplot2")
+library("hrbrthemes")
+library("wesanderson") # las paletas de las pelis! <3
+
+paleta <- wes_palette("Zissou1", 100, type = "continuous")
+
+df_tipo_contagio_edad_agrupado %>% 
+  ggplot(aes(x = grupo_edad, y = tipo_contagio, fill = casos)) +
+  geom_tile(colour="white", size=0.5) +
+  geom_text(aes(label= casos), color = "white") +
+  facet_grid(~genero) +
+  scale_fill_gradientn(colors = paleta) +
+  coord_cartesian(expand=FALSE) +
+  labs(x = " ", 
+       y = " ", 
+       title = "Covid-19 | CABA", 
+       subtitle = "Casos confirmados por tipo de contagio, grupo de edad y género", 
+       caption = "Autor: Santiago Lator | tw: @SantiagoLator\n\nFuente: https://data.buenosaires.gob.ar/dataset/casos-covid-19\n",
+       fill = "Casos") +
+  theme_ft_rc()
+
+```
