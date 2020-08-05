@@ -286,5 +286,33 @@ shinyServer(function(input, output) {
                 labFormat = labelFormat(suffix = "%"),
                 opacity = 1)
   }) ## Fin mapa 2
+    
+    
+## Grafico 7 - Promedio anual nacional por genero    
+output$graph_promedio_anual <- renderPlot({
+  
+  df_remuneracion_promedio %>% 
+     filter(
+       #categoria %in% input$sexo_4,
+       # indice_tiempo >= input$anio_3[1],
+       # indice_tiempo <= input$anio_3[2],
+       indice_tiempo %in% input$anio_3
+     ) %>% 
+    ggplot(aes(valor, indice_tiempo))+
+    geom_col(aes(fill = categoria),
+             position = 'fill')+
+    theme_ipsum_rc()+
+    scale_x_continuous(labels = scales::percent,
+                       n.breaks = 10)+
+    scale_fill_manual(values=c("#872642", "#F6C026"))+
+    labs(x = "\nProporcion ingresos x genero",
+         y = "",
+         #title = "Promedio anual a nivel nacional\nde ingresos por genero de 1996 al 2017",
+         #caption = "\nArgentina\nFuente: Datos Argentina - https://datos.gob.ar/",
+         fill = "Género")+
+    geom_vline(xintercept = 0.5, linetype = "dashed", size = 1.5, color = "#a0d3f9")
+  
+  
+}) ## Fin grafico 7
   
 })
