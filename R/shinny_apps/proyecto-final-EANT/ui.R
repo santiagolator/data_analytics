@@ -70,41 +70,54 @@ shinyUI(fluidPage(
       
     ), ## Cierre tabPanel
     
-    # tabPanel(
-    #   "Situacion nacional",
-    #   br(),
-    #   tabsetPanel(
-    #     tabPanel("Tasa participacion",
-    #              br(),
-    #              navlistPanel(
-    #                           tabPanel("Mujeres",
-    #                                    leafletOutput(outputId = "map_tasa1")),
-    #                           
-    #                           # absolutePanel(top = 10, right = 10,
-    #                           #               selectInput(
-    #                           #                 inputId = "tasa_mapa", 
-    #                           #                 label = "Tasa participacion",
-    #                           #                 choices = c("Mujeres" = "tasa_participacion_m", 
-    #                           #                             "Varones" = "tasa_participacion_v")
-    #                           #               )
-    #                           # )
-    #                           
-    #                           
-    #                            tabPanel("Varones",
-    #                                     leafletOutput(outputId = "map_tasa2"))
-    #                           
-    # 
-    #              )
-    # 
-    #   ),
-    #   tabPanel("Promedio horas")
-    # 
-    #   )
-    # ),
+     tabPanel(
+       "Situacion nacional", ## TAB 1 - Situacion nacional
+       br(),
+       tabsetPanel( ## SUB TABSET
+         tabPanel("Tasa participacion", ## TAB 1.1 Tasa participacion
+                  br(),
+                  navlistPanel( ## NAVLIST GENERO
+                    
+                               tabPanel("Mujeres",
+                                        leafletOutput(outputId = "map_tasa1")),
+                               
+                                # absolutePanel(top = 10, right = 10,
+                                #               selectInput(
+                                #                 inputId = "tasa_mapa", 
+                                #                 label = "Tasa participacion",
+                                #                 choices = c("Mujeres" = "tasa_participacion_m", 
+                                #                             "Varones" = "tasa_participacion_v")
+                                #               )
+                                # ),
+                               
+                               
+                                tabPanel("Varones",
+                                         leafletOutput(outputId = "map_tasa2"))
+     
+                  ) ## Cierre NAVLIST
+     
+       ), ## Cierre TAB1.1
+       
+       tabPanel("Promedio anual", ## TAB 1.2 Promedio anual
+                br(),
+                
+                
+                
+                ) ## Cierre TAB 1.2
+     
+       ), ## Cierre SUB TABSET
+       
+    ), ## Cierre TAB 1
     
     
     tabPanel(
       "Trabajo no remunerado", ## TAB 2 - Trabajo no remunerado
+      br(),
+      #h4("Definición"),
+      #br(),
+      tags$blockquote("Nos referimos a ",tags$strong("trabajo doméstico no remunerado"), "cuando se trata de tareas de limpieza, gestión,  alimentación, refacción, acompañamiento escolar, cuidado de mascotas, de niños/as y/o de personas que requieran cuidados especiales, por las que no se percibe retribución económica."),
+      #br(),
+      #h5("Gráficos"),
       br(),
       tabsetPanel( ## SUB TABSET
         tabPanel(
@@ -253,7 +266,7 @@ shinyUI(fluidPage(
             mainPanel(
               br(),
               h4("Trabajo no remunerado"),
-              h5("Promedio horas diarias segun quintinl de ingreso familiar"),
+              h5("Promedio horas diarias segun quintil de ingreso familiar"),
               plotOutput(outputId = "graph_quintil"), ## Plot output - quintil ingreso
               h6("Año: 2016 - Ciudad Autonoma de Buenos Aires"),
               tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
@@ -269,6 +282,8 @@ shinyUI(fluidPage(
 
     tabPanel(
       "Brecha salarial", ## TAB 3 - Brecha salarial
+      br(),
+      tags$blockquote("Se conoce como ",tags$strong("brecha salarial entre hombres y mujeres"), "a la diferencia existente entre los salarios percibidos por los trabajadores de ambos sexos, calculada sobre la base de la diferencia media entre los ingresos brutos por hora de todos los trabajadores."),
       br(),
       tabsetPanel( ## SUB TABSETPANEL
         tabPanel(
