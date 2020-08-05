@@ -33,7 +33,7 @@ shinyServer(function(input, output) {
       coord_cartesian(ylim = c(0.5, 4.5)) +
       scale_color_manual(
         values = color_puntos,
-        name = "Sexo   ",
+        name = "Género   ",
         breaks = c("m", "v"),
         labels = c("  Mujeres ", "  Varones")
       ) +
@@ -74,7 +74,7 @@ shinyServer(function(input, output) {
       coord_flip() +
       scale_fill_manual(
         values = color_barras,
-        name = "Sexo",
+        name = "Género",
         breaks = c("m", "v"),
         labels = c("Mujeres", "Varones")
       ) +
@@ -111,7 +111,7 @@ shinyServer(function(input, output) {
       # geom_label(aes(label = promedio_hs_diarias), fill = "white", hjust = "center", size = 3) +
       scale_fill_manual(
         values = color_barras,
-        name = "Sexo",
+        name = "Género",
         breaks = c("m", "v"),
         labels = c("Mujeres", "Varones")
       ) +

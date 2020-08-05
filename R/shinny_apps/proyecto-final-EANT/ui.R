@@ -181,7 +181,7 @@ shinyUI(fluidPage(
             sidebarPanel(
               checkboxGroupButtons( ## Checkbox SEXO
                 inputId = "sexo",
-                label = "Seleccione el sexo",
+                label = "Seleccione el género",
                 choiceValues = unique(df_sin_total$sexo),
                 choiceNames = c("Mujeres", "Varones"),
                 selected = unique(df_sin_total$sexo)[1:2],
@@ -224,7 +224,7 @@ shinyUI(fluidPage(
             sidebarPanel(
               checkboxGroupButtons( ## Checkbox SEXO
                 inputId = "sexo2",
-                label = "Seleccione el sexo",
+                label = "Seleccione el género",
                 choiceValues = unique(df_2_sin_total$sexo),
                 choiceNames = c("Mujeres", "Varones"),
                 selected = unique(df_2_sin_total$sexo)[1:2],
@@ -288,7 +288,7 @@ shinyUI(fluidPage(
             sidebarPanel(
               checkboxGroupButtons( ## Checkbox SEXO
                 inputId = "sexo3",
-                label = "Seleccione el sexo",
+                label = "Seleccione el género",
                 choiceValues = unique(df_3_sin_total$sexo),
                 choiceNames = c("Mujeres", "Varones"),
                 selected = unique(df_3_sin_total$sexo)[1:2],
@@ -504,7 +504,7 @@ shinyUI(fluidPage(
           tags$div( ## tag div
               tags$ul( ## tags lista
                   tags$li(
-                      tags$p("Ailén Rocío Ventaja")
+                      tags$p("Ailén Rocío Ventaja", HTML('&nbsp;'),"[", icon("linkedin"), a(href = "https://www.linkedin.com/in/ailenventaja/", "Linkedin"), "]")
                   ),
                   tags$li(
                       tags$p("Alejandro Ingercher")
