@@ -293,7 +293,7 @@ output$graph_promedio_anual <- renderPlot({
   
   df_remuneracion_promedio %>% 
      filter(
-       categoria %in% input$sexo_4,
+       #categoria %in% input$sexo_4,
        indice_tiempo >= input$anio_3[1],
        indice_tiempo <= input$anio_3[2]
        #indice_tiempo %in% input$anio_3

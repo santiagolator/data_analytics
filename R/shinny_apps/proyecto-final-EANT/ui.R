@@ -445,15 +445,15 @@ shinyUI(fluidPage(
                  sidebarLayout(
                    sidebarPanel(
                      
-                     checkboxGroupButtons( ## Checkbox GENERO
-                       inputId = "sexo_4",
-                       label = "Seleccione el genero",
-                       choiceValues = unique(df_remuneracion_promedio$categoria),
-                       choiceNames = c("Mujeres", "Hombres"),
-                       selected = unique(df_remuneracion_promedio$categoria)[1:2],
-                       justified = TRUE
-
-                     ), ## Cierre checkbox
+                     # checkboxGroupButtons( ## Checkbox GENERO
+                     #   inputId = "sexo_4",
+                     #   label = "Seleccione el genero",
+                     #   choiceValues = unique(df_remuneracion_promedio$categoria),
+                     #   choiceNames = c("Mujeres", "Hombres"),
+                     #   selected = unique(df_remuneracion_promedio$categoria)[1:2],
+                     #   justified = TRUE
+                     # 
+                     # ), ## Cierre checkbox
                      
                      sliderTextInput( ## Slider AÑO
                        inputId = "anio_3",
