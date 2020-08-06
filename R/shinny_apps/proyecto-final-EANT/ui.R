@@ -507,10 +507,10 @@ shinyUI(fluidPage(
                       tags$p("Ailén Rocío Ventaja", HTML('&nbsp;'),"[", icon("linkedin"), a(href = "https://www.linkedin.com/in/ailenventaja/", "Linkedin"), "]")
                   ),
                   tags$li(
-                      tags$p("Alejandro Ingercher")
+                      tags$p("Alejandro Ingercher", HTML('&nbsp;'),"[", icon("github"), a(href = "https://github.com/aleingercher", "Github"),"|", icon("linkedin"), a(href ="https://www.linkedin.com/in/alejandro-ingercher-casas-234aba41", "Linkedin") , "]")
                   ),
                   tags$li(
-                      tags$p("Laureano Fuentes")
+                      tags$p("Laureano Fuentes", HTML('&nbsp;'),"[", icon("linkedin"), a(href = "http://linkedin.com/in/laureanofuentes", "Linkedin"), "]")
                   ),
                   tags$li(
                       tags$p("Santiago Lator ", HTML('&nbsp;'),"[", icon("github"), a(href = "https://github.com/santiagolator", "Github"),"|", icon("linkedin"), a(href ="https://www.linkedin.com/in/santiago-lator-arias-291879153/", "Linkedin") , "]")
