@@ -181,7 +181,14 @@ shinyUI(fluidPage(
                  navlistPanel( ## NAVLIST GENERO
                    
                    tabPanel("Mujeres",
-                            leafletOutput(outputId = "map_tasa1")),
+                            br(),
+                            h4("Tasa de participacion"),
+                            h5("Mujeres"),
+                            br(),
+                            leafletOutput(outputId = "map_tasa1"),
+                            br(),
+                            br()
+                            ),
                    
                    # absolutePanel(top = 10, right = 10,
                    #               selectInput(
@@ -194,7 +201,14 @@ shinyUI(fluidPage(
                    
                    
                    tabPanel("Varones",
-                            leafletOutput(outputId = "map_tasa2"))
+                            br(),
+                            h4("Tasa de participacion"),
+                            h5("Varones"),
+                            br(),
+                            leafletOutput(outputId = "map_tasa2"),
+                            br(),
+                            br()
+                            )
                    
                  ) ## Cierre NAVLIST
                  
@@ -656,11 +670,11 @@ shinyUI(fluidPage(
           tags$hr(), ## ---------
 
 
-          h4("Docente"),
+          h4("Equipo docente"),
           tags$div(
             tags$ul(
               tags$li(
-                tags$p("Romina Méndez", HTML('&nbsp;'), "[ ", a(href = "https://eant.tech/", "EANT"), " ]")
+                tags$p("Romina Méndez y Julio Spairani", HTML('&nbsp;'), "[ ", a(href = "https://eant.tech/", "EANT"), " ]")
                 
               )
             )

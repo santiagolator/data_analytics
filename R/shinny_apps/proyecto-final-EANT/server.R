@@ -251,7 +251,7 @@ shinyServer(function(input, output) {
                   popup = popup_m)%>%
       addLegend("bottomright", pal = pal, values = ~df_tidy$tasa_participacion_m, ### elemento cambiante
                 title = "Tasa de participacion de mujeres",
-                labFormat = labelFormat(suffix = "%"),
+                #labFormat = labelFormat(suffix = "%"),
                 opacity = 1)
   #   
   #   # observe({
@@ -283,7 +283,7 @@ shinyServer(function(input, output) {
                   popup = popup_v) %>%
       addLegend("bottomright", pal = pal, values = ~df_tidy$tasa_participacion_v,
                 title = "Tasa de participacion de varones",
-                labFormat = labelFormat(suffix = "%"),
+                #labFormat = labelFormat(suffix = "%"),
                 opacity = 1)
   }) ## Fin mapa 2
     
