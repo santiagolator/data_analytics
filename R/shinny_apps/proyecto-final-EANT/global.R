@@ -10,6 +10,7 @@ library("tidyverse")
 library("ggplot2")
 library("viridis")
 library("leaflet")
+library("treemapify")
 
 # hrbrthemes::import_roboto_condensed()
 
