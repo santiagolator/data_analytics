@@ -314,5 +314,34 @@ output$graph_promedio_anual <- renderPlot({
   
   
 }) ## Fin grafico 7
+
+### Grafico 8 - Promedio horas diarias por actividad
+output$graph_actividad <- renderPlot({
+  
+  df_9_horasact %>%
+    filter(
+      grupos_actividad %in% input$actividad,
+      sexo %in% input$sexo4
+    ) %>% 
+    mutate(sexo = paste(sexo, promedio_hs_diarias, sep = "\n")) %>%
+    ggplot(aes(
+      area = horasnum, fill = grupos_actividad, label = sexo, subgroup = grupos_actividad
+    )) +
+    geom_treemap() +
+    geom_treemap_subgroup_border(size = 0.5) +
+    geom_treemap_text(
+      colour = "white", place = "centre",
+      grow = F, reflow = F
+    ) +
+    scale_fill_manual(
+      values = color_barras_2,
+      name = "Actividad"
+    ) +
+    theme_ipsum_rc()
+  
+  
+  
+}) ## Fin grafico 8
+
   
 })

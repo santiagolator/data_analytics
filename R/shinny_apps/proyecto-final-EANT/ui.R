@@ -286,6 +286,7 @@ shinyUI(fluidPage(
           br(),
           sidebarLayout(
             sidebarPanel(
+              
               checkboxGroupButtons( ## Checkbox SEXO
                 inputId = "sexo3",
                 label = "Seleccione el género",
@@ -332,7 +333,55 @@ shinyUI(fluidPage(
             ) ## cierre MainPanel
             
           ) ## cierre sidebarLayout
-        ) ## Cierre TAB 2.3
+        ), ## Cierre TAB 2.3
+        
+        
+        tabPanel(
+          "Actividad", ## TAB 2.4 - Promedio horas diarias por actividad no remunerada
+          br(),
+          sidebarLayout(
+            sidebarPanel(
+              
+              checkboxGroupButtons( ## Checkbox GENERO
+                inputId = "sexo4",
+                label = "Seleccione el género",
+                choiceValues = unique(df_9_horasact$sexo),
+                choiceNames = c("Mujeres", "Varones"),
+                selected = unique(df_9_horasact$sexo)[1:2],
+                justified = TRUE
+              ), ## cierre checkbox
+              
+              pickerInput( ## dropdown ACTIVIDAD
+                inputId = "actividad",
+                label = "Seleccione la actividad",
+                # choiceValues = unique(df_3_sin_total$quintil_ing_familiar),
+                # choiceNames = c("1°", "2°","3°","4°","5°"),
+                choices = unique(df_9_horasact$grupos_actividad),
+                selected = unique(df_9_horasact$grupos_actividad)[1:length(unique(df_9_horasact$grupos_actividad))],
+                options = list(`actions-box` = TRUE),
+                multiple = TRUE
+              ), ## cierre dropdown
+              
+            ), ## cierre sidebarPanel
+            
+            mainPanel(
+              br(),
+              h4("Trabajo no remunerado"),
+              h5("Promedio horas diarias segun actividad no remunerada"),
+              plotOutput(outputId = "graph_actividad"), ## Plot output - actividad
+              h6("Año: 2016 - Ciudad Autonoma de Buenos Aires"),
+              tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
+              br()
+              
+            ) ## cierre mainPanel
+            
+          ) ## cierre sidebarLayout
+          
+          
+        ) ## Cierre TAB 2.4
+        
+        
+        
       ) ## Cierre SUB TABSETPANEL
     ), ## Cierre TAB 2
 
