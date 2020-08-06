@@ -45,7 +45,7 @@ shinyUI(fluidPage(
           h4("Objetivos del proyecto"),
           h5("En el presente proyecto pretendemos analizar la desigualdad de género en el trabajo remunerado y no remunerado, a través del análisis de la brecha salarial y la participación de hombres y mujeres en el trabajo doméstico."),
           h5("Nuestro objetivo principal visibilizar las diferencias existentes tanto en la distribución de trabajo del hogar y tareas de cuidado, como en los salarios percibidos en el mercado laboral según género. Se intenta contribuir a la discusión actual sobre la desigualdad de género y los roles establecidos."),
-          h5("Acotamos el estudio a la Ciudad Autónoma de Buenos Aires."),
+          h5("Acotamos el estudio a la Ciudad Autónoma de Buenos Aires e incluimos algunos datos sobre el contexto nacional."),
           br(),
           h4("Fuentes de datos"),
           tags$div( ## tag div
@@ -58,6 +58,9 @@ shinyUI(fluidPage(
               ),
               tags$li(
                 tags$a(href = "https://www.indec.gob.ar/indec/web/Institucional-Indec-BasesDeDatos", "Encuesta Permanente de Hogares (EPH - INDEC)")
+              ),
+              tags$li(
+                tags$a(href = "https://www.indec.gob.ar/indec/web/Nivel4-Tema-4-31-117", "Encuesta sobre Trabajo No Remunerado y Uso del Tiempo (INDEC)")
               ),
               tags$li(
                 tags$a(href = "https://datos.gob.ar/", "Datos Argentina")
@@ -183,10 +186,12 @@ shinyUI(fluidPage(
                    tabPanel("Mujeres",
                             br(),
                             h4("Tasa de participacion"),
-                            h5("Mujeres"),
+                            h5("Actividades que componen el trabajo doméstico no remunerado de la población de 18 años y más según provincia"),
                             br(),
                             leafletOutput(outputId = "map_tasa1"),
                             br(),
+                            h6("Argentina - Año: 2013"),
+                            tags$h6("Fuente: Encuesta sobre Trabajo No Remunerado y Uso del Tiempo (INDEC)", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://www.indec.gob.ar/", "https://www.indec.gob.ar/")),
                             br()
                             ),
                    
@@ -203,10 +208,12 @@ shinyUI(fluidPage(
                    tabPanel("Varones",
                             br(),
                             h4("Tasa de participacion"),
-                            h5("Varones"),
+                            h5("Actividades que componen el trabajo doméstico no remunerado de la población de 18 años y más según provincia"),
                             br(),
                             leafletOutput(outputId = "map_tasa2"),
                             br(),
+                            h6("Argentina - Año: 2013"),
+                            tags$h6("Fuente: Encuesta sobre Trabajo No Remunerado y Uso del Tiempo (INDEC)", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://www.indec.gob.ar/", "https://www.indec.gob.ar/")),
                             br()
                             )
                    
@@ -244,7 +251,7 @@ shinyUI(fluidPage(
               h4("Trabajo no remunerado"),
               h5("Promedio horas diarias por grupo de edad"),
               plotOutput(outputId = "graph_grupo_edad"), ## Plot output - GRUPO EDAD
-              h6("Año: 2016 - Ciudad Autonoma de Buenos Aires"),
+              h6("Ciudad Autonoma de Buenos Aires - Año: 2016"),
               tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
               br()
               # ,
@@ -306,7 +313,7 @@ shinyUI(fluidPage(
               h4("Trabajo no remunerado"),
               h5("Promedio horas por nivel de instruccion"),
               plotOutput(outputId = "graph_nivel_instruccion"), ## Plot output - Nivel instruccion
-              h6("Año: 2016 - Ciudad Autonoma de Buenos Aires"),
+              h6("Ciudad Autonoma de Buenos Aires - Año: 2016"),
               tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
               br()
               
@@ -366,7 +373,7 @@ shinyUI(fluidPage(
               h4("Trabajo no remunerado"),
               h5("Promedio horas diarias segun quintil de ingreso familiar"),
               plotOutput(outputId = "graph_quintil"), ## Plot output - quintil ingreso
-              h6("Año: 2016 - Ciudad Autonoma de Buenos Aires"),
+              h6("Ciudad Autonoma de Buenos Aires - Año: 2016"),
               tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
               br()
                       
@@ -409,7 +416,7 @@ shinyUI(fluidPage(
               h4("Trabajo no remunerado"),
               h5("Promedio horas diarias segun actividad no remunerada"),
               plotOutput(outputId = "graph_actividad"), ## Plot output - actividad
-              h6("Año: 2016 - Ciudad Autonoma de Buenos Aires"),
+              h6("Ciudad Autonoma de Buenos Aires - Año: 2016"),
               tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
               br()
               
@@ -478,7 +485,7 @@ shinyUI(fluidPage(
                      h4("Promedio anual nacional"),
                      h5("ingresos por genero de 1996 al 2017"),
                      plotOutput(outputId = "graph_promedio_anual"), ## Plot output - GRUPO EDAD
-                     h6("País: Argentina"),
+                     h6("Argentina - Años: 1996-2017"),
                      tags$h6("Fuente: Datos Argentina", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://datos.gob.ar/", "https://datos.gob.ar/")),
                      br()
                      # ,
@@ -520,7 +527,7 @@ shinyUI(fluidPage(
                 h4("Brecha salarial"),
                 h5("Relación entre los ingresos laborales mensuales de la ocupación principal, normalizados por la cantidad de horas, de mujeres y varones"),
                 plotOutput(outputId = "graph_brecha_norm"), ## Plot output - brecha normalizado
-                h6("Ciudad Autonoma de Buenos Aires"),
+                h6("Ciudad Autonoma de Buenos Aires - Años: 1990 - 2016"),
                 tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
                 br()
                 ) ## cierre mainPanel
@@ -586,7 +593,7 @@ shinyUI(fluidPage(
               h4("Brecha salarial"),
               h5("Relación entre el ingreso de las mujeres con respecto al de los varones según la fuente de ingresos y grupo de edad"),
               plotOutput(outputId = "graph_brecha_fuente"), ## Plot output - brecha fuente ingreso
-              h6("Ciudad Autonoma de Buenos Aires"),
+              h6("Ciudad Autonoma de Buenos Aires - Años: 2013 -2017"),
               tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
               br()
               
@@ -628,7 +635,7 @@ shinyUI(fluidPage(
               h4("Brecha salarial"),
               h5("Relación entre el ingreso promedio de las mujeres con respecto al de los varones según la rama de actividad a la que se dedica el establecimiento donde trabaja la persona"),
               plotOutput(outputId = "graph_brecha_rama"), ## Plot output - brecha rama actividad
-              h6("Año: 2017 - Ciudad Autonoma de Buenos Aires"),
+              h6("Ciudad Autonoma de Buenos Aires - Año: 2017"),
               tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
               br()
               ) ## cierre mainPanel
