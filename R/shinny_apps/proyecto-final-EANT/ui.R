@@ -645,7 +645,7 @@ shinyUI(fluidPage(
           tags$div( ## tag div
             tags$ul( ## tags lista
               tags$li(
-                tags$a(href = "https://www.color-hex.com/color-palette/95221", "Brisk")
+                tags$p(tags$a(href = "https://www.color-hex.com/color-palette/95221", "Brisk"), HTML('&nbsp;'),"|", HTML('&nbsp;'), includeHTML("include.html") )
               )
             ) ## cierre tags lista
           ), ## Cierre div
