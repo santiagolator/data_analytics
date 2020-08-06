@@ -58,6 +58,9 @@ shinyUI(fluidPage(
               ),
               tags$li(
                 tags$a(href = "https://www.indec.gob.ar/indec/web/Institucional-Indec-BasesDeDatos", "Encuesta Permanente de Hogares (EPH - INDEC)")
+              ),
+              tags$li(
+                tags$a(href = "https://datos.gob.ar/", "Datos Argentina")
               )
             ) ## cierre tags lista
           ), ## cierre tag div
