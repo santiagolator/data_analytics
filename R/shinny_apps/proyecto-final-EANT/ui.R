@@ -623,6 +623,9 @@ shinyUI(fluidPage(
               ),
               tags$li(
                 tags$a(href = "https://github.com/yixuan/showtext", "showtext")
+              ),
+              tags$li(
+                tags$a(href = "https://github.com/wilkox/treemapify", "treemapify")
               )
             ) ## cierre tags lista
           ), ## cierre tag div
