@@ -298,6 +298,9 @@ output$graph_promedio_anual <- renderPlot({
        # indice_tiempo <= input$anio_3[2],
        indice_tiempo %in% input$anio_3
      ) %>% 
+    mutate(
+      categoria = gsub("Hombres", "Varones", categoria)
+    ) %>% 
     ggplot(aes(valor, indice_tiempo))+
     geom_col(aes(fill = categoria),
              position = 'fill')+
