@@ -445,38 +445,38 @@ shinyUI(fluidPage(
                  sidebarLayout(
                    sidebarPanel(
                      
-                     # checkboxGroupButtons( ## Checkbox GENERO
-                     #   inputId = "sexo_4",
-                     #   label = "Seleccione el genero",
-                     #   choiceValues = unique(df_remuneracion_promedio$categoria),
-                     #   choiceNames = c("Mujeres", "Hombres"),
-                     #   selected = unique(df_remuneracion_promedio$categoria)[1:2],
-                     #   justified = TRUE
-                     # 
-                     # ), ## Cierre checkbox
+                     checkboxGroupButtons( ## Checkbox GENERO
+                       inputId = "sexo_4",
+                       label = "Seleccione el genero",
+                       choiceValues = unique(df_remuneracion_promedio$categoria),
+                       choiceNames = c("Mujeres", "Hombres"),
+                       selected = unique(df_remuneracion_promedio$categoria)[1:2],
+                       justified = TRUE
+
+                     ), ## Cierre checkbox
                      
-                     # sliderTextInput( ## Slider AÑO
-                     #   inputId = "anio_3",
-                     #   label = "Seleccione año",
-                     #   choices = sort(unique(df_remuneracion_promedio$indice_tiempo)),
-                     #   selected = c(min(unique(df_remuneracion_promedio$indice_tiempo)), max(unique(df_remuneracion_promedio$indice_tiempo))),
-                     #   from_min = min(unique(df_remuneracion_promedio$indice_tiempo)),
-                     #   from_max = max(unique(df_remuneracion_promedio$indice_tiempo)) - 1,
-                     #   to_min = min(unique(df_remuneracion_promedio$indice_tiempo)) + 1,
-                     #   to_max = max(unique(df_remuneracion_promedio$indice_tiempo)),
-                     #   dragRange = TRUE,
-                     #   animate = TRUE,
-                     #   hide_min_max = TRUE
-                     # ) ## cierre slider
-                     
-                     pickerInput( ## Dropdown AÑO
+                     sliderTextInput( ## Slider AÑO
                        inputId = "anio_3",
-                       label = "Seleccione el año",
+                       label = "Seleccione año",
                        choices = sort(unique(df_remuneracion_promedio$indice_tiempo)),
-                       selected = unique(df_remuneracion_promedio$indice_tiempo)[1:length(unique(df_remuneracion_promedio$indice_tiempo))],
-                       options = list(`actions-box` = TRUE),
-                       multiple = TRUE
-                     ) ## cierre dropdown
+                       selected = c(min(unique(df_remuneracion_promedio$indice_tiempo)), max(unique(df_remuneracion_promedio$indice_tiempo))),
+                       from_min = min(unique(df_remuneracion_promedio$indice_tiempo)),
+                       from_max = max(unique(df_remuneracion_promedio$indice_tiempo)) - 1,
+                       to_min = min(unique(df_remuneracion_promedio$indice_tiempo)) + 1,
+                       to_max = max(unique(df_remuneracion_promedio$indice_tiempo)),
+                       dragRange = TRUE,
+                       animate = TRUE,
+                       hide_min_max = TRUE
+                     ), ## cierre slider
+                     
+                     # pickerInput( ## Dropdown AÑO
+                     #   inputId = "anio_3",
+                     #   label = "Seleccione el año",
+                     #   choices = sort(unique(df_remuneracion_promedio$indice_tiempo)),
+                     #   selected = unique(df_remuneracion_promedio$indice_tiempo)[1:length(unique(df_remuneracion_promedio$indice_tiempo))],
+                     #   options = list(`actions-box` = TRUE),
+                     #   multiple = TRUE
+                     # ) ## cierre dropdown
                      
                    ), ## cierre sidebarPanel
                    
