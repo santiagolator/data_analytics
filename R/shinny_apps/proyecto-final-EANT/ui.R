@@ -638,6 +638,14 @@ shinyUI(fluidPage(
               )
             ) ## cierre tags lista
           ), ## Cierre div
+          h5("Paleta de colores"),
+          tags$div( ## tag div
+            tags$ul( ## tags lista
+              tags$li(
+                tags$a(href = "https://www.color-hex.com/color-palette/95221", "Brisk")
+              )
+            ) ## cierre tags lista
+          ), ## Cierre div
           br(),
           br()
         ) ## Cierre columna principal
