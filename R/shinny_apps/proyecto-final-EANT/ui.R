@@ -95,7 +95,7 @@ shinyUI(fluidPage(
                    tabPanel("Mujeres",
                             br(),
                             h4("Tasa de participacion"),
-                            h5("Actividades que componen el trabajo doméstico no remunerado de la población de 18 años y más, según provincia"),
+                            h5("Porcentaje de participación de mujeres de 18 años y más en tareas domésticas no remuneradas, según provincia"),
                             br(),
                             leafletOutput(outputId = "map_tasa1"),
                             br(),
@@ -108,7 +108,7 @@ shinyUI(fluidPage(
                    tabPanel("Varones",
                             br(),
                             h4("Tasa de participacion"),
-                            h5("Actividades que componen el trabajo doméstico no remunerado de la población de 18 años y más según, provincia"),
+                            h5("Porcentaje de participación de varones de 18 años y más en tareas domésticas no remuneradas, según provincia"),
                             br(),
                             leafletOutput(outputId = "map_tasa2"),
                             br(),
@@ -161,7 +161,7 @@ shinyUI(fluidPage(
                    mainPanel( ## inicio mainPanel
                      br(),
                      h4("Tasa de participacion"),
-                     h5("Actividades que componen el trabajo doméstico no remunerado de la población de 18 años y más por sexo y nivel educativo, según provincia"),
+                     h5("Porcentaje de participación en tareas domésticas no remuneradas según género y nivel educativo, por provincia"),
                      plotOutput(outputId = "graph_provincia"), ## Plot output - GRUPO EDAD
                      h6("Argentina - Año: 2013"),
                      tags$h6("Fuente: Encuesta sobre Trabajo No Remunerado y Uso del Tiempo (INDEC)", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://www.indec.gob.ar/", "https://www.indec.gob.ar/")),
