@@ -215,7 +215,7 @@ shinyUI(fluidPage(
         ), ## cierre TAB 2.1
 
         tabPanel(
-          "Nivel de instruccion", ## TAB 2.2 - Nivel instruccion
+          "Nivel educativo", ## TAB 2.2 - Nivel instruccion
           br(),
           sidebarLayout(
             sidebarPanel(
@@ -230,7 +230,7 @@ shinyUI(fluidPage(
 
               pickerInput( ## dropdown NIVEL INSTRUCCION
                 inputId = "nivel_instruccion",
-                label = "Seleccione el grado de educacion",
+                label = "Seleccione grado de educacion",
                 choices = unique(df_2_sin_total$nivel_instruccion),
                 # choiceValues = unique(df_2_sin_total$nivel_instruccion),
                 # choiceNames = c("Hasta secundario incompleto", "Secundario completo y superior incompleto", "Superior completo y mas"),
@@ -261,7 +261,7 @@ shinyUI(fluidPage(
             mainPanel(
               br(),
               h4("Trabajo no remunerado"),
-              h5("Promedio horas por nivel de instruccion"),
+              h5("Promedio horas por nivel educativo"),
               plotOutput(outputId = "graph_nivel_instruccion"), ## Plot output - Nivel instruccion
               h6("Ciudad Autonoma de Buenos Aires - Año: 2016"),
               tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
