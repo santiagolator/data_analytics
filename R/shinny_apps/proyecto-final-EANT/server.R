@@ -214,7 +214,7 @@ shinyServer(function(input, output) {
       ) %>%
       ggplot(aes(x = rama, y = brecha_ing, fill = rama)) +
       geom_bar(stat = "identity") + ### Le digo a ggplot que voy a indicar el parametro "y"
-      geom_text(aes(label = round(brecha_ing)), position = position_stack(vjust = 0.5), color = "white") +
+      geom_text(aes(label = round(brecha_ing)), position = position_stack(vjust = 0.3), color = "white") +
       #geom_label(aes(label = round(brecha_ing)), fill = "white", hjust = "center") +
       coord_cartesian(ylim = c(-50, 0)) +
       scale_fill_manual(values = color_barras_2) +
@@ -341,7 +341,7 @@ output$graph_actividad <- renderPlot({
       values = color_barras_2,
       name = "Actividad ",
       breaks = unique(df_9_horasact$grupos_actividad),
-      labels = c("Trabajo par\n el mercado", "Trabajo doméstico\nno remunerado", "Convivencia social y\nactividades recreativas", "Trabajo de cuidado no\nremunerado a miembros del hogar")
+      labels = c("Trabajo para\n el mercado", "Trabajo doméstico\nno remunerado", "Convivencia social y\nactividades recreativas", "Trabajo de cuidado no\nremunerado a miembros del hogar")
     ) +
     theme_ipsum_rc() +
     theme(legend.position = "bottom")
