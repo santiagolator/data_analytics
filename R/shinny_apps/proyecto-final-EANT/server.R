@@ -337,7 +337,7 @@ output$graph_actividad <- renderPlot({
     scale_fill_manual(
       values = color_barras_2,
       name = "Actividad ",
-      breaks = unique(grupos_actividad),
+      breaks = unique(df_9_horasact$grupos_actividad),
       labels = c("Trabajo par\n el mercado", "Trabajo doméstico\nno remunerado", "Convivencia social y\nactividades recreativas", "Trabajo de cuidado no\nremunerado a miembros del hogar")
     ) +
     theme_ipsum_rc() +
