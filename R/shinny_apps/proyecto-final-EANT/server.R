@@ -51,7 +51,11 @@ shinyServer(function(input, output) {
         plot.title = element_text(hjust = 0),
         plot.subtitle = element_text(hjust = 0),
         plot.caption = element_text(hjust = 0, color = "#a3a3a3"),
-        legend.position = "bottom"
+        legend.position = "bottom",
+        axis.title.y = element_text(size = 13),
+        axis.title.x = element_text(size = 13),
+        legend.title = element_text(size = 13),
+        legend.text = element_text(size = 13)
       )
   }) ## Fin grafico1
 
@@ -92,7 +96,11 @@ shinyServer(function(input, output) {
         plot.title = element_text(hjust = 0),
         plot.subtitle = element_text(hjust = 0),
         plot.caption = element_text(hjust = 0, color = "#a3a3a3"),
-        axis.text.y = element_text(size = 10, hjust = 0)
+        axis.text.y = element_text(size = 14, hjust = 0),
+        legend.title = element_text(size = 13),
+        legend.text = element_text(size = 13),
+        axis.title.x = element_text(size = 13),
+        axis.text.x = element_text(size = 14)
       )
   }) ## Fin grafico2
 
@@ -129,7 +137,11 @@ shinyServer(function(input, output) {
       theme(
         plot.title = element_text(hjust = 0),
         plot.subtitle = element_text(hjust = 0),
-        plot.caption = element_text(hjust = 0, color = "#a3a3a3")
+        plot.caption = element_text(hjust = 0, color = "#a3a3a3"),
+        legend.title = element_text(size = 13),
+        legend.text = element_text(size = 13),
+        axis.title.y = element_text(size = 13),
+        axis.text.x = element_text(size = 14)
       )
   }) ## Fin grafico3
 
@@ -160,7 +172,9 @@ shinyServer(function(input, output) {
       theme(
         plot.title = element_text(hjust = 0),
         plot.subtitle = element_text(hjust = 0, size = 11),
-        plot.caption = element_text(hjust = 0, color = "#a3a3a3",)
+        plot.caption = element_text(hjust = 0, color = "#a3a3a3"),
+        axis.text.y = element_text(size = 13),
+        axis.text.x = element_text(size = 13)
       )
   }) ## Fin grafico 4
 
@@ -200,7 +214,11 @@ shinyServer(function(input, output) {
         plot.title = element_text(hjust = 0),
         plot.subtitle = element_text(hjust = 0, size = 11),
         plot.caption = element_text(hjust = 0, color = "#a3a3a3"),
-        legend.position = "bottom"
+        legend.position = "bottom",
+        legend.title = element_text(size = 13),
+        legend.text = element_text(size = 13),
+        axis.text.y = element_text(size = 13),
+        axis.text.x = element_text(size = 13)
       )
   }) ## Fin grafico 5
 
@@ -233,7 +251,9 @@ shinyServer(function(input, output) {
         plot.title = element_text(hjust = 0),
         plot.subtitle = element_text(hjust = 0, size = 10.2),
         plot.caption = element_text(hjust = 0, color = "#a3a3a3"),
-        legend.position = "none"
+        legend.position = "none",
+        axis.text.y = element_text(size = 14),
+        axis.text.x = element_text(size = 14)
       )
   }) ## Cierre grafico 6
   
@@ -308,7 +328,8 @@ output$graph_promedio_anual <- renderPlot({
       categoria = gsub("Hombres", "Varones", categoria)
     ) %>% 
     ggplot(aes(indice_tiempo, valor))+
-    scale_fill_manual(values=c("#872642", "#F6C026"))+
+    scale_fill_manual(values=c("#872642", "#F6C026"),
+                      name = "Género")+
     geom_col(position = 'fill',
              aes(fill = categoria))+
     theme_ipsum_rc()+
@@ -317,7 +338,13 @@ output$graph_promedio_anual <- renderPlot({
          x = " ")+
     scale_y_continuous(labels = scales::percent,
                        n.breaks = 10)+
-    geom_hline(yintercept = 0.5, linetype = "dashed", size = 1.5, color = "#4C4556")
+    geom_hline(yintercept = 0.5, linetype = "dashed", size = 1.5, color = "#4C4556") +
+  theme(
+    legend.title = element_text(size = 13),
+    legend.text = element_text(size = 13),
+    axis.text.y = element_text(size = 13),
+    axis.text.x = element_text(size = 13)
+  )
   
   
 }) ## Fin grafico 7
@@ -347,7 +374,9 @@ output$graph_actividad <- renderPlot({
       labels = c("Trabajo para\n el mercado", "Trabajo doméstico\nno remunerado", "Convivencia social y\nactividades recreativas", "Trabajo de cuidado no\nremunerado a miembros del hogar")
     ) +
     theme_ipsum_rc() +
-    theme(legend.position = "bottom")
+    theme(legend.position = "bottom",
+          legend.title = element_text(size = 14),
+          legend.text = element_text(size = 13))
   
   
   
@@ -369,9 +398,9 @@ output$graph_provincia <- renderPlot({
     geom_col() +
     scale_fill_manual(
       values = color_barras_2,
-      name = "Nivel educativo ",
+      name = "Nivel\neducativo  ",
       breaks = unique(df_10$Nivel.educativo),
-      labels = c("Hasta primaria\ncompleta", "Secundaria incompleta\no completa", "Superior universitaria\nincompleta o completa")
+      labels = c("Hasta primaria\ncompleta ", "Secundaria incompleta\no completa ", "Superior universitaria\nincompleta o completa ")
     ) +
     labs(
       x = "",
@@ -381,7 +410,10 @@ output$graph_provincia <- renderPlot({
     coord_flip() +
     facet_wrap(~Provincia) +
     theme_ipsum_rc() +
-    theme(legend.position = "bottom")
+    theme(legend.position = "bottom",
+          legend.text = element_text(size = 12),
+          legend.title = element_text(size = 12)
+          )
   
 }) ## Fin grafico 9
 
