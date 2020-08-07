@@ -218,7 +218,8 @@ shinyServer(function(input, output) {
         legend.title = element_text(size = 13),
         legend.text = element_text(size = 13),
         axis.text.y = element_text(size = 13),
-        axis.text.x = element_text(size = 13)
+        axis.text.x = element_text(size = 13),
+        strip.text.x = element_text(size = 15)
       )
   }) ## Fin grafico 5
 
