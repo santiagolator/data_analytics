@@ -141,9 +141,11 @@ shinyServer(function(input, output) {
         anio <= input$anio_1[2]
       ) %>%
       ggplot(aes(x = anio, y = brecha_ing)) +
-      geom_smooth(method = "loess", color = "#4c4556", se = F, linetype = "dashed") + ## tendencia y grado de confianza
+      stat_smooth(geom ='line', color = "#A0D3F9",alpha = 0.6, se = FALSE, linetype = "dashed", size = 1.2) +
       geom_line(color = "#872642", size = 1.1) +
-      #geom_text(aes(label= brecha_ing), color = "black", hjust = 1.5) +
+      geom_text_repel(aes(label = round(brecha_ing, digits = 2)),size = 4, box.padding = unit(0.35, "lines"),point.padding = unit(0.3, "lines"), vjust = 0.5, hjust = -0.7 , alpha = 0.7, force = 1) +
+      #geom_smooth(method = "loess", color = "#4c4556", se = F, linetype = "dashed") + ## tendencia y grado de confianza
+            #geom_text(aes(label= brecha_ing), color = "black", hjust = 1.5) +
       #scale_color_discrete(name = "Y series", labels = c("Y2", "Y1")) +
       coord_cartesian(ylim = c(0.7, 1.15)) +
       labs(
