@@ -238,11 +238,20 @@ shinyUI(fluidPage(
                      
                      pickerInput( ## Dropdown Provincia
                        inputId = "provincia",
-                       label = "Seleccione el nivel educativo (hasta 6)",
+                       label = "Seleccione provincia (hasta 6)",
                        choices = unique(df_10$Provincia),
                        selected = unique(df_10$Provincia)[1:6],
                        options = list(`actions-box` = TRUE,
                                       `max-options` = 6),
+                       multiple = TRUE
+                     ), ## cierre dropdown
+                     
+                     pickerInput( ## Dropdown nivel educativo
+                       inputId = "nivel_instruccion_2",
+                       label = "Seleccione grado de educacion",
+                       choices = unique(df_10$Nivel.educativo),
+                       selected = unique(df_10$Nivel.educativo)[1:6],
+                       options = list(`actions-box` = TRUE),
                        multiple = TRUE
                      ), ## cierre dropdown
                      

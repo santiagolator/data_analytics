@@ -71,6 +71,7 @@ shinyServer(function(input, output) {
       ) %>%
       ggplot(aes(fill = sexo, y = promedio_hs_diarias, x = nivel_instruccion)) +
       geom_bar(stat = "identity", position = "dodge") +
+      geom_text(aes(label = promedio_hs_diarias), position = position_dodge(width = 0.9), hjust = 1.5, color = "white") +
       coord_flip() +
       scale_fill_manual(
         values = color_barras,
@@ -108,6 +109,7 @@ shinyServer(function(input, output) {
       ) %>%
       ggplot(aes(fill = sexo, y = promedio_hs_diarias, x = quintil_ing_familiar)) +
       geom_bar(stat = "identity", position = "dodge") +
+      geom_text(aes(label = promedio_hs_diarias), position = position_dodge(width = 0.9), vjust = 3, color = "white") +
       # geom_label(aes(label = promedio_hs_diarias), fill = "white", hjust = "center", size = 3) +
       scale_fill_manual(
         values = color_barras,
@@ -175,7 +177,7 @@ shinyServer(function(input, output) {
       ) %>%
       ggplot(aes(x = anio, y = brecha_ing, fill = fuente_ingresos)) +
       geom_bar(stat = "identity") + ### LE digo aggplot que voy a indicar el parametro "y"
-      # geom_label(aes(label = round(brecha_ing), fill = "white", hjust = "center")) +
+      geom_text(aes(label = round(brecha_ing)), position = position_stack(vjust = 0.5), color = "white") +
       facet_grid(~grupo_edad) +
       # coord_flip() +
       scale_fill_manual(
@@ -212,7 +214,8 @@ shinyServer(function(input, output) {
       ) %>%
       ggplot(aes(x = rama, y = brecha_ing, fill = rama)) +
       geom_bar(stat = "identity") + ### Le digo a ggplot que voy a indicar el parametro "y"
-      geom_label(aes(label = round(brecha_ing)), fill = "white", hjust = "center") +
+      geom_text(aes(label = round(brecha_ing)), position = position_stack(vjust = 0.5), color = "white") +
+      #geom_label(aes(label = round(brecha_ing)), fill = "white", hjust = "center") +
       coord_cartesian(ylim = c(-50, 0)) +
       scale_fill_manual(values = color_barras_2) +
       labs(
@@ -356,7 +359,8 @@ output$graph_provincia <- renderPlot({
   df_10 %>%
     filter(
       Genero %in% input$sexo5,
-      Provincia %in% input$provincia
+      Provincia %in% input$provincia,
+      Nivel.educativo %in% input$nivel_instruccion_2
       ) %>%
     ggplot(aes(x = Genero, y = Porcentaje, fill = Nivel.educativo)) +
     geom_col() +
