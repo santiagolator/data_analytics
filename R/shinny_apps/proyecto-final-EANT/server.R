@@ -344,5 +344,36 @@ output$graph_actividad <- renderPlot({
   
 }) ## Fin grafico 8
 
+
+
+### Grafico 9 - Nivel educativo por provincia
+
+output$graph_provincia <- renderPlot({
+  
+  df_10 %>%
+    filter(
+      Genero %in% input$sexo5,
+      Provincia %in% input$provincia
+      ) %>%
+    ggplot(aes(x = Genero, y = Porcentaje, fill = Nivel.educativo)) +
+    geom_col() +
+    scale_fill_manual(
+      values = color_barras_2,
+      name = "Nivel educativo ",
+      breaks = unique(df_10$Nivel.educativo),
+      labels = c("Hasta primaria\ncompleta", "Secundaria incompleta\no completa", "Superior universitaria\nincompleta o completa")
+    ) +
+    labs(
+      x = "",
+      y = ""
+    ) +
+    geom_text(aes(label = paste(Porcentaje, "%", sep = " ")), position = position_stack(vjust = 0.5), color = "white") +
+    coord_flip() +
+    facet_wrap(~Provincia) +
+    theme_ipsum_rc() +
+    theme(legend.position = "bottom")
+  
+}) ## Fin grafico 9
+
   
 })

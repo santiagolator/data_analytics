@@ -179,14 +179,14 @@ shinyUI(fluidPage(
       br(),
       tabsetPanel( ## SUB TABSET
         
-        tabPanel("Contexto nacional", ## TAB 1.1 Tasa participacion
+        tabPanel("Contexto nacional - Participacion", ## TAB 1.1 Tasa participacion
                  br(),
                  navlistPanel( ## NAVLIST GENERO
                    
                    tabPanel("Mujeres",
                             br(),
                             h4("Tasa de participacion"),
-                            h5("Actividades que componen el trabajo doméstico no remunerado de la población de 18 años y más según provincia"),
+                            h5("Actividades que componen el trabajo doméstico no remunerado de la población de 18 años y más, según provincia"),
                             br(),
                             leafletOutput(outputId = "map_tasa1"),
                             br(),
@@ -208,7 +208,7 @@ shinyUI(fluidPage(
                    tabPanel("Varones",
                             br(),
                             h4("Tasa de participacion"),
-                            h5("Actividades que componen el trabajo doméstico no remunerado de la población de 18 años y más según provincia"),
+                            h5("Actividades que componen el trabajo doméstico no remunerado de la población de 18 años y más según, provincia"),
                             br(),
                             leafletOutput(outputId = "map_tasa2"),
                             br(),
@@ -220,6 +220,55 @@ shinyUI(fluidPage(
                  ) ## Cierre NAVLIST
                  
         ), ## Cierre TAB1.1
+        
+        
+        tabPanel("Contexto nacional - Nivel educativo", ## TAB 1.2 Nivel educativo
+                 br(),
+                 sidebarLayout(
+                   sidebarPanel(
+                     
+                     checkboxGroupButtons( ## Checkbox GENERO
+                       inputId = "sexo5",
+                       label = "Seleccione el género",
+                       choiceValues = unique(df_10$Genero),
+                       choiceNames = c("Mujeres", "Varones"),
+                       selected = unique(df_10$Genero)[1:2],
+                       justified = TRUE
+                     ), ## cierre checkbox
+                     
+                     pickerInput( ## Dropdown Provincia
+                       inputId = "provincia",
+                       label = "Seleccione el nivel educativo (hasta 6)",
+                       choices = unique(df_10$Provincia),
+                       selected = unique(df_10$Provincia)[1:6],
+                       options = list(`actions-box` = TRUE,
+                                      `max-options` = 6),
+                       multiple = TRUE
+                     ), ## cierre dropdown
+                     
+                   ), ## Cierre sidebarPanel
+                   
+                   
+                   mainPanel( ## inicio mainPanel
+                     br(),
+                     h4("Tasa de participacion"),
+                     h5("Actividades que componen el trabajo doméstico no remunerado de la población de 18 años y más por sexo y nivel educativo, según provincia"),
+                     plotOutput(outputId = "graph_provincia"), ## Plot output - GRUPO EDAD
+                     h6("Argentina - Año: 2013"),
+                     tags$h6("Fuente: Encuesta sobre Trabajo No Remunerado y Uso del Tiempo (INDEC)", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://www.indec.gob.ar/", "https://www.indec.gob.ar/")),
+                     br()
+                     # ,
+                     # br(),
+                     # DT::dataTableOutput("tabla_1"),
+                     # br()
+                     
+                   ) ## Cierre mainPanel
+                   
+                   
+                 ) ## Cierre sidebarLayout
+          
+        ), ## Cierre TAB 1.2
+        
         
         tabPanel(
           "Grupo de edad", ## TAB 2.1 - Grupo Edad
