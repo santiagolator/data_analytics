@@ -30,6 +30,7 @@ shinyServer(function(input, output) {
         color = sexo
       )) +
       geom_point(size = 3.5) +
+      geom_text_repel(aes(label = round(promedio_hs_diarias, digits = 2)), size = 3, box.padding = unit(0.35, "lines"), point.padding = unit(0.3, "lines"), vjust = 0.5, hjust = -0.7, alpha = 0.8, force = 1) +
       coord_cartesian(ylim = c(0.5, 4.5)) +
       scale_color_manual(
         values = color_puntos,
