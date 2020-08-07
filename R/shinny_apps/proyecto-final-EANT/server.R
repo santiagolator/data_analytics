@@ -216,7 +216,7 @@ shinyServer(function(input, output) {
         plot.caption = element_text(hjust = 0, color = "#a3a3a3"),
         legend.position = "bottom",
         legend.title = element_text(size = 13),
-        legend.text = element_text(size = 13),
+        legend.text = element_text(size = 13, margin = margin(r = 10, unit = "pt")),
         axis.text.y = element_text(size = 13),
         axis.text.x = element_text(size = 13),
         strip.text.x = element_text(size = 15)
@@ -377,7 +377,7 @@ output$graph_actividad <- renderPlot({
     theme_ipsum_rc() +
     theme(legend.position = "bottom",
           legend.title = element_text(size = 14),
-          legend.text = element_text(size = 13))
+          legend.text = element_text(size = 13, margin = margin(r = 10, unit = "pt")))
   
   
   
@@ -412,7 +412,7 @@ output$graph_provincia <- renderPlot({
     facet_wrap(~Provincia) +
     theme_ipsum_rc() +
     theme(legend.position = "bottom",
-          legend.text = element_text(size = 12),
+          legend.text = element_text(size = 12, margin = margin(r = 11, unit = "pt")), ### margin para separar las keys en legend
           legend.title = element_text(size = 12)
           )
   
