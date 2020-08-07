@@ -11,6 +11,7 @@ library("ggplot2")
 library("viridis")
 library("leaflet")
 library("treemapify")
+library("ggrepel")
 
 # hrbrthemes::import_roboto_condensed()
 

@@ -76,98 +76,7 @@ shinyUI(fluidPage(
       
     ), ## Cierre tabPanel
     
-    #  tabPanel(
-    #    "Situacion nacional", ## TAB 1 - Situacion nacional
-    #    br(),
-    #    tabsetPanel( ## SUB TABSET
-    #      tabPanel("Tasa participacion", ## TAB 1.1 Tasa participacion
-    #               br(),
-    #               navlistPanel( ## NAVLIST GENERO
-    #                 
-    #                            tabPanel("Mujeres",
-    #                                     leafletOutput(outputId = "map_tasa1")),
-    #                            
-    #                             # absolutePanel(top = 10, right = 10,
-    #                             #               selectInput(
-    #                             #                 inputId = "tasa_mapa", 
-    #                             #                 label = "Tasa participacion",
-    #                             #                 choices = c("Mujeres" = "tasa_participacion_m", 
-    #                             #                             "Varones" = "tasa_participacion_v")
-    #                             #               )
-    #                             # ),
-    #                            
-    #                            
-    #                             tabPanel("Varones",
-    #                                      leafletOutput(outputId = "map_tasa2"))
-    #  
-    #               ) ## Cierre NAVLIST
-    #  
-    #    ), ## Cierre TAB1.1
-    #    
-    #    tabPanel("Promedio anual", ## TAB 1.2 Promedio anual
-    #             br(),
-    #             sidebarLayout(
-    #               sidebarPanel(
-    #                 
-    #                 # checkboxGroupButtons( ## Checkbox GENERO
-    #                 #   inputId = "sexo_4",
-    #                 #   label = "Seleccione el genero",
-    #                 #   choiceValues = unique(df_remuneracion_promedio$categoria),
-    #                 #   choiceNames = c("Mujeres", "Hombres"),
-    #                 #   selected = unique(df_remuneracion_promedio$categoria)[1:2],
-    #                 #   justified = TRUE
-    #                 # 
-    #                 # ), ## Cierre checkbox
-    #                 
-    #                 # sliderTextInput( ## Slider AÑO
-    #                 #   inputId = "anio_3",
-    #                 #   label = "Seleccione año",
-    #                 #   choices = sort(unique(df_remuneracion_promedio$indice_tiempo)),
-    #                 #   selected = c(min(unique(df_remuneracion_promedio$indice_tiempo)), max(unique(df_remuneracion_promedio$indice_tiempo))),
-    #                 #   from_min = min(unique(df_remuneracion_promedio$indice_tiempo)),
-    #                 #   from_max = max(unique(df_remuneracion_promedio$indice_tiempo)) - 1,
-    #                 #   to_min = min(unique(df_remuneracion_promedio$indice_tiempo)) + 1,
-    #                 #   to_max = max(unique(df_remuneracion_promedio$indice_tiempo)),
-    #                 #   dragRange = TRUE,
-    #                 #   animate = TRUE,
-    #                 #   hide_min_max = TRUE
-    #                 # ) ## cierre slider
-    #                 
-    #                 pickerInput( ## Dropdown AÑO
-    #                   inputId = "anio_3",
-    #                   label = "Seleccione el año",
-    #                   choices = sort(unique(df_remuneracion_promedio$indice_tiempo)),
-    #                   selected = unique(df_remuneracion_promedio$indice_tiempo)[1:length(unique(df_remuneracion_promedio$indice_tiempo))],
-    #                   options = list(`actions-box` = TRUE),
-    #                   multiple = TRUE
-    #                 ) ## cierre dropdown
-    #                 
-    #               ), ## cierre sidebarPanel
-    #               
-    #               mainPanel( ## inicio mainPanel Promedio anual
-    #                 br(),
-    #                 h4("Promedio anual nacional"),
-    #                 h5("ingresos por genero de 1996 al 2017"),
-    #                 plotOutput(outputId = "graph_promedio_anual"), ## Plot output - GRUPO EDAD
-    #                 h6("País: Argentina"),
-    #                 tags$h6("Fuente: Datos Argentina", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://datos.gob.ar/", "https://datos.gob.ar/")),
-    #                 br()
-    #                 # ,
-    #                 # br(),
-    #                 # DT::dataTableOutput("tabla_1"),
-    #                 # br()
-    #                 
-    #               ) ## Cierre mainPanel
-    #               
-    #             )
-    #             
-    #             ) ## Cierre TAB 1.2
-    #  
-    #    ), ## Cierre SUB TABSET
-    #    
-    # ), ## Cierre TAB 1
-    
-    
+
     tabPanel(
       "Trabajo no remunerado", ## TAB 2 - Trabajo no remunerado
       br(),
@@ -195,16 +104,7 @@ shinyUI(fluidPage(
                             br()
                             ),
                    
-                   # absolutePanel(top = 10, right = 10,
-                   #               selectInput(
-                   #                 inputId = "tasa_mapa", 
-                   #                 label = "Tasa participacion",
-                   #                 choices = c("Mujeres" = "tasa_participacion_m", 
-                   #                             "Varones" = "tasa_participacion_v")
-                   #               )
-                   # ),
-                   
-                   
+
                    tabPanel("Varones",
                             br(),
                             h4("Tasa de participacion"),
@@ -266,11 +166,7 @@ shinyUI(fluidPage(
                      h6("Argentina - Año: 2013"),
                      tags$h6("Fuente: Encuesta sobre Trabajo No Remunerado y Uso del Tiempo (INDEC)", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://www.indec.gob.ar/", "https://www.indec.gob.ar/")),
                      br()
-                     # ,
-                     # br(),
-                     # DT::dataTableOutput("tabla_1"),
-                     # br()
-                     
+
                    ) ## Cierre mainPanel
                    
                    
@@ -312,11 +208,7 @@ shinyUI(fluidPage(
               h6("Ciudad Autonoma de Buenos Aires - Año: 2016"),
               tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
               br()
-              # ,
-              # br(),
-              # DT::dataTableOutput("tabla_1"),
-              # br()
-              
+
               ) ## Cierre mainPanel
             
           ) ## cierre sidebarLayout
@@ -503,16 +395,6 @@ shinyUI(fluidPage(
                  sidebarLayout(
                    sidebarPanel(
                      
-                     # checkboxGroupButtons( ## Checkbox GENERO
-                     #   inputId = "sexo_4",
-                     #   label = "Seleccione el genero",
-                     #   choiceValues = unique(df_remuneracion_promedio$categoria),
-                     #   choiceNames = c("Mujeres", "Hombres"),
-                     #   selected = unique(df_remuneracion_promedio$categoria)[1:2],
-                     #   justified = TRUE
-                     # 
-                     # ), ## Cierre checkbox
-                     
                      sliderTextInput( ## Slider AÑO
                        inputId = "anio_3",
                        label = "Seleccione año",
@@ -527,15 +409,7 @@ shinyUI(fluidPage(
                        hide_min_max = TRUE
                      ), ## cierre slider
                      
-                     # pickerInput( ## Dropdown AÑO
-                     #   inputId = "anio_3",
-                     #   label = "Seleccione el año",
-                     #   choices = sort(unique(df_remuneracion_promedio$indice_tiempo)),
-                     #   selected = unique(df_remuneracion_promedio$indice_tiempo)[1:length(unique(df_remuneracion_promedio$indice_tiempo))],
-                     #   options = list(`actions-box` = TRUE),
-                     #   multiple = TRUE
-                     # ) ## cierre dropdown
-                     
+
                    ), ## cierre sidebarPanel
                    
                    mainPanel( ## inicio mainPanel Promedio anual
@@ -546,10 +420,7 @@ shinyUI(fluidPage(
                      h6("Argentina - Años: 1996-2017"),
                      tags$h6("Fuente: Datos Argentina", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://datos.gob.ar/", "https://datos.gob.ar/")),
                      br()
-                     # ,
-                     # br(),
-                     # DT::dataTableOutput("tabla_1"),
-                     # br()
+
                      
                    ) ## Cierre mainPanel
                    
