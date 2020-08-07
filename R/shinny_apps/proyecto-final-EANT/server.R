@@ -29,8 +29,8 @@ shinyServer(function(input, output) {
         y = promedio_hs_diarias,
         color = sexo
       )) +
-      geom_point(size = 3.5) +
-      geom_text_repel(aes(label = round(promedio_hs_diarias, digits = 2)), size = 3, box.padding = unit(0.35, "lines"), point.padding = unit(0.3, "lines"), vjust = 0.5, hjust = -0.7, alpha = 0.8, force = 1) +
+      geom_point(size = 5) +
+      geom_text_repel(aes(label = round(promedio_hs_diarias, digits = 2)), size = 5, box.padding = unit(0.35, "lines"), point.padding = unit(0.3, "lines"), vjust = 0.5, hjust = -0.7, alpha = 0.8, force = 1) +
       coord_cartesian(ylim = c(0.5, 4.5)) +
       scale_color_manual(
         values = color_puntos,
@@ -72,7 +72,7 @@ shinyServer(function(input, output) {
       ) %>%
       ggplot(aes(fill = sexo, y = promedio_hs_diarias, x = nivel_instruccion)) +
       geom_bar(stat = "identity", position = "dodge") +
-      geom_text(aes(label = promedio_hs_diarias), position = position_dodge(width = 0.9), hjust = 1.5, color = "white") +
+      geom_text(aes(label = promedio_hs_diarias), position = position_dodge(width = 0.9), hjust = 1.5, color = "white", size = 5) +
       coord_flip() +
       scale_fill_manual(
         values = color_barras,
@@ -110,7 +110,7 @@ shinyServer(function(input, output) {
       ) %>%
       ggplot(aes(fill = sexo, y = promedio_hs_diarias, x = quintil_ing_familiar)) +
       geom_bar(stat = "identity", position = "dodge") +
-      geom_text(aes(label = promedio_hs_diarias), position = position_dodge(width = 0.9), vjust = 3, color = "white") +
+      geom_text(aes(label = promedio_hs_diarias), position = position_dodge(width = 0.9), vjust = 3, color = "white", size = 5) +
       # geom_label(aes(label = promedio_hs_diarias), fill = "white", hjust = "center", size = 3) +
       scale_fill_manual(
         values = color_barras,
@@ -217,7 +217,7 @@ shinyServer(function(input, output) {
       ) %>%
       ggplot(aes(x = rama, y = brecha_ing, fill = rama)) +
       geom_bar(stat = "identity") + ### Le digo a ggplot que voy a indicar el parametro "y"
-      geom_text(aes(label = round(brecha_ing)), position = position_stack(vjust = 0.3), color = "white") +
+      geom_text(aes(label = round(brecha_ing)), position = position_stack(vjust = 0.5), color = "white", size = 7) +
       #geom_label(aes(label = round(brecha_ing)), fill = "white", hjust = "center") +
       coord_cartesian(ylim = c(-50, 0)) +
       scale_fill_manual(values = color_barras_2) +
@@ -317,7 +317,7 @@ output$graph_promedio_anual <- renderPlot({
          x = " ")+
     scale_y_continuous(labels = scales::percent,
                        n.breaks = 10)+
-    geom_hline(yintercept = 0.5, linetype = "dashed", size = 1.5, color = "#a0d3f9")
+    geom_hline(yintercept = 0.5, linetype = "dashed", size = 1.5, color = "#4C4556")
   
   
 }) ## Fin grafico 7

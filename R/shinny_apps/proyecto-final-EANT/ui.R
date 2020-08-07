@@ -363,8 +363,8 @@ shinyUI(fluidPage(
             
             mainPanel(
               br(),
-              h4("Trabajo no remunerado"),
-              h5("Promedio horas diarias segun actividad no remunerada"),
+              h4("Uso del tiempo"),
+              h5("Promedio de horas diarias dedicadas a tareas de cuidado, actividades de mercado y ocio"),
               plotOutput(outputId = "graph_actividad"), ## Plot output - actividad
               h6("Ciudad Autonoma de Buenos Aires - Año: 2016"),
               tags$h6("Fuente: Buenos Aires Data", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://data.buenosaires.gob.ar/", "https://data.buenosaires.gob.ar/")),
