@@ -1,7 +1,7 @@
-# Trabajo remunerado y brecha social
+# Trabajo no remunerado y brecha salarial
 ## Trabajo final curso Data Analytics - EANT 2020
 
-[Link directo en Shinyapps](https://santiago-lator.shinyapps.io/proyecto-final-EANT)
+- [Link directo en Shinyapps](https://santiago-lator.shinyapps.io/proyecto-final-EANT)
 
 ## Abstract
 ### Problema
