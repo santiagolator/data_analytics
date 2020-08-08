@@ -1,8 +1,7 @@
 # Dataset original
 
 ```{r}
-df <- read.csv("https://cdn.buenosaires.gob.ar/datosabiertos/datasets/salud/casos-covid-19/casos_covid19.csv",
-         encoding = "UTF-8")
+df <- read.csv("https://cdn.buenosaires.gob.ar/datosabiertos/datasets/salud/casos-covid-19/casos_covid19.csv", encoding = "UTF-8")
 ```
 
 # Transformacion dataset
@@ -13,11 +12,14 @@ library("tidyverse")
 df_tipo_contagio_edad_agrupado <- df %>%
   filter(
     !is.na(tipo_contagio),
-    !is.na(genero),
+    !is.na(sexo),
     !is.na(edad),
     clasificacion == "confirmado"
   ) %>%
   mutate(
+    sexo = gsub("masculino", "Varones", sexo),
+    sexo = gsub("femenino", "Mujeres", sexo),
+    mes = month(ymd(fecha_clasificacion), label = T), ### dato a usar mas adelante?
     grupo_edad = case_when(
       edad <=18 ~ "0-18",
       edad > 18 & edad <= 35 ~ "19-35",
@@ -28,30 +30,39 @@ df_tipo_contagio_edad_agrupado <- df %>%
       is.na(edad) ~ "Edad\ndesconocida"
     )
   ) %>% 
-  count(grupo_edad, tipo_contagio, genero, name = "casos", sort = T)
+  count(grupo_edad, tipo_contagio, sexo, name = "casos", sort = T)
 
 ```
 # Plot
 ```{r}
 library("ggplot2")
 library("hrbrthemes")
-library("wesanderson") # las paletas de las pelis! <3
+library("wesanderson")
 
 paleta <- wes_palette("Zissou1", 100, type = "continuous")
 
-df_tipo_contagio_edad_agrupado %>% 
+df_tipo_contagio_edad_agrupado %>%
+  mutate(
+    tipo_contagio = gsub("Trabajador de la Salud", "Trabajador\nde la Salud", tipo_contagio)
+  ) %>% 
   ggplot(aes(x = grupo_edad, y = tipo_contagio, fill = casos)) +
-  geom_tile(colour="white", size=0.5) +
-  geom_text(aes(label= casos), color = "white") +
-  facet_grid(~genero) +
+  geom_tile(colour = "white", size = 0.5) +
+  geom_text(aes(label = casos), color = "white") +
+  facet_grid(~sexo) +
   scale_fill_gradientn(colors = paleta) +
-  coord_cartesian(expand=FALSE) +
-  labs(x = " ", 
-       y = " ", 
-       title = "Covid-19 | CABA", 
-       subtitle = "Casos confirmados por tipo de contagio, grupo de edad y género", 
-       caption = "Autor: Santiago Lator | tw: @SantiagoLator\n\nFuente: https://data.buenosaires.gob.ar/dataset/casos-covid-19\n",
-       fill = "Casos") +
-  theme_ft_rc()
+  coord_cartesian(expand = FALSE) +
+  labs(
+    x = " ",
+    y = " ",
+    title = "Covid-19 | CABA",
+    subtitle = "Casos confirmados por tipo de contagio, grupo de edad y género",
+    caption = "Autor: Santiago Lator | tw: @SantiagoLator\n\nFuente: https://data.buenosaires.gob.ar/dataset/casos-covid-19\n",
+    fill = "Casos"
+  ) +
+  theme_ft_rc() +
+  theme(
+    axis.text.y.left = element_text(margin = margin(r = 10, unit = "pt"))
+  ) +
+  ggsave(filename = "foo150.png", height = 16, width = 28, dpi = 300, units = "cm", device = "png")
 
 ```
