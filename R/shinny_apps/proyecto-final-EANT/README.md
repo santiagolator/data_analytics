@@ -3,6 +3,8 @@
 
 - [Link directo en Shinyapps](https://santiago-lator.shinyapps.io/proyecto-final-EANT)
 
+![](https://github.com/santiagolator/data_analytics/raw/master/R/shinny_apps/proyecto-final-EANT/app_shiny.gif)
+
 ## Abstract
 ### Problema
 
