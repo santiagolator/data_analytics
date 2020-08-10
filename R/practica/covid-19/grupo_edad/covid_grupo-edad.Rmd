@@ -1,0 +1,148 @@
+---
+title: "covid-19 - CABA"
+date: "Fecha: `r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    df_print: paged
+    theme: lumen
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+author: Santiago Lator
+---
+
+# Librerias
+```{r}
+library("tidyverse")
+library("ggplot2")
+library("hrbrthemes")
+library("lubridate")
+library("patchwork")
+
+hrbrthemes::import_roboto_condensed()
+```
+
+
+# Dataset original
+```{r Dataset}
+df <- read.csv("https://cdn.buenosaires.gob.ar/datosabiertos/datasets/salud/casos-covid-19/casos_covid19.csv",
+         encoding = "UTF-8")
+
+#glimpse(df)
+```
+
+# Analisis y transformacion
+```{r}
+df_edad_agrupado_tipo_total <- df %>%
+  filter(
+    #!is.na(tipo_contagio),
+    #!is.na(sexo),
+    !is.na(edad),
+    clasificacion == "confirmado",
+    is.na(fallecido)
+  ) %>%
+  mutate(
+    tipo_contagio = ifelse(is.na(tipo_contagio), "Desconocido", tipo_contagio),
+    sexo = gsub("masculino", "Varones", sexo),
+    sexo = gsub("femenino", "Mujeres", sexo),
+    #mes = month(ymd(fecha_clasificacion), label = T), ### dato a usar mas adelante?
+    grupo_edad = case_when(
+      edad <=18 ~ "0-18",
+      edad > 18 & edad <= 35 ~ "19-35",
+      edad > 35 & edad <= 50 ~ "36-50",
+      edad > 50 & edad <= 65 ~ "51-65",
+      edad > 65 & edad <= 80 ~ "66-80",
+      edad >= 80 ~ "Mas de 80",
+      is.na(edad) ~ "Edad\ndesconocida"
+    )
+  ) %>% 
+  count(tipo_contagio,grupo_edad, name = "casos_confirmados", sort = T)
+
+df_fallecido_tipo_contagio_edad_agrupado <- df %>%
+  filter(
+    !is.na(tipo_contagio),
+    !is.na(sexo),
+    !is.na(edad),
+    fallecido == "si"
+  ) %>%
+  mutate(
+    sexo = gsub("masculino", "Varones", sexo),
+    sexo = gsub("femenino", "Mujeres", sexo),
+    #mes = month(ymd(fecha_clasificacion), label = T), ### dato a usar mas adelante?
+    grupo_edad = case_when(
+      edad <=18 ~ "0-18",
+      edad > 18 & edad <= 35 ~ "19-35",
+      edad > 35 & edad <= 50 ~ "36-50",
+      edad > 50 & edad <= 65 ~ "51-65",
+      edad > 65 & edad <= 80 ~ "66-80",
+      edad >= 80 ~ "Mas de 80",
+      is.na(edad) ~ "Edad\ndesconocida"
+    )
+  ) %>% 
+  count(tipo_contagio, grupo_edad, name = "fallecimientos", sort = T)
+```
+
+# Plots
+```{r}
+plot3 <- df_edad_agrupado_tipo_total %>% 
+  filter(
+   tipo_contagio != "Desconocido" 
+  ) %>%
+  mutate(
+    tipo_contagio = gsub("Trabajador de la Salud", "Trabajador salud", tipo_contagio),
+    grupo_edad = gsub("Mas de 80", "Mas\nde 80", grupo_edad)
+  ) %>% 
+  ggplot(aes(x = grupo_edad, y = casos_confirmados, fill = tipo_contagio)) +
+  geom_col(position = "stack") +
+  scale_fill_brewer( palette = "Set2") +
+  #guides(fill=guide_legend(ncol = 3)) +
+  labs(
+    subtitle = "Casos confirmados",
+    x = " ",
+    y = " ",
+    fill = "Tipo de contagio"
+  )
+
+plot4 <- df_fallecido_tipo_contagio_edad_agrupado %>%
+    mutate(
+    tipo_contagio = gsub("Trabajador de la Salud", "Trabajador salud", tipo_contagio),  
+    grupo_edad = gsub("Mas de 80", "Mas\nde 80", grupo_edad)
+  ) %>% 
+  ggplot(aes(x = grupo_edad, y = fallecimientos, fill = tipo_contagio)) +
+  geom_col(position = "stack") +
+  scale_fill_brewer( palette = "Set2") +
+  #guides(fill=guide_legend(ncol = 3)) +
+    labs(
+    subtitle = "Fallecimientos",
+    x = " ",
+    y = " ",
+    fill = "Tipo de contagio"
+  )
+```
+
+# Patchwork
+```{r}
+patchwork_2 <- plot3 + plot4
+
+p <- patchwork_2 + 
+  plot_layout(guides = "collect") +
+  plot_annotation(
+  tag_levels = "A",
+  tag_prefix = "fig.",
+  title = "Covid-19 | CABA",
+  subtitle = "Casos confirmados y fallecimientos por grupo de edad y tipo de contagio",
+  caption = "Autor: Santiago Lator | tw: @SantiagoLator\n\nFuente: https://data.buenosaires.gob.ar/dataset/casos-covid-19\n",
+  theme = theme(plot.title = element_text(size = 18),
+                plot.caption = element_text(size = 10, hjust = 0))) &
+  theme_ft_rc() +
+  theme(text = element_text('Roboto Condensed'),
+        legend.position = "bottom",
+        legend.text = element_text(size = 10, margin = margin(r = 10, unit = "pt")),
+        legend.title = element_text(size = 11, margin = margin(r = 10, unit = "pt"))
+        )
+
+#ggsave(filename = "covid-caba_patchwork_grupo-edad.png", p, height = 18, width = 25, dpi = 300, units = "cm", device = "png")
+```
+
+

@@ -1,14 +1,38 @@
+---
+title: "Mapa de calor - COVID-19 - CABA"
+author: Santiago Lator
+date: "Fecha: `r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    df_print: paged
+    theme: lumen
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+abstract: "Con los datos publicos del gobierno de la Ciudad Autonoma de Buenos Aires (https://data.buenosaires.gob.ar/) me propuse generar una visualizacion que cruce los casos confirmados de COVID-19 por tipo de contagio y grupo edad, separados por género."
+thanks: "Github del proyecto: https://github.com/santiagolator/data_analytics/tree/master/R/practica/covid-19/heatmap"
+---
+
+# Librerias
+```{r include=FALSE}
+library("ggplot2")
+library("hrbrthemes")
+library("wesanderson")
+library("tidyverse")
+```
+
+
 # Dataset original
 
-```{r dataset}
+```{r dataset, include=FALSE}
 df <- read.csv("https://cdn.buenosaires.gob.ar/datosabiertos/datasets/salud/casos-covid-19/casos_covid19.csv", encoding = "UTF-8")
 ```
 
+
 # Transformacion dataset
 
-```{r tidying}
-library("tidyverse")
-
+```{r tidying, include=FALSE}
 df_tipo_contagio_edad_agrupado <- df %>%
   filter(
     !is.na(tipo_contagio),
@@ -19,7 +43,6 @@ df_tipo_contagio_edad_agrupado <- df %>%
   mutate(
     sexo = gsub("masculino", "Varones", sexo),
     sexo = gsub("femenino", "Mujeres", sexo),
-    #mes = month(ymd(fecha_clasificacion), label = T), ### dato a usar mas adelante?
     grupo_edad = case_when(
       edad <=18 ~ "0-18",
       edad > 18 & edad <= 35 ~ "19-35",
@@ -31,15 +54,12 @@ df_tipo_contagio_edad_agrupado <- df %>%
     )
   ) %>% 
   count(grupo_edad, tipo_contagio, sexo, name = "casos", sort = T)
-
 ```
-# Plot
-```{r plot}
-library("ggplot2")
-library("hrbrthemes")
-library("wesanderson")
 
-paleta <- wes_palette("Zissou1", 100, type = "continuous")
+# Plot
+
+```{r plot, eval=FALSE, include=FALSE}
+paleta <- wes_palette("Zissou1", 100, type = "continuous") ## Las paletas de las peliculas! <3
 
 df_tipo_contagio_edad_agrupado %>%
   mutate(
@@ -62,7 +82,8 @@ df_tipo_contagio_edad_agrupado %>%
   theme_ft_rc() +
   theme(
     axis.text.y.left = element_text(margin = margin(r = 10, unit = "pt"))
-  ) #+
-  #ggsave(filename = "foo150.png", height = 16, width = 28, dpi = 300, units = "cm", device = "png")
-
+  ) +
+  ggsave(filename = "foo150.png", height = 16, width = 28, dpi = 300, units = "cm", device = "png")
 ```
+
+![](https://github.com/santiagolator/data_analytics/raw/master/R/practica/covid-19/heatmap/covid-caba_plot-heatmap-2.png)
