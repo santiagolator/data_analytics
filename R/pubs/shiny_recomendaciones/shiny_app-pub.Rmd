@@ -1,0 +1,75 @@
+---
+title: "Publicar una Shinyapp"
+author: Santiago Lator
+date: "Fecha: `r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    df_print: paged
+    theme: lumen
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+abstract: "Algunas recomendaciones claves para principiantes como yo, reunidas en un solo lugar :)"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Intro
+
+Mi camino en R comenzó hace relativamente muy poco, pero desde el principio supe que queria meterme de lleno en el desarrollo de aplicaciones web combinando mi pasion por el lenguaje HTML, CSS y Javascript.
+
+Asi es que, luego de realizar un curso intensivo en R, aproveché el trabajo final para empezar a meterme en el maravilloso mundo de Shiny.
+
+## Primeros pasos
+
+Mi primer recomendación es configurar el espacio de trabajo. Esto es, dejar todo listo para la publicacion de la app una vez que estemos satisfechos con nuestro trabajo. Doy por descontado que estamos trabajando con RStudio y su fantastico ecosistema.
+
+### Cuenta en Shinyapps
+Para esto, nos vamos a hacer una cuenta en [shinyapps.io](https://www.shinyapps.io/). Hay varios tipos de cuenta, con distintos objetivos y con sus precios correspondientes. Como siempre, la gente de RStudio ofrece una opcion gratuita con las caracteristicas suficientes para comenzar a probar.
+
+El plan gratuito incluye 5 aplicaciones alojadas y hasta 25 horas de actividad mensuales (la app permanece idle hasta algun acceso). Esto ultimo es muy importante a la hora de subir la version final de nuestra aplicacion, ya que las horas se contabilizan por ciclo mensual y cuando se alcanza el limite en la cuenta gratuita deja de estar disponible para el acceso publico hasta el proximo ciclo. 
+
+Para nuestras primeras aplicaciones, suponiento que no apuntamos a ambientes productivos, vamos a estar bien.
+
+Por otro lado, si creemos que vamos a tener una gran afluencia de visitantes y no podemos invertir en una cuenta paga, una alternativa es generar una estructura de varias apps vinculadas entre si. Este concepto no lo experimente por mi mismo, pero conozco experiencias que lo llevaron adelante. Por supuesto, los tiempos de carga pueden resultar negativos en la experiencia de navegacion.
+
+#### Vincular cuenta en RStudio
+
+Una vez que tenemos una cuenta en Shinyapps tenemos que vincularla con el IDE. 
+
+Lo mas 
+
+TOKEN + RStudio
+
+### Estructura de archivos
+
+Cuando creamos una nueva Shiny Web App desde RStudio, el primer cuadro de dialogo nos permite elegir la estructura inicial de la aplicacion:
+
+![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/app_nueva-1.PNG)
+
+- **Multiple file**: *ui.R/server.R* > En mi opinion, es la estructura indicada para aplicaciones medianas o grandes, con una interfaz de cierta complejidad, ya que 
+- **Single file**: *app.R* > Esta estructura es ideal para aplicaciones pequeñas
+
+
+---
+
+Les recomiendo separar la app en 3 scripts de R:
+- ui.R > solo lo que corresponde a ui
+- server.R > la funcion del server
+- global.R > este archivo sirve para cargar todas las librerias que vayan a usar, los RData, fuentes y demases.
+
+Esta lógica me sirvió para tener un control mucho más finito del uso de memoria.
+
+Se armaron una cuenta en shinyapps? Esto es necesario para que lo puedan publicar directo desde RStudio. La cuenta la vinculan desde Tools > Global options > Publishing y con el boton publish van subiendo los archivos.
+
+Otra recomendación que les puedo hacer es que armen una carpeta data en el directorio raiz de la app y pongan ahi el RData que usen. De esta manera lo pueden cargar en global.R con load(file = "./data/XXXX.RData") y ya lo pueden usar en la ui y server.
+
+Y la última, les recontra recomiendo laburarlo como un proyecto en RStudio. Cuando publicas la app te reconoce mucho mejor los archivos que tenes que subir.
+
+Eso es lo que se me ocurre por ahora! Cualquier cosa me avisan, espero haberles ayudado.
+
+Abrazo!
+
