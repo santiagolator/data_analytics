@@ -1,5 +1,5 @@
 ---
-title: "Publicar una Shinyapp"
+title: "Publicar una Shinyapp 101"
 author: Santiago Lator
 date: "Fecha: `r format(Sys.time(), '%d %B %Y')`"
 output:
@@ -19,8 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Intro
 
-Mi camino en R comenzó hace relativamente muy poco, pero desde el principio supe que queria meterme de lleno en el desarrollo de aplicaciones web combinando mi pasion por el lenguaje HTML, CSS y Javascript.
-
+> Mi camino en R comenzó hace relativamente muy poco, pero desde el principio supe que queria meterme de lleno en el desarrollo de aplicaciones web combinando mi pasion por el lenguaje HTML, CSS y Javascript.
 Asi es que, luego de realizar un curso intensivo en R, aproveché el trabajo final para empezar a meterme en el maravilloso mundo de Shiny.
 
 ## Primeros pasos
@@ -44,14 +43,169 @@ Lo mas
 
 TOKEN + RStudio
 
-### Estructura de archivos
+### Creacion del proyecto
 
-Cuando creamos una nueva Shiny Web App desde RStudio, el primer cuadro de dialogo nos permite elegir la estructura inicial de la aplicacion:
+Es de extrema importancia iniciar el proceso de creacion de una aplicacion lo mas ordenado posible. Sobre todo para no tener que realizar cambios en la estructura principal.
 
-![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/app_nueva-1.PNG)
+Para esto, una *best practice* es crear un proyecto en RStudio por cada aplicacion.
 
-- **Multiple file**: *ui.R/server.R* > En mi opinion, es la estructura indicada para aplicaciones medianas o grandes, con una interfaz de cierta complejidad, ya que 
-- **Single file**: *app.R* > Esta estructura es ideal para aplicaciones pequeñas
+![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/new_project.gif)
+
+Esto nos genera un directorio nuevo con 2 archivos, *app.R*: el archivo unificado de la aplicacion y *test.Rproj*: el archivo del proyecto.
+
+
+![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/new_project-files.PNG)
+
+
+### Estructura de archivos: single o multiple file?
+
+Como acabamos de ver, cuando creamos una nueva Shiny Web App como proyecto nos deja un workspace de un solo archivo para la aplicacion. 
+
+Pero, si lo hacemos de manera independiente, desde *File > New File > Shiny Web App* nos permite elegir la estructura inicial de la aplicacion:
+
+![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/app_nueva-1.gif)
+
+<br>
+
+- **Single file** (*app.R*): Esta estructura es ideal para aplicaciones pequeñas, concentra en un mismo archivo las funciones de server y de interface.
+<br>
+
+##### app.R
+  
+<details><summary>Ver código</summary>
+```{r eval=FALSE}
+#
+# This is a Shiny web application. You can run the application by clicking
+# the 'Run App' button above.
+#
+# Find out more about building applications with Shiny here:
+#
+#    http://shiny.rstudio.com/
+#
+
+library(shiny)
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+
+    # Application title
+    titlePanel("Old Faithful Geyser Data"),
+
+    # Sidebar with a slider input for number of bins 
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput("bins",
+                        "Number of bins:",
+                        min = 1,
+                        max = 50,
+                        value = 30)
+        ),
+
+        # Show a plot of the generated distribution
+        mainPanel(
+           plotOutput("distPlot")
+        )
+    )
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+
+    output$distPlot <- renderPlot({
+        # generate bins based on input$bins from ui.R
+        x    <- faithful[, 2]
+        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+
+        # draw the histogram with the specified number of bins
+        hist(x, breaks = bins, col = 'darkgray', border = 'white')
+    })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+</details>
+<br>
+
+- **Multiple file** (*ui.R/server.R*): En mi opinion, es la estructura indicada para aplicaciones medianas o grandes, principalmente a medida que aumenta el numero de lineas de codigo. Dividir la aplicación en varios archivos nos permite tener mayor visibilidad sobre el codigo, ayuda en el proceso de *debugging* y permite reutilizar el código para otro proyecto.
+<br>
+
+##### ui.R
+
+<details><summary>Ver código</summary>
+```{r eval=FALSE}
+#
+# This is the user-interface definition of a Shiny web application. You can
+# run the application by clicking 'Run App' above.
+#
+# Find out more about building applications with Shiny here:
+#
+#    http://shiny.rstudio.com/
+#
+
+library(shiny)
+
+# Define UI for application that draws a histogram
+shinyUI(fluidPage(
+
+    # Application title
+    titlePanel("Old Faithful Geyser Data"),
+
+    # Sidebar with a slider input for number of bins
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput("bins",
+                        "Number of bins:",
+                        min = 1,
+                        max = 50,
+                        value = 30)
+        ),
+
+        # Show a plot of the generated distribution
+        mainPanel(
+            plotOutput("distPlot")
+        )
+    )
+))
+```
+</details>
+
+##### server.R
+
+<details><summary>Ver código</summary>
+```{r eval=FALSE}
+#
+# This is the server logic of a Shiny web application. You can run the
+# application by clicking 'Run App' above.
+#
+# Find out more about building applications with Shiny here:
+#
+#    http://shiny.rstudio.com/
+#
+
+library(shiny)
+
+# Define server logic required to draw a histogram
+shinyServer(function(input, output) {
+
+    output$distPlot <- renderPlot({
+
+        # generate bins based on input$bins from ui.R
+        x    <- faithful[, 2]
+        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+
+        # draw the histogram with the specified number of bins
+        hist(x, breaks = bins, col = 'darkgray', border = 'white')
+
+    })
+
+})
+
+```
+</details>
+<br>
+
+### global.R
 
 
 ---
@@ -73,3 +227,13 @@ Eso es lo que se me ocurre por ahora! Cualquier cosa me avisan, espero haberles 
 
 Abrazo!
 
+---
+
+<details><summary>Click here</summary>
+Some text
+
+```{r code}
+# even code
+print("Hello world!")
+```
+</details>
