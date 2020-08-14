@@ -205,35 +205,43 @@ shinyServer(function(input, output) {
 </details>
 <br>
 
-### global.R
+### global.R: imprescindible
 
+Es una muy buena practica centralizar bloques de codigo o lógicas que puedan ser reusadas  y evitar lineas redundantes. Para esto, podemos crear un script llamado `global.R` en el directorio raiz de la app.
 
----
+Este script se ejecuta una sola vez, al lanzar la aplicacion. Pero lo mas importante es que cualquier objeto que se generen aqui quedan disponibles automaticamente tanto para `app.R` como para `ui.R` y `server.R`.
 
-Les recomiendo separar la app en 3 scripts de R:
-- ui.R > solo lo que corresponde a ui
-- server.R > la funcion del server
-- global.R > este archivo sirve para cargar todas las librerias que vayan a usar, los RData, fuentes y demases.
+No es un requerimiento de una Shinyapp contar con esto, pero con este script podemos realizar mucho del pre-procesamiento y aumentar la velocidad de la app al reusar logicas o variables, en un ambiente global.
 
-Esta lógica me sirvió para tener un control mucho más finito del uso de memoria.
+Es un excelente lugar para:
 
-Se armaron una cuenta en shinyapps? Esto es necesario para que lo puedan publicar directo desde RStudio. La cuenta la vinculan desde Tools > Global options > Publishing y con el boton publish van subiendo los archivos.
+- cargar librerias > Solo se cargan una vez y estan disponibles durante la totalidad de la sesion
+- funciones
+- variables globales
+- datasets
+- fuentes
 
-Otra recomendación que les puedo hacer es que armen una carpeta data en el directorio raiz de la app y pongan ahi el RData que usen. De esta manera lo pueden cargar en global.R con load(file = "./data/XXXX.RData") y ya lo pueden usar en la ui y server.
+### Subdirectorios: /data y /www
 
-Y la última, les recontra recomiendo laburarlo como un proyecto en RStudio. Cuando publicas la app te reconoce mucho mejor los archivos que tenes que subir.
+Recomiendo crear un directorio `/data`en la raiz para ubicar nuestros datasets, archivos de datos **.Rdata** o archivos HTML . Estos datos los podemos cargar en `global.R` con, por ejemplo, `load(file = “./data/XXXX.RData”)` y ya queda disponible para toda la sesion :)
 
-Eso es lo que se me ocurre por ahora! Cualquier cosa me avisan, espero haberles ayudado.
+Tambien, podemos generar la carpeta `/www`para incorporar nuestros archivos CSS o imagenes, por ejemplo.
 
-Abrazo!
+### Estructura final
 
----
+Entonces, un ejemplo de una buena estructura para la publicacion, nos debería quedar asi:
 
-<details><summary>Click here</summary>
-Some text
-
-```{r code}
-# even code
-print("Hello world!")
+```{r eval=FALSE}
+test_app
+├── ui.R
+├── server.R
+├── data
+│   └── XXXX.Rdata
+│   └── data.csv
+└── www
+    └── A.jpg
+    └── ui.css    
 ```
-</details>
+
+![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/new_project-files-2.PNG)
+
