@@ -39,7 +39,7 @@ Por otro lado, si creemos que vamos a tener una gran afluencia de visitantes y n
 
 Una vez que tenemos una cuenta en Shinyapps tenemos que vincularla con el IDE. 
 
-Lo mas 
+ 
 
 TOKEN + RStudio
 
@@ -242,6 +242,7 @@ test_app
     └── A.jpg
     └── ui.css    
 ```
+<br>
 
 ![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/new_project-files-2.PNG)
 
