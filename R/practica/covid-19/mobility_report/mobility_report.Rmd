@@ -1,0 +1,156 @@
+---
+title: "Movilidad local sobre el COVID-19"
+author: "Santiago Lator"
+date: "15/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Librerias
+
+```{r}
+pacman::p_load(tidyverse, lubridate, ggplot2, wesanderson, hrbrthemes, patchwork)
+
+hrbrthemes::import_roboto_condensed()
+```
+
+
+## Dataset original
+
+```{r}
+
+#df <- read.csv("https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv?cachebust=fad0787569d04d8e", encoding = "UTF-8")
+
+paises <- c("Argentina", "Australia", "Belgium", "Bolivia", "Brazil", "Chile", "Colombia", "France", "Germany", "India", "Israel", "Italy", "Japan", "Mexico", "Paraguay", "Peru", "Spain", "United Kingdom")
+
+df <- read.csv("C:\\Lator Santiago\\git\\data_analytics\\R\\practica\\covid-19\\mobility_report\\Global_Mobility_Report.csv", encoding = "UTF-8") %>%
+  select(
+    country_region, date, retail_and_recreation_percent_change_from_baseline, grocery_and_pharmacy_percent_change_from_baseline, parks_percent_change_from_baseline, transit_stations_percent_change_from_baseline, workplaces_percent_change_from_baseline, residential_percent_change_from_baseline
+  ) %>%
+  filter(
+    country_region %in% paises
+  ) %>%
+  mutate(
+    date = ymd(date)
+  )
+```
+
+## Analisis y transformacion
+
+```{r}
+#summary(df)
+#glimpse(df)
+
+df_2 <- df %>%
+  select(
+    country_region, date, workplaces_percent_change_from_baseline
+  ) %>%
+  rename(
+     movilidad_trabajo = workplaces_percent_change_from_baseline ## renombro columna por comodidad de trabajo
+  ) %>%
+  mutate(
+    semana = week(date), ## agrego columna de numero de semana
+    dia_semana = wday(date, label = F) ## aggrego columna con dia de la semana
+  ) %>%
+  filter(
+    dia_semana != 1 & dia_semana != 7, ## saco los fines de semana
+    semana != 7 & semana != 8 & semana != 9 ## dejo a partir de la semana 10
+  )
+
+
+df_2_mean <- df_2 %>% 
+  group_by(semana, country_region) %>% ## agrupo por pais y semana
+  summarise_at(vars(movilidad_trabajo), funs(mean(., na.rm=TRUE))) ## calculo el mean de la movilidad
+```
+
+## Plots
+
+### Tiles
+
+```{r}
+paleta <- wes_palette("Zissou1", 100, type = "continuous")
+
+paleta_2 <- c("#D2222D", "#FFBF00", "#238823", "#007000")
+
+plot_1 <- df_2_mean %>%
+  mutate(
+    semana = paste0("S",semana)
+  ) %>% 
+  ggplot(aes(x = as.factor(semana), y = fct_rev(country_region), fill = movilidad_trabajo)) + ## uso forcats para ordenar alfabeticamente los paises
+  geom_tile(colour = "white", size = 0.5) +
+  geom_text(aes(label = round(movilidad_trabajo)), color = "white", size = ifelse(df_2_mean$country_region == "Argentina", 4.2, 3.5)) +
+  #scale_fill_gradientn(colors = paleta_2) +
+  #scale_fill_gradient(low = "#25a240", high = "#e4322b", trans = "reverse") +
+  scale_fill_gradientn(colors = paleta, trans = "reverse" ) + ## invierto la paleta
+  coord_cartesian(expand = FALSE) +
+  scale_x_discrete(position = "top") +
+  theme_ft_rc() +
+  theme(legend.position = "none") +
+  labs(
+    y = " ",
+    x = " "
+  )
+
+plot_1
+```
+### Barras
+
+```{r}
+plot_2 <- df_2_mean %>%
+  filter(
+    semana == 32
+  ) %>% 
+  ggplot(aes(x = movilidad_trabajo, y = reorder(country_region, movilidad_trabajo))) + 
+  geom_bar(stat = "identity", aes(fill = country_region == "Argentina")) + ## highlight Argentina
+  #coord_flip() +
+  coord_cartesian(xlim = c(-52,0))+
+  geom_text(aes(label = round(movilidad_trabajo)), color = "white", hjust = 1.5, size = 3.5) +
+  #scale_fill_gradientn(colors = paleta_2) +
+  #scale_fill_gradient(low = "#25a240", high = "#e4322b", trans = "reverse") +
+  #scale_fill_gradientn(colors = paleta, trans = "reverse" ) +
+  #scale_fill_brewer(palette = "Set2") +
+  scale_fill_manual(values = c("#3c9ab2", "#ebcc2a") ) + ## colores del highlight
+  #coord_cartesian(expand = FALSE) +
+  scale_y_discrete(position = "right") +
+  theme_ft_rc() +
+  theme(legend.position = "none") +
+  labs(
+    subtitle = "Semana 32",
+    y = " ",
+    x = " "
+  )
+fct
+plot_2
+```
+
+## Patchwork
+```{r}
+patchwork <- plot_1 + plot_2
+
+p <- patchwork + 
+  plot_layout(ncol = 2, widths = c(2.4, 1)) +
+  plot_annotation(
+  title = "Movilidad local sobre el COVID-19",
+  subtitle = "Media de la movilidad en lugares de trabajo, de lunes a viernes",
+  caption = "Autor: Santiago Lator en base a trabajo de Martin Barrionuevo | tw: @SantiagoLator\n\nFuente: https://www.google.com/covid19/mobility\n",
+  theme = theme(plot.caption = element_text(size = 10, hjust = 0))) &
+  theme_ft_rc() +
+  theme(text = element_text('Roboto Condensed'),
+        legend.position = "none",
+        axis.text.y.right = element_text(size = 12, margin = margin(r = 10, unit = "pt")),
+        axis.text.y.left = element_text(size = 14.5, margin = margin(r = 10, unit = "pt")),
+        axis.text.x.bottom = element_text(size = 11, margin = margin(t = 10, unit = "pt")),
+        axis.text.x.top = element_text(size = 11, margin = margin(b = 10, unit = "pt")),
+        plot.title = element_text(size = 25),
+        plot.caption = element_text(size = 15, hjust = 1),
+        plot.subtitle = element_text(size = 20)
+        )
+
+#p
+
+ggsave(filename = "covid-caba_patchwork_movilidad.png", p, height = 26, width = 39, dpi = 300, units = "cm", device = "png")
+```
+
