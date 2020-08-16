@@ -2,7 +2,15 @@
 title: "Movilidad local sobre el COVID-19"
 author: "Santiago Lator"
 date: "15/8/2020"
-output: html_document
+output:
+  html_document:
+    df_print: paged
+    theme: lumen
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+author: Santiago Lator
 ---
 
 ```{r setup, include=FALSE}
@@ -122,7 +130,7 @@ plot_2 <- df_2_mean %>%
     y = " ",
     x = " "
   )
-fct
+
 plot_2
 ```
 
