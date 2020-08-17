@@ -143,8 +143,7 @@ p <- patchwork +
   plot_annotation(
   title = "Movilidad local sobre el COVID-19",
   subtitle = "Media de la movilidad en lugares de trabajo, de lunes a viernes",
-  caption = "Autor: Santiago Lator en base a trabajo de Martin Barrionuevo | tw: @SantiagoLator\n\nFuente: https://www.google.com/covid19/mobility\n",
-  theme = theme(plot.caption = element_text(size = 10, hjust = 0))) &
+  caption = "Autor: Santiago Lator en base a trabajo de Martin Barrionuevo | tw: @SantiagoLator\n\nFuente: https://www.google.com/covid19/mobility\n") &
   theme_ft_rc() +
   theme(text = element_text('Roboto Condensed'),
         legend.position = "none",
@@ -157,8 +156,8 @@ p <- patchwork +
         plot.subtitle = element_text(size = 20)
         )
 
-#p
+p
 
-ggsave(filename = "covid-caba_patchwork_movilidad.png", p, height = 26, width = 39, dpi = 300, units = "cm", device = "png")
+#ggsave(filename = "covid-caba_patchwork_movilidad.png", p, height = 26, width = 39, dpi = 300, units = "cm", device = "png")
 ```
 
