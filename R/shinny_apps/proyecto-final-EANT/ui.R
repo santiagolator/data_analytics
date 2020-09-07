@@ -90,6 +90,7 @@ shinyUI(fluidPage(
         
         tabPanel("Contexto nacional - Participacion", ## TAB 1.1 Tasa participacion
                  br(),
+                 
                  navlistPanel( ## NAVLIST GENERO
                    
                    tabPanel("Mujeres",
@@ -116,6 +117,8 @@ shinyUI(fluidPage(
                             tags$h6("Fuente: Encuesta sobre Trabajo No Remunerado y Uso del Tiempo (INDEC)", HTML('&nbsp;'),"-", HTML('&nbsp;'), a(href = "https://www.indec.gob.ar/", "https://www.indec.gob.ar/")),
                             br()
                             )
+                   
+                   
                    
                  ) ## Cierre NAVLIST
                  

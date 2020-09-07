@@ -1,30 +1,42 @@
 ---
-title: "Publicar una Shinyapp 101"
-author: Santiago Lator
+title: "Como publicar una Shinyapp - 101"
+#author: Santiago Lator
 date: "Fecha: `r format(Sys.time(), '%d %B %Y')`"
 output:
   html_document:
+    includes:
+      after_body: footer.html
+    css: style.css
     df_print: paged
-    theme: lumen
+    theme: flatly
+    highlight: textmate
     toc: yes
     toc_float: yes
+    toc_depth: 4
   pdf_document:
     toc: yes
-abstract: "Algunas recomendaciones claves para principiantes como yo, reunidas en un solo lugar :)"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+path_img="C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/img/"
 ```
 
-## Intro
+---
 
-> Mi camino en R comenzó hace relativamente muy poco, pero desde el principio supe que queria meterme de lleno en el desarrollo de aplicaciones web combinando mi pasion por el lenguaje HTML, CSS y Javascript.
+## Por qué hacer esta guia?
+
+Mi camino en R comenzó hace relativamente muy poco, pero desde el principio supe que queria meterme de lleno en el desarrollo de aplicaciones web combinando mi pasion por el lenguaje HTML, CSS y Javascript.
+
 Asi es que, luego de realizar un curso intensivo en R, aproveché el trabajo final para empezar a meterme en el maravilloso mundo de Shiny.
+
+Lo primero con lo que me encontre es que hay muchos articulos y muy variados sobre como publicar una ShinyApp por primera vez, pero esta informacion esta muy dispersa y para los/as que recien empezamos resulta un tanto confuso.   
+Por esta razon es que armo esta guia, donde voy a tratar de ordenar la informacion que fui recabando y los desafios con los que me encontre en mi experiencia personal.
 
 ## Primeros pasos
 
-Mi primer recomendación es configurar el espacio de trabajo. Esto es, dejar todo listo para la publicacion de la app una vez que estemos satisfechos con nuestro trabajo. Doy por descontado que estamos trabajando con RStudio y su fantastico ecosistema.
+Mi primera recomendación es configurar el espacio de trabajo. Esto es, dejar todo listo para la publicacion de la app una vez que estemos satisfechos con nuestro trabajo. Doy por descontado que estamos trabajando con RStudio y su fantastico ecosistema.
 
 ### Cuenta en Shinyapps
 Para esto, nos vamos a hacer una cuenta en [shinyapps.io](https://www.shinyapps.io/). Hay varios tipos de cuenta, con distintos objetivos y con sus precios correspondientes. Como siempre, la gente de RStudio ofrece una opcion gratuita con las caracteristicas suficientes para comenzar a probar.
@@ -35,42 +47,67 @@ Para nuestras primeras aplicaciones, suponiento que no apuntamos a ambientes pro
 
 Por otro lado, si creemos que vamos a tener una gran afluencia de visitantes y no podemos invertir en una cuenta paga, una alternativa es generar una estructura de varias apps vinculadas entre si. Este concepto no lo experimente por mi mismo, pero conozco experiencias que lo llevaron adelante. Por supuesto, los tiempos de carga pueden resultar negativos en la experiencia de navegacion.
 
+> Otra alternativa, que requiere conocimientos bastante mas avanzados, es generar nuestro propio servidor usando [Shiny Server](https://rstudio.com/products/shiny/shiny-server/) o  [ShinyProxy](https://www.shinyproxy.io/)
+
 #### Vincular cuenta en RStudio
 
 Una vez que tenemos una cuenta en Shinyapps tenemos que vincularla con el IDE. 
 
- 
+Para esto, el primer requisito es generar un **token** para autorizar la conexion. Esto lo hacemos desde <kbd>TOKENS</kbd> en nuestra cuenta de [shinyapps.io](https://www.shinyapps.io/):
 
-TOKEN + RStudio
+1. Hacemos click en <kbd>Add Token</kbd> para generar una nueva autorizacion
+2. Esto nos genera los 2 componentes de la clave, el **Token** y el **Secret**
+3. Vamos a necesitar los valores de ambos, por lo que accedemos a los detalles con <kbd>Show</kbd>
+3. En el popup, podemos ver el string de conexion que necesitamos para vincular con Rstudio. Hacemos click en <kbd>Show secret</kbd> para revelar este valor y luego lo copiamos en nuestro clipboard.
+
+![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/img/token_1.gif)
+
+<br>  
+
+Con esta info, nos vamos a Rstudio y desde *Tools > Global Options > Publishing* hacemos click en <kbd>Connect</kbd>.
+
+Esto nos abre el dialogo para conectar nuestra cuenta de shinyapps con el string de conexion (token + secret) en pasos anteriores.
+
+Listo! Nuestra cuenta ya se encuentra vinculada al IDE. **Esto nos va a permitir publicar la app directamente desde Rstudio con suma facilidad y con bastante control.**
+
+![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/img/connect-shinyapps_3.gif)
+
 
 ### Creacion del proyecto
 
-Es de extrema importancia iniciar el proceso de creacion de una aplicacion lo mas ordenado posible. Sobre todo para no tener que realizar cambios en la estructura principal.
+Es de extrema importancia iniciar el proceso de creacion de una aplicacion lo mas ordenado posible. Sobre todo para no tener que realizar cambios en la estructura principal.  
 
-Para esto, una *best practice* es crear un proyecto en RStudio por cada aplicacion.
+Para esto, una *best practice* es crear un proyecto en RStudio por cada aplicacion.  
 
-![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/new_project.gif)
+Para esto vamos a *File > New Project* donde podemos optar por crear un directorio para la app o alguno ya creado.  
+
+Luego seleccionamos **Shiny Web Application** como tipo de proyecto y elegimos el nombre del directorio y, ademas, tenemos la posibilidad de crear un repositorio de **git** (*en proximos articulos voy a contar un poco mas sobre esto*).  
+
+![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/img/new_project.gif)
 
 Esto nos genera un directorio nuevo con 2 archivos, *app.R*: el archivo unificado de la aplicacion y *test.Rproj*: el archivo del proyecto.
 
 
-![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/new_project-files.PNG)
+![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/img/new_project-files.PNG)
 
 
-### Estructura de archivos: single o multiple file?
+
+## Estructura de archivos: single o multiple file?
 
 Como acabamos de ver, cuando creamos una nueva Shiny Web App como proyecto nos deja un workspace de un solo archivo para la aplicacion. 
 
 Pero, si lo hacemos de manera independiente, desde *File > New File > Shiny Web App* nos permite elegir la estructura inicial de la aplicacion:
 
-![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/app_nueva-1.gif)
+![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/img/app_nueva-1.gif)
 
 <br>
 
-- **Single file** (*app.R*): Esta estructura es ideal para aplicaciones pequeñas, concentra en un mismo archivo las funciones de server y de interface.
+### Single file (*app.R*)
+
+Esta estructura es ideal para aplicaciones pequeñas, concentra en un mismo archivo las funciones de server y de interface.
 <br>
 
-##### app.R
+#### app.R
   
 <details><summary>Ver código</summary>
 ```{r eval=FALSE}
@@ -127,10 +164,12 @@ shinyApp(ui = ui, server = server)
 </details>
 <br>
 
-- **Multiple file** (*ui.R/server.R*): En mi opinion, es la estructura indicada para aplicaciones medianas o grandes, principalmente a medida que aumenta el numero de lineas de codigo. Dividir la aplicación en varios archivos nos permite tener mayor visibilidad sobre el codigo, ayuda en el proceso de *debugging* y permite reutilizar el código para otro proyecto.
-<br>
+### Multiple file (*ui.R/server.R*):
 
-##### ui.R
+En mi opinion, es la estructura indicada para aplicaciones medianas o grandes, principalmente a medida que aumenta el numero de lineas de codigo. Dividir la aplicación en varios archivos nos permite tener mayor visibilidad sobre el codigo, ayuda en el proceso de *debugging* y permite reutilizar el código para otro proyecto.
+
+
+#### ui.R
 
 <details><summary>Ver código</summary>
 ```{r eval=FALSE}
@@ -170,7 +209,7 @@ shinyUI(fluidPage(
 ```
 </details>
 
-##### server.R
+#### server.R
 
 <details><summary>Ver código</summary>
 ```{r eval=FALSE}
@@ -200,16 +239,15 @@ shinyServer(function(input, output) {
     })
 
 })
-
 ```
 </details>
-<br>
+
 
 ### global.R: imprescindible
 
 Es una muy buena practica centralizar bloques de codigo o lógicas que puedan ser reusadas  y evitar lineas redundantes. Para esto, podemos crear un script llamado `global.R` en el directorio raiz de la app.
 
-Este script se ejecuta una sola vez, al lanzar la aplicacion. Pero lo mas importante es que cualquier objeto que se generen aqui quedan disponibles automaticamente tanto para `app.R` como para `ui.R` y `server.R`.
+Este script se ejecuta una sola vez, al lanzar la aplicacion. Pero lo mas importante es que cualquier objeto que se genere aqui queda disponible automaticamente tanto para `app.R` como para `ui.R` y `server.R`.
 
 No es un requerimiento de una Shinyapp contar con esto, pero con este script podemos realizar mucho del pre-procesamiento y aumentar la velocidad de la app al reusar logicas o variables, en un ambiente global.
 
@@ -232,17 +270,70 @@ Tambien, podemos generar la carpeta `/www`para incorporar nuestros archivos CSS 
 Entonces, un ejemplo de una buena estructura para la publicacion, nos debería quedar asi:
 
 ```{r eval=FALSE}
-test_app
-├── ui.R
-├── server.R
-├── data
-│   └── XXXX.Rdata
-│   └── data.csv
-└── www
-    └── A.jpg
-    └── ui.css    
+.
+└── test_app/
+    ├── ui.R
+    ├── server.R
+    ├── data/
+    │   ├── dataframe.Rdata
+    │   └── data_raw.csv
+    └── www/
+        ├── A.jpg
+        └── ui.css   
 ```
 <br>
 
-![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/new_project-files-2.PNG)
+![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/img/new_project-files-2.PNG)
+
+
+## Publicacion de la app
+
+Bien, con todo lo anterior ya estamos en condiciones de publicar nuestra app de manera publica en internet.
+
+Si hicimos todos los pasos anteriores vamos a poder subir la app directamente desde RStudio. Desde *File > Publish* o por el boton en el área de trabajo accedemos al dialogo de publicacion:
+
+- **Publish files from**: Son los files que vamos a subir y resultan necesarios para el funcionamiento de nuestra app. Si partimos de un proyecto de Rstudio, como recomendamos anteriormente, vamos a ver directamente los files que componen la app.
+- **Publish from Account**: es la cuenta de shinyapps que vinculamos anteriormente y en la cual vamos a publicar
+- **Title**: Es el titulo de nuestra app. En el caso de la version gratuita e shinyapps, es tambien parte de la URL que vamos a obtener automaticamente, en este caso seria https://santiago-lator.shinyapps.io/**test_app/**
+
+<br>
+
+![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/img/publish_3.png)
+
+<br>  
+
+Una vez que le damos al boton <kbd>Publish</kbd> vamos a ver que se abre un job en nuestra consola donde podemos ir viendo el proceso de deployment.
+Si todo salio bien, tenemos que ver en esta pestaña un mensaje que dice `Deployment completed` y una URL. Mediante esa URL (que seguramente ya se abrio automaticamente en nuestro navegador) ya podemos acceder a nuestra app 😃💪
+
+<br>  
+
+![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/img/deploy_1.png)
+
+### El dashboard de shinyapps
+
+Una vez que publicamos nuestra app, podemos acceder desde nuestro [dashboard](https://www.shinyapps.io/admin/#/dashboard) a distintos controles y configuraciones.
+
+![](C:/Lator Santiago/git/data_analytics/R/pubs/shiny_recomendaciones/img/dashboard_header_01.png)
+
+<br>
+
+Las secciones del dashboard son bastante *self explanatory*, pero en mi opinion no hay que perder de vista las siguientes:
+
+- En **Overview** podemos ver un resumen de los datos de la app como **Id**, **status** o la **URL** de acceso. Tambien tenemos un grafico del uso de la aplicacion en horas, que nos puede dar una idea cuan cerca o no esamos del limite mensual.
+
+- Desde **Metrics** tenemos acceso a la informacion a nivel infraestructura del consumo de la aplicacion, como por ejemplo cantidad de conexiones, la memoria RAM utilizada o uso de CPU.
+
+- En **Logs** podemos obtener un log practicamente realtime de la ejecucion de nuestra app. Es muy importante familizarizarsse con este aspecto, para poder realizar un troubleshooting en caso de algun error.
+
+## Algunos recursos y proximos pasos
+
+Para cerrar esta publicacion, comparto algunos links con recursos que me resultaron muy valiosos en estos primeros pasos con Shiny:
+
+- [Mastering Shiny](https://mastering-shiny.org/) ⭐
+- [Cheatsheet de Shiny](https://shiny.rstudio.com/images/shiny-cheatsheet.pdf)
+- [Shiny tips & tricks for improving your apps and solving common problems](https://deanattali.com/blog/advanced-shiny-tips/) ⭐
+- [Getting Started with Shiny](https://ourcodingclub.github.io/tutorials/shiny/)
+- [Build Your First Shiny Web App in R](https://towardsdatascience.com/build-your-first-shiny-web-app-in-r-72f9538f9868)
+
+
 
