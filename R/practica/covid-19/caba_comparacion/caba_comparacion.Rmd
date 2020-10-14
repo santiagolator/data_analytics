@@ -11,6 +11,7 @@ library(here)
 library(ggplot2)
 library(sf)
 library(lubridate)
+library(scales)
 #library(geojsonio)
 #library(broom)
 #devtools::install_github("yutannihilation/ggsflabel")
@@ -52,7 +53,7 @@ df_casos_confirmados <- df_covid19 %>%
     ) %>% 
   mutate(
     comuna = as.character(comuna)
-  )
+  ) 
 
 df_fallecidos <- df_covid19 %>% 
   filter(
@@ -66,6 +67,32 @@ df_fallecidos <- df_covid19 %>%
   mutate(
     comuna = as.character(comuna)
   )
+
+
+df_casos_confirmados_barrios <- df_covid19 %>% 
+  filter(
+    provincia == "CABA",
+    is.na(fallecido),
+    !is.na(comuna)
+  ) %>% 
+  count(
+    barrio, name = "cantidad_casos",
+    sort = T
+    )
+
+
+df_fallecidos_barrios <- df_covid19 %>%
+  filter(
+    provincia == "CABA",
+    !is.na(fallecido),
+    !is.na(comuna)
+  ) %>% 
+  count(
+    barrio, name = "cantidad_fallecidos",
+    sort = T
+  )
+
+
 ```
 
 ### Plots
@@ -75,11 +102,6 @@ df_fallecidos <- df_covid19 %>%
 ```{r}
 comunas <- st_read('https://bitsandbricks.github.io/data/CABA_comunas.geojson')
 
-comunas <- comunas %>% 
-  rename(
-    "comuna" = comunas
-  )
-
 rivadavia <- st_read('https://bitsandbricks.github.io/data/avenida_rivadavia.geojson')
 
 barrios_geo <- st_read(here("caba_comparacion", "dataset", "barrios.geojson")) 
@@ -87,30 +109,33 @@ barrios_geo <- st_read(here("caba_comparacion", "dataset", "barrios.geojson"))
 nueva_columna <- c("Sur", "Norte", "Sur", "Sur", "Sur", "Norte", "Sur", "Sur", 
                    "Sur", "Norte", "Norte", "Norte", "Norte", "Norte", "Norte")
 
+comunas <- comunas %>% 
+  rename(
+    "comuna" = comunas
+  )
 
 comunas <- left_join(comunas, df_casos_confirmados, by = "comuna")
 comunas <- left_join(comunas, df_fallecidos, by = "comuna")
-comunas <- mutate(comunas, ubicacion = nueva_columna)
+
+barrios_geo <- left_join(barrios_geo, df_casos_confirmados_barrios, by = "barrio")
+barrios_geo <- left_join(barrios_geo, df_fallecidos_barrios, by = "barrio")
+
+comunas <- comunas %>% 
+  mutate(
+    comunas, ubicacion = nueva_columna,
+    tasa_letalidad = percent(cantidad_fallecidos / cantidad_casos)
+    )
+
+barrios_geo <- barrios_geo %>% 
+  mutate(
+    tasa_letalidad = percent(cantidad_fallecidos / cantidad_casos)
+    )
 
 comunas_sur <- filter(comunas, ubicacion == "Sur")
 comunas_norte <- filter(comunas, ubicacion == "Norte")
 
 mean(comunas_sur$cantidad_casos) / mean(comunas_norte$cantidad_casos)
 mean(comunas_sur$cantidad_fallecidos) / mean(comunas_norte$cantidad_fallecidos)
-
-# df_barrios_geo_fort <- tidy(df_barrios_geo)
-# 
-# lista_barrios <- df_barrios_geo$barrio
-# 
-# lista_id <- 1:48
-# 
-# df_barrios_id <- as.data.frame(cbind(lista_barrios,lista_id)) %>% 
-#   rename(
-#     "barrios" = lista_barrios,
-#     "id" = lista_id
-#   )
-# 
-# df_barrios_geo_fort <- left_join(df_barrios_geo_fort, df_barrios_id, by = "id")
 ```
 
 #### Plot mapa
@@ -149,20 +174,13 @@ barrios_geo %>%
   #geom_sf_label(aes(label = comuna)) +
   #scale_fill_distiller(palette = "Spectral")
 
-
 barrios_geo %>% 
   filter(
-    comuna == 15
+    comuna == 7
   ) %>% 
 ggplot() +
-    geom_sf(aes(fill = barrio))
-
-# df_barrios_geo_fort %>% 
-#   filter(
-#     id == 10 & id == 32
-#   ) %>% 
-#   ggplot() +
-#   geom_polygon(aes(x = long, y = lat, group = barrios), fill="#69b3a2", color="white") +
-#   theme_void() +
-#   coord_map()
+  geom_sf(aes(fill = tasa_letalidad)) +
+  theme_void() +
+  coord_sf() #+
+  #scale_fill_manual(values = c("red", "blue", "green"))
 ```
