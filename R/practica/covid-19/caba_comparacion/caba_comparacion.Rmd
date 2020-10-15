@@ -91,8 +91,6 @@ df_fallecidos_barrios <- df_covid19 %>%
     barrio, name = "cantidad_fallecidos",
     sort = T
   )
-
-
 ```
 
 ### Plots
@@ -123,12 +121,13 @@ barrios_geo <- left_join(barrios_geo, df_fallecidos_barrios, by = "barrio")
 comunas <- comunas %>% 
   mutate(
     comunas, ubicacion = nueva_columna,
-    tasa_letalidad = percent(cantidad_fallecidos / cantidad_casos)
+    #tasa_letalidad = percent(cantidad_fallecidos / cantidad_casos, accuracy = 0.01)
+    tasa_letalidad = round(cantidad_fallecidos / cantidad_casos * 100, digits = 2)
     )
 
 barrios_geo <- barrios_geo %>% 
   mutate(
-    tasa_letalidad = percent(cantidad_fallecidos / cantidad_casos)
+    tasa_letalidad = round(cantidad_fallecidos / cantidad_casos * 100, digits = 2)
     )
 
 comunas_sur <- filter(comunas, ubicacion == "Sur")
@@ -141,46 +140,36 @@ mean(comunas_sur$cantidad_fallecidos) / mean(comunas_norte$cantidad_fallecidos)
 #### Plot mapa
 
 ```{r}
-ggplot(comunas) +
-    geom_sf(aes(fill = ubicacion)) +
-    geom_sf(data = rivadavia, color = "red")
 
 comunas %>% 
   ggplot() + 
-  geom_sf(aes(fill = cantidad_casos)) +
-  geom_sf(data = rivadavia, color = "red") +
-  #geom_sf_label(aes(label = comuna)) +
-  scale_fill_distiller(palette = "Spectral")
+  geom_sf(aes(fill = tasa_letalidad)) +
+  geom_sf_text(aes(label = comuna, family = "sans")) +
+  scale_fill_distiller(palette = "Spectral") +
+  labs(
+    fill = "Tasa de letalidad\n"
+  ) +
+  theme_void() +
+  coord_sf()
 
-comunas %>% 
-  ggplot() + 
-  geom_sf(aes(fill = cantidad_fallecidos)) +
-  geom_sf(data = rivadavia, color = "red") +
-  #geom_sf_label(aes(label = comuna)) +
-  scale_fill_distiller(palette = "Spectral")
 
-comunas %>% 
+barrios_geo %>% 
   filter(
-    comuna == 1
+    comuna == 10 | comuna == 11
   ) %>% 
-  ggplot() + 
-  geom_sf(aes(fill = cantidad_fallecidos))
-
-
-barrios_geo %>% 
-  ggplot() + 
-  geom_sf(aes(fill = barrio)) #+
-  #geom_sf(data = rivadavia, color = "red") +
-  #geom_sf_label(aes(label = comuna)) +
-  #scale_fill_distiller(palette = "Spectral")
-
-barrios_geo %>% 
-  filter(
-    comuna == 7
+  mutate(
+    barrio = gsub("VILLA", "V.", barrio),
+    barrio = ifelse(grepl("V. [A-Z]", barrio), barrio, gsub(' ', '\n', barrio))
   ) %>% 
 ggplot() +
   geom_sf(aes(fill = tasa_letalidad)) +
+  geom_sf_text(aes(label = barrio), size = 3) +
+  #geom_sf(data = rivadavia, color = "red") +
+  #geom_sf_label(aes(label = comuna)) +
+  scale_fill_distiller(palette = "Spectral") +
+  labs(
+    fill = "Tasa de letalidad\n"
+  ) +
   theme_void() +
-  coord_sf() #+
-  #scale_fill_manual(values = c("red", "blue", "green"))
+  coord_sf()
 ```
