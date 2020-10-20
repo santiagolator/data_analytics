@@ -1,6 +1,11 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Tasa de letalidad - comunas CABA"
+author: "Desarrollo: Santiago Lator"
+date: "Fecha: `r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    code_folding: hide
+    theme: flatly
 ---
 
 ### Librerias
@@ -11,25 +16,23 @@ library(here)
 library(ggplot2)
 library(sf)
 library(lubridate)
-library(scales)
-#library(geojsonio)
-#library(broom)
-#devtools::install_github("yutannihilation/ggsflabel")
-#library(ggsflabel)
+library(formattable)
+library(patchwork)
+#library(hrbrthemes)
 
-here::here()
+#here::here()
 ```
 
 ### Dataset
 
 ```{r}
-#df <- read_csv("https://cdn.buenosaires.gob.ar/datosabiertos/datasets/salud/casos-covid-19/casos_covid19.csv", encoding = "UTF-8")
+#df_covid19 <- read.csv("https://cdn.buenosaires.gob.ar/datosabiertos/datasets/salud/casos-covid-19/casos_covid19.csv", encoding = "UTF-8")
 
 df_covid19 <- read_csv(here("caba_comparacion", "dataset", "casos_covid19.csv"))
 
-#df_barrios <- read.csv(here("caba_comparacion", "dataset", "barrios_comunas.csv"), sep = ";")
+comunas <- st_read('https://bitsandbricks.github.io/data/CABA_comunas.geojson')
 
-#df_barrios_geo <- geojson_read(here("caba_comparacion", "dataset", "barrios.geojson"),  what = "sp")
+barrios <- st_read(here("caba_comparacion", "dataset", "barrios.geojson")) 
 ```
 
 ### Limpieza y transformacion
@@ -91,6 +94,8 @@ df_fallecidos_barrios <- df_covid19 %>%
     barrio, name = "cantidad_fallecidos",
     sort = T
   )
+
+
 ```
 
 ### Plots
@@ -98,62 +103,80 @@ df_fallecidos_barrios <- df_covid19 %>%
 #### Mapa
 
 ```{r}
-comunas <- st_read('https://bitsandbricks.github.io/data/CABA_comunas.geojson')
+# nueva_columna <- c("Sur", "Norte", "Sur", "Sur", "Sur", "Norte", "Sur", "Sur", 
+#                    "Sur", "Norte", "Norte", "Norte", "Norte", "Norte", "Norte")
 
-rivadavia <- st_read('https://bitsandbricks.github.io/data/avenida_rivadavia.geojson')
-
-barrios_geo <- st_read(here("caba_comparacion", "dataset", "barrios.geojson")) 
-
-nueva_columna <- c("Sur", "Norte", "Sur", "Sur", "Sur", "Norte", "Sur", "Sur", 
-                   "Sur", "Norte", "Norte", "Norte", "Norte", "Norte", "Norte")
-
-comunas <- comunas %>% 
-  rename(
-    "comuna" = comunas
-  )
+comunas <- comunas %>%
+  rename("comuna" = comunas)
 
 comunas <- left_join(comunas, df_casos_confirmados, by = "comuna")
 comunas <- left_join(comunas, df_fallecidos, by = "comuna")
 
-barrios_geo <- left_join(barrios_geo, df_casos_confirmados_barrios, by = "barrio")
-barrios_geo <- left_join(barrios_geo, df_fallecidos_barrios, by = "barrio")
+barrios <- left_join(barrios, df_casos_confirmados_barrios, by = "barrio")
+barrios <- left_join(barrios, df_fallecidos_barrios, by = "barrio")
 
 comunas <- comunas %>% 
   mutate(
-    comunas, ubicacion = nueva_columna,
+    #comunas, ubicacion = nueva_columna,
     #tasa_letalidad = percent(cantidad_fallecidos / cantidad_casos, accuracy = 0.01)
     tasa_letalidad = round(cantidad_fallecidos / cantidad_casos * 100, digits = 2)
     )
 
-barrios_geo <- barrios_geo %>% 
+barrios <- barrios %>% 
   mutate(
     tasa_letalidad = round(cantidad_fallecidos / cantidad_casos * 100, digits = 2)
     )
 
-comunas_sur <- filter(comunas, ubicacion == "Sur")
-comunas_norte <- filter(comunas, ubicacion == "Norte")
+tasa_letalidad_caba <- comunas %>% 
+  bind_rows(summarise_all(., funs(if(is.numeric(.)) sum(.) else "Total"))) %>% 
+  filter(
+    barrios == "Total"
+  ) %>% 
+  mutate(
+    tasa_letalidad = round(cantidad_fallecidos / cantidad_casos * 100, digits = 2)
+  ) %>% 
+  tibble() %>% 
+  select(cantidad_casos, cantidad_fallecidos, tasa_letalidad)
 
-mean(comunas_sur$cantidad_casos) / mean(comunas_norte$cantidad_casos)
-mean(comunas_sur$cantidad_fallecidos) / mean(comunas_norte$cantidad_fallecidos)
+comunas_top_10_letalidad <- comunas %>% 
+  tibble() %>% 
+  select(
+    comuna, cantidad_casos, cantidad_fallecidos, tasa_letalidad
+  )
+  
+
+# comunas_sur <- filter(comunas, ubicacion == "Sur")
+# comunas_norte <- filter(comunas, ubicacion == "Norte")
+
+# mean(comunas_sur$cantidad_casos) / mean(comunas_norte$cantidad_casos)
+# mean(comunas_sur$cantidad_fallecidos) / mean(comunas_norte$cantidad_fallecidos)
 ```
 
 #### Plot mapa
 
 ```{r}
 
-comunas %>% 
+plot_1 <- comunas %>% 
   ggplot() + 
   geom_sf(aes(fill = tasa_letalidad)) +
-  geom_sf_text(aes(label = comuna, family = "sans")) +
+  geom_sf_text(aes(label = comuna),size = 4.5, color = "black") +
   scale_fill_distiller(palette = "Spectral") +
   labs(
+    subtitle = "Comunas de CABA\n",
     fill = "Tasa de letalidad\n"
   ) +
   theme_void() +
+    theme(
+    legend.position = "left",
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+     axis.ticks = element_blank(),
+     rect = element_blank()
+  ) +
   coord_sf()
 
 
-barrios_geo %>% 
+plot_2 <- barrios %>% 
   filter(
     comuna == 10 | comuna == 11
   ) %>% 
@@ -163,13 +186,179 @@ barrios_geo %>%
   ) %>% 
 ggplot() +
   geom_sf(aes(fill = tasa_letalidad)) +
-  geom_sf_text(aes(label = barrio), size = 3) +
+  geom_sf_text(aes(label = barrio), size = 3, color = "black") +
   #geom_sf(data = rivadavia, color = "red") +
   #geom_sf_label(aes(label = comuna)) +
   scale_fill_distiller(palette = "Spectral") +
   labs(
+    subtitle = "Barrios de comunas 10 y 11\n",
     fill = "Tasa de letalidad\n"
   ) +
   theme_void() +
+  theme(
+    legend.position = "right"
+  ) +
   coord_sf()
+
+plot_1
+plot_2
+```
+
+### Plot grupo edad barrios
+
+```{r}
+df_edad_agrupado_confirmados <- df_covid19 %>%
+  filter(
+    #!is.na(tipo_contagio),
+    #!is.na(genero),
+    !is.na(edad),
+    !is.na(barrio),
+    clasificacion == "confirmado",
+    is.na(fallecido)
+  ) %>%
+  mutate(
+    #tipo_contagio = ifelse(is.na(tipo_contagio), "Desconocido", tipo_contagio),
+    genero = gsub("masculino", "Varones", genero),
+    genero = gsub("femenino", "Mujeres", genero),
+    #mes = month(ymd(fecha_clasificacion), label = T), ### dato a usar mas adelante?
+    grupo_edad = case_when(
+      edad <=18 ~ "0-18",
+      edad > 18 & edad <= 35 ~ "19-35",
+      edad > 35 & edad <= 50 ~ "36-50",
+      edad > 50 & edad <= 65 ~ "51-65",
+      edad > 65 & edad <= 80 ~ "66-80",
+      edad >= 80 ~ "Mas de 80",
+      is.na(edad) ~ "Edad\ndesconocida"
+    )
+  ) %>% 
+  count(grupo_edad, barrio, comuna, name = "casos_confirmados", sort = T)
+
+
+df_edad_agrupado_fallecidos <- df_covid19 %>%
+  filter(
+    !is.na(genero),
+    !is.na(edad),
+    !is.na(barrio),
+    fallecido == "si"
+  ) %>%
+  mutate(
+    genero = gsub("masculino", "Varones", genero),
+    genero = gsub("femenino", "Mujeres", genero),
+    #mes = month(ymd(fecha_clasificacion), label = T), ### dato a usar mas adelante?
+    grupo_edad = case_when(
+      edad <=18 ~ "0-18",
+      edad > 18 & edad <= 35 ~ "19-35",
+      edad > 35 & edad <= 50 ~ "36-50",
+      edad > 50 & edad <= 65 ~ "51-65",
+      edad > 65 & edad <= 80 ~ "66-80",
+      edad >= 80 ~ "Mas de 80",
+      is.na(edad) ~ "Edad\ndesconocida"
+    )
+  ) %>% 
+  count(grupo_edad, barrio, comuna, name = "fallecimientos", sort = T)
+```
+
+```{r}
+plot_3 <- df_edad_agrupado_confirmados %>%
+  filter(
+    barrio == "VELEZ SARSFIELD" | barrio == "VILLA DEVOTO" | barrio == "VILLA REAL"
+    #comuna == 10 | comuna == 11
+  ) %>% 
+  mutate(
+    grupo_edad = gsub("Mas de 80", "Mas\nde 80", grupo_edad)
+  ) %>% 
+  ggplot(aes(x = grupo_edad, y = casos_confirmados, fill = barrio)) +
+  geom_col(position = "dodge") +
+  scale_fill_brewer( palette = "Set2") +
+  #guides(fill=guide_legend(ncol = 2)) +
+  labs(
+    subtitle = "\nCasos confirmados - TOP 3 tasa de letalidad\n\nBarrios de comunas 10 y 11\n",
+    x = " ",
+    y = " ",
+    fill = "Comuna"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
+  )
+
+plot_4 <- df_edad_agrupado_fallecidos %>%
+  filter(
+    barrio == "VELEZ SARSFIELD" | barrio == "VILLA DEVOTO" | barrio == "VILLA REAL"
+    #comuna == 10 | comuna == 11
+  ) %>% 
+  mutate(
+    grupo_edad = gsub("Mas de 80", "Mas\nde 80", grupo_edad)
+  ) %>% 
+  ggplot(aes(x = grupo_edad, y = fallecimientos, fill = barrio)) +
+  geom_col(position = "dodge") +
+  scale_fill_brewer( palette = "Set2") +
+  #guides(fill=guide_legend(ncol = 1)) +
+  labs(
+    subtitle = "\nFallecimientos - TOP 3 tasa de letalidad\n\nBarrios de comunas 10 y 11\n",
+    x = " ",
+    y = " ",
+    fill = "Comuna "
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
+  )
+
+plot_3
+plot_4
+```
+
+### Patchwork
+
+```{r}
+formattable(comunas_top_10_letalidad, list(
+  area(col = c(cantidad_casos, cantidad_fallecidos)) ~ normalize_bar("pink", 0.2)
+))
+```
+
+```{r}
+#patchwork <- (plot_1 + plot_2 + plot_layout(guides = 'collect')) / (plot_3 + plot_4 + plot_layout(guides = 'collect'))
+
+patchwork_1 <- plot_1 + wrap_ggplot_grob(tabla_1) #+ plot_layout(guides = 'keep')
+
+tabla_1 <- gt(data = comunas_top_10_letalidad) %>% 
+    tab_header(
+    title = md("**Tasa de letalidad**"),
+    subtitle = "Comunas de CABA"
+  )
+
+text_1 <- wrap_elements(grid::textGrob(paste0('Cuando hablamos de Tasa de Letalidad, nos referimos al cociente entre el número de fallecimientos\na causa de una determinada enfermedad en un período de tiempo\ny el número de afectados por esa misma enfermedad en ese mismo período.\nEn CABA la tasa de letalidad es de ', tasa_letalidad_caba$tasa_letalidad)))
+
+text_1 / patchwork_1
+
+patchwork <- patchwork_1 / patchwork_2
+
+p <- patchwork_1 + 
+  #plot_layout(guides = "collect") +
+  #plot_layout(heights = unit(c(10, 2), c('cm', 'null'))) +
+  plot_annotation(
+  #tag_levels = "A",
+  #tag_prefix = "fig.",
+  title = "Covid-19 | CABA",
+  subtitle = "Tasa de letalidad",
+  caption = "Autor: Santiago Lator | tw: @SantiagoLator\n\nFuente: https://data.buenosaires.gob.ar/dataset/casos-covid-19\n",
+  theme = theme(plot.title = element_text(size = 24),
+                plot.caption = element_text(size = 16, hjust = 0))) &
+  theme_ft_rc() +
+  theme(text = element_text('Roboto Condensed'),
+        #legend.position = "none",
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        rect = element_blank(),
+        legend.text = element_text(size = 16, margin = margin(r = 10, unit = "pt")),
+        legend.title = element_text(size = 17, margin = margin(r = 10, unit = "pt"))
+        )
+
+p
+
+ggsave(filename = "covid_caba_comparacion.png", p, height = 18, width = 36, dpi = 300, units = "cm", device = "png")
+
+#https://patchwork.data-imaginist.com/articles/guides/layout.html
 ```
