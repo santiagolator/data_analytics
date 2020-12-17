@@ -1,17 +1,18 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-  
-<h4>La votacion en la Camara de Senadores esta programada para el <strong>29/12/2020</strong>, faltan:</h4>
-
-<ul>
-<li><p style="font-size:18px;" id="demo"></p></li>
-</ul>
-
-<script>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		</head>
+		<body>
+			<h4>La votacion en la Camara de Senadores esta programada para el 
+				<strong>29/12/2020</strong>, faltan:
+			</h4>
+			<ul>
+				<li>
+					<p style="font-size:18px;" id="demo"></p>
+				</li>
+			</ul>
+			<script>
 // Set the date we're counting down to
 var countDownDate = new Date("Dec 29, 2020 00:00:00").getTime();
 
@@ -40,7 +41,7 @@ var x = setInterval(function() {
     document.getElementById("demo").innerHTML = "EXPIRED";
   }
 }, 1000);
-</script>
 
-</body>
-</html>
+			</script>
+		</body>
+	</html>
