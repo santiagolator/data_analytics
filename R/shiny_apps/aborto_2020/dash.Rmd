@@ -12,6 +12,7 @@ runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
+## Cargar librerias
 library(flexdashboard)
 library(tidyverse)
 library(reactable)
@@ -21,7 +22,7 @@ library(crosstalk)
 ```
 
 
-```{r}
+```{r dataset, include=FALSE}
 ## Cargar dataset
 load(file = "./data/global.RData")
 ```
@@ -101,51 +102,53 @@ Row
 df_bloques_2020 %>%
   filter(
     bloque %in% c("Frente de Todos", "PRO", "Unión Cívica Radical", "Coalición Cívica", "Córdoba Federal")
-  ) %>% 
+  ) %>%
   hchart(
-    type = "bar", 
+    type = "bar",
     hcaes(x = bloque, y = n, group = voto),
     name = c("Abstencion", "Afirmativo", "Ausente", "Negativo")
-    ) %>%
+  ) %>%
   hc_colors(cols) %>%
-  hc_tooltip(crosshairs = T, shared = T, 
-             headerFormat = "<b>{point.key}</b><br>",
-             pointFormat = "<b>{point.voto}</b>: {point.n} votos - <b>{point.pct_total}</b> del total<br> "
-             ) %>% 
-  hc_yAxis(title = "") %>% 
-  hc_xAxis(title = "") %>% 
-    hc_legend(
+  hc_tooltip(
+    crosshairs = T, shared = T,
+    headerFormat = "<b>{point.key}</b><br>",
+    pointFormat = "<b>{point.voto}</b>: {point.n} votos - <b>{point.pct_total}</b> del total<br> "
+  ) %>%
+  hc_yAxis(title = "") %>%
+  hc_xAxis(title = "") %>%
+  hc_legend(
     align = "right",
     verticalAlign = "bottom"
-    )
+  )
 ```
 
 ### Voto por provincia (TOP 5 por habitantes)
 
 ```{r}
-df_prov_2020 %>% 
+df_prov_2020 %>%
   filter(
     provincia %in% c("Buenos Aires", "C.A.B.A.", "Córdoba", "Santa Fe", "Mendoza")
-  ) %>% 
+  ) %>%
   mutate(
-    pct_total = scales::percent(n/sum(n) *100, scale = 1)
+    pct_total = scales::percent(n / sum(n) * 100, scale = 1)
   ) %>%
   hchart(
-    type = "bar", 
+    type = "bar",
     hcaes(x = provincia, y = n, group = voto),
     name = c("Abstencion", "Afirmativo", "Ausente", "Negativo")
-    ) %>%
-  hc_colors(cols) %>% 
-  hc_tooltip(crosshairs = T, shared = T, 
-             headerFormat = "<b>{point.key}</b><br>",
-             pointFormat = "<b>{point.voto}</b>: {point.n} votos - <b>{point.pct_total}</b> del total<br> "
-             ) %>% 
-  hc_yAxis(title = "") %>% 
-  hc_xAxis(title = "") %>% 
-    hc_legend(
+  ) %>%
+  hc_colors(cols) %>%
+  hc_tooltip(
+    crosshairs = T, shared = T,
+    headerFormat = "<b>{point.key}</b><br>",
+    pointFormat = "<b>{point.voto}</b>: {point.n} votos - <b>{point.pct_total}</b> del total<br> "
+  ) %>%
+  hc_yAxis(title = "") %>%
+  hc_xAxis(title = "") %>%
+  hc_legend(
     align = "right",
     verticalAlign = "bottom"
-    ) 
+  )
 ```
 
 
@@ -165,28 +168,29 @@ bscols(
     filter_select("provincia", "Provincia", data, ~provincia)
   ),
   reactable(data,
-            compact = T,
-            pagination = T,
-            defaultPageSize = 7,
-            searchable = T,
-            outlined = TRUE,
-            defaultSorted = list(bloque = "asc"),
-            showSortable = T,
-            style = list(fontFamily = "Work Sans, sans-serif", fontSize = "14px"),
-            columns = list(
-    diputado = colDef(
-      name = "Diputado",
-      # style = sticky_style,
-      # headerStyle = sticky_style,
-      cell = function(value, index) {
-        prov <- df_2020_filter$provincia[index]
-        tagList(
-          div(style = list(fontWeight = 600), value),
-          div(style = list(fontSize = 12), prov)
-        )
-      }),
-    provincia = colDef(show = F),
-    bloque = colDef(
+    compact = T,
+    pagination = T,
+    defaultPageSize = 7,
+    searchable = T,
+    outlined = TRUE,
+    defaultSorted = list(bloque = "asc"),
+    showSortable = T,
+    style = list(fontFamily = "Work Sans, sans-serif", fontSize = "14px"),
+    columns = list(
+      diputado = colDef(
+        name = "Diputado",
+        # style = sticky_style,
+        # headerStyle = sticky_style,
+        cell = function(value, index) {
+          prov <- df_2020_filter$provincia[index]
+          tagList(
+            div(style = list(fontWeight = 600), value),
+            div(style = list(fontSize = 12), prov)
+          )
+        }
+      ),
+      provincia = colDef(show = F),
+      bloque = colDef(
         name = "Bloque",
         style = JS("function(rowInfo, colInfo, state) {
         var firstSorted = state.sorted[0]
@@ -197,27 +201,26 @@ bscols(
           }
         }
       }")
+      ),
+      voto = colDef(
+        name = "Voto",
+        cell = function(value) {
+          class <- paste0("tag status-", tolower(value))
+          htmltools::div(class = class, value)
+        }
+      )
     ),
-    voto = colDef(name = "Voto",
-      cell = function(value) {
-        class <- paste0("tag status-", tolower(value))
-        htmltools::div(class = class, value)
-      })
-  ),
     language = reactableLang(
-    searchPlaceholder = "Buscar...",
-    noData = "No se encontraron registros",
-    pageInfo = "{rowStart} a {rowEnd} de {rows} registros",
-    pagePrevious = "\u276e",
-    pageNext = "\u276f",
-
-    # Accessible labels for assistive technologies such as screen readers.
-    # These are already set by default, but don't forget to update them when
-    # changing visible text.
-    pagePreviousLabel = "Pagina previa",
-    pageNextLabel = "Siguiente pagina"
+      searchPlaceholder = "Buscar...",
+      noData = "No se encontraron registros",
+      pageInfo = "{rowStart} a {rowEnd} de {rows} registros",
+      pagePrevious = "\u276e",
+      pageNext = "\u276f",
+      pagePreviousLabel = "Pagina previa",
+      pageNextLabel = "Siguiente pagina"
+    )
   )
-))
+)
 ```
 
 
@@ -264,19 +267,19 @@ reactable(
     cambio = colDef(
       name = "Cambio %",
       cell = function(value) {
-                if (value >= 0) paste0("+", value, "%") else paste0(value, "%")
-              },
-              style = function(value) {
-                color <- if (value > 0) {
-                  "#008000"
-                } else if (value < 0) {
-                  "#e00000"
-                }
-                list(fontWeight = 600, color = color)
-              }
-            )
+        if (value >= 0) paste0("+", value, "%") else paste0(value, "%")
+      },
+      style = function(value) {
+        color <- if (value > 0) {
+          "#008000"
+        } else if (value < 0) {
+          "#e00000"
+        }
+        list(fontWeight = 600, color = color)
+      }
+    )
   ),
-    columnGroups = list(
+  columnGroups = list(
     colGroup(name = "2018", columns = c("cant_2018", "pct_bloque_2018")),
     colGroup(name = "2020", columns = c("cant_2020", "pct_bloque_2020"))
   ),
@@ -287,10 +290,6 @@ reactable(
     pageInfo = "{rowStart} a {rowEnd} de {rows} registros",
     pagePrevious = "\u276e",
     pageNext = "\u276f",
-
-    # Accessible labels for assistive technologies such as screen readers.
-    # These are already set by default, but don't forget to update them when
-    # changing visible text.
     pagePreviousLabel = "Pagina previa",
     pageNextLabel = "Siguiente pagina"
   )
@@ -314,7 +313,8 @@ reactable(
           div(style = list(fontWeight = 600), value),
           div(style = list(fontSize = 12), prov)
         )
-      }),
+      }
+    ),
     bloque = colDef(
       name = "Bloque",
       style = JS("function(rowInfo, colInfo, state) {
@@ -328,16 +328,20 @@ reactable(
       }")
     ),
     provincia = colDef(show = FALSE),
-    voto_2018 = colDef(name = "2018",
+    voto_2018 = colDef(
+      name = "2018",
       cell = function(value) {
         class <- paste0("tag status-", tolower(value))
         htmltools::div(class = class, value)
-      }),
-    voto_2020 = colDef(name = "2020",
+      }
+    ),
+    voto_2020 = colDef(
+      name = "2020",
       cell = function(value) {
         class <- paste0("tag status-", tolower(value))
         htmltools::div(class = class, value)
-      })
+      }
+    )
   ),
   columnGroups = list(
     colGroup(name = "Voto", columns = c("voto_2018", "voto_2020"))
@@ -349,10 +353,6 @@ reactable(
     pageInfo = "{rowStart} a {rowEnd} de {rows} registros",
     pagePrevious = "\u276e",
     pageNext = "\u276f",
-
-    # Accessible labels for assistive technologies such as screen readers.
-    # These are already set by default, but don't forget to update them when
-    # changing visible text.
     pagePreviousLabel = "Pagina previa",
     pageNextLabel = "Siguiente pagina"
   )
@@ -367,15 +367,16 @@ reactable(
 ```{r}
 highchart() %>%
   hc_add_series(voto_nuevos_diputados,
-                type = "pie",
-                innerSize = "50%",
-                size = "70%", 
-                #center = c(1, 5),
-                hcaes(x = voto_2020, y = n,)) %>%
-  hc_colors(c("#00a32a", "#00a3e4","#b5b6b5")) %>% 
-  hc_tooltip(headerFormat = "<b>{point.key}</b><br>",
-             pointFormat = "<b>{point.n}</b> votos - <b>{point.pct_total_nuevos}</b> votos nuevos mandatos<br>"
-             ) 
+    type = "pie",
+    innerSize = "50%",
+    size = "70%",
+    hcaes(x = voto_2020, y = n, )
+  ) %>%
+  hc_colors(c("#00a32a", "#00a3e4", "#b5b6b5")) %>%
+  hc_tooltip(
+    headerFormat = "<b>{point.key}</b><br>",
+    pointFormat = "<b>{point.n}</b> votos - <b>{point.pct_total_nuevos}</b> votos nuevos mandatos<br>"
+  )
 ```
 </div>
 
@@ -383,25 +384,26 @@ highchart() %>%
 ```{r}
 voto_nuevos_diputados_bloque %>%
   mutate(
-    pct_total_nuevos = scales::percent(n/sum(n) *100, scale = 1)
-  ) %>% 
+    pct_total_nuevos = scales::percent(n / sum(n) * 100, scale = 1)
+  ) %>%
   hchart(
     type = "bar",
-    #size = "60%",
+    # size = "60%",
     name = c("Abstencion", "Afirmativo", "Negativo"),
     hcaes(x = bloque, y = n, group = voto_2020)
-    ) %>%
-  hc_colors(c("#b5b6b5", "#00a32a","#00a3e4")) %>%
-  hc_tooltip(crosshairs = T, shared = T,
-             headerFormat = "<b>{point.key}</b><br>",
-             pointFormat = "<b>{point.voto_2020}</b>: {point.n} votos - <b>{point.pct_total_nuevos}</b> votos nuevos mandatos<br> "
-             ) %>%
-  hc_yAxis(title = "") %>% 
-  hc_xAxis(title = "") %>% 
-    hc_legend(
+  ) %>%
+  hc_colors(c("#b5b6b5", "#00a32a", "#00a3e4")) %>%
+  hc_tooltip(
+    crosshairs = T, shared = T,
+    headerFormat = "<b>{point.key}</b><br>",
+    pointFormat = "<b>{point.voto_2020}</b>: {point.n} votos - <b>{point.pct_total_nuevos}</b> votos nuevos mandatos<br> "
+  ) %>%
+  hc_yAxis(title = "") %>%
+  hc_xAxis(title = "") %>%
+  hc_legend(
     align = "right",
     verticalAlign = "bottom"
-    )
+  )
 ```
 </div>
 
