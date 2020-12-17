@@ -1,0 +1,632 @@
+---
+title: "aborto_diputados"
+output: 
+  html_document:
+    css: "www/style.css"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## O.D. 352 - LEY DE REGULACIÓN DEL ACCESO A LA I.V.E. Y A LA ATENCIÓN POSTABORTO
+### 11/12/2020 - 07:23
+
+## Librerias    
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(janitor)
+library(here)
+#library(leaflet)
+#library(hrbrthemes)
+library(highcharter)
+library(reactable)
+#library(waffle)
+#library(patchwork)
+library(htmltools)
+
+here()
+```
+
+## Dataset 2018 y 2020
+```{r}
+## Fuente: https://votaciones.hcdn.gob.ar/votacion/4077
+
+## Votacion 2020
+df_2020 <- read_csv(here("data","138-17-1.csv"))
+
+### Cambio el nombre de la columna "¿CÓMO VOTÓ?" por algo mas facil de trabajar
+df_2020 <- df_2020 %>% 
+  rename(VOTO = "¿CÓMO VOTÓ?") %>% 
+  clean_names() %>% 
+  ## Filtro al presidente de la cámara porque no votó
+  filter(
+    voto != "PRESIDENTE"
+  )
+
+## Votacion 2018
+df_2018 <- read_csv(here("data","136-8-1.csv"))
+
+### Cambio el nombre de la columna "¿CÓMO VOTÓ?" por algo mas facil de trabajar
+df_2018 <- df_2018 %>% 
+  rename(VOTO = "¿CÓMO VOTÓ?") %>% 
+  clean_names() %>% 
+  ## Filtro al presidente de la cámara porque no votó
+  filter(
+    voto != "PRESIDENTE"
+  )
+```
+
+## Primeras exploraciones votacion 2020
+```{r}
+df_voto_2020 <- df_2020 %>% 
+  count(voto, sort = T)
+
+## Diputados por bloques
+df_2020 %>% 
+  count(bloque, sort = T)
+
+df_bloques_2020 <- df_2020 %>% 
+  count(bloque, voto, sort = T) %>% 
+  mutate(
+    pct_total = scales::percent(n/sum(n) *100, scale = 1)
+  )
+
+df_bloques_2020_top5 <- df_bloques_2020 %>% 
+  slice_head(n = 10)
+
+df_prov_2020 <- df_2020 %>% 
+  count(provincia, voto, sort = T)
+
+votos_afirmativos <-  df_voto_2020 %>% 
+  filter(
+    voto == "AFIRMATIVO"
+  )
+votos_afirmativos <- votos_afirmativos$n
+
+votos_negativos <-  df_voto_2020 %>% 
+  filter(
+    voto == "NEGATIVO"
+  )
+votos_negativos <- votos_negativos$n
+
+votos_abstencion <-  df_voto_2020 %>% 
+  filter(
+    voto == "ABSTENCION"
+  )
+votos_abstencion <- votos_abstencion$n
+
+votos_ausente <-  df_voto_2020 %>% 
+  filter(
+    voto == "AUSENTE"
+  )
+votos_ausente <-  votos_ausente$n
+
+
+## ¿Que bloque aporto mas al voto afirmativo? TOP10
+df_bloques_2020 %>% 
+  rename(
+    cant_voto = n
+  ) %>% 
+  filter(
+    voto == "AFIRMATIVO"
+  ) %>% 
+  mutate(
+    #pct = round(cant_voto/sum(cant_voto) *100, digits = 2)
+    pct_afirmativo = scales::percent(cant_voto/sum(cant_voto) *100, scale = 1)
+  ) %>% 
+  select(bloque, pct_afirmativo) %>% 
+  slice_head(n = 10)
+
+## ¿Que bloque aporto mas al voto negativo? TOP10
+df_bloques_2020 %>% 
+  rename(
+    cant_voto = n
+  ) %>% 
+  filter(
+    voto == "NEGATIVO"
+  ) %>% 
+  mutate(
+    #pct = round(cant_voto/sum(cant_voto) *100, digits = 2)
+    pct_negativo = scales::percent(cant_voto/sum(cant_voto) *100, scale = 1)
+  ) %>% 
+  select(bloque, pct_negativo) %>% 
+  slice_head(n = 10)
+
+## ¿Que provincia aporto más al voto afirmativo? TOP10
+df_prov_2020 %>% 
+  rename(
+    cant_voto = n
+  ) %>% 
+  filter(
+    voto == "AFIRMATIVO"
+  ) %>% 
+  mutate(
+    pct_afirmativo = scales::percent(cant_voto/sum(cant_voto) *100, scale = 1)
+  ) %>% 
+  select(provincia, pct_afirmativo) %>% 
+  slice_head(n = 10)
+
+## ¿Que provincia aporto más al voto negativo? TOP10
+df_prov_2020 %>% 
+  rename(
+    cant_voto = n
+  ) %>% 
+  filter(
+    voto == "NEGATIVO"
+  ) %>% 
+  mutate(
+    #pct = round(cant_voto/sum(cant_voto) *100, digits = 2)
+    pct_negativo = scales::percent(cant_voto/sum(cant_voto) *100, scale = 1)
+  ) %>% 
+  select(provincia, pct_negativo) %>% 
+  slice_head(n = 10)
+```
+
+
+```{r}
+## Cambio la composicion de voto por bloque desde 2018 a 2020? PRO y FDT
+df_bloques_2018 <- df_2018 %>% 
+  count(bloque, voto, sort = T) %>% 
+  mutate(
+    pct_total = scales::percent(n/sum(n) *100, scale = 1)
+  )
+
+##### PRO
+df_bloques_PRO_2018 <- df_bloques_2018 %>% 
+  filter(
+    bloque == "PRO"
+  ) %>% 
+  rename(
+    #"voto_2018" = voto,
+    "pct_total_2018" = pct_total,
+    "cant_2018" = n
+  ) %>% 
+  mutate(
+    pct_bloque_2018 = scales::percent(cant_2018/sum(cant_2018) *100, scale = 1)
+  )
+
+df_bloques_PRO_2020 <- df_bloques_2020 %>% 
+  filter(
+    bloque == "PRO"
+  ) %>% 
+  rename(
+    #"voto_2020" = voto,
+    "pct_total_2020" = pct_total,
+    "cant_2020" = n
+  ) %>% 
+  mutate(
+    pct_bloque_2020 = scales::percent(cant_2020/sum(cant_2020) *100, scale = 1)
+  )
+
+df_bloques_PRO <- right_join(df_bloques_PRO_2018, df_bloques_PRO_2020, by = "voto", keep = T)
+
+df_bloques_PRO$pct_bloque_2018[3:4] <- 0
+df_bloques_PRO$cant_2018[3:4] <- 0
+
+df_bloques_PRO <- df_bloques_PRO %>% 
+  select(bloque.y, voto.y, cant_2018, cant_2020, pct_bloque_2018, pct_bloque_2020) %>% 
+  mutate(
+    cant_2018 = coalesce(cant_2018, 0),
+    cambio = parse_number(pct_bloque_2020) - parse_number(pct_bloque_2018)
+  ) #%>% 
+  # mutate(
+  #   cambio = case_when(
+  #     cambio > 0 ~ paste0("↑", as.character(abs(cambio)), "%"),
+  #     cambio < 0 ~ paste0("↓", as.character(abs(cambio)), "%"),
+  #     cambio == 0 ~ as.character(abs(cambio))
+  #   ) 
+  # )
+
+
+##### FDT
+df_bloques_FDT_2018 <- df_bloques_2018 %>% 
+  filter(
+    bloque == "Frente para la Victoria - PJ"
+  ) %>% 
+  rename(
+    #"voto_2018" = voto,
+    "pct_total_2018" = pct_total,
+    "cant_2018" = n
+  ) %>% 
+  mutate(
+    pct_bloque_2018 = scales::percent(cant_2018/sum(cant_2018) *100, scale = 1),
+    bloque = str_replace(bloque, "Frente para la Victoria - PJ", "Frente de Todos")
+  )
+
+df_bloques_FDT_2020 <- df_bloques_2020 %>% 
+  filter(
+    bloque == "Frente de Todos"
+  ) %>% 
+  rename(
+    #"voto_2020" = voto,
+    "pct_total_2020" = pct_total,
+    "cant_2020" = n
+  ) %>% 
+  mutate(
+    pct_bloque_2020 = scales::percent(cant_2020/sum(cant_2020) *100, scale = 1)
+  ) 
+
+df_bloques_FDT <- right_join(df_bloques_FDT_2018, df_bloques_FDT_2020, by = "voto", keep = T)
+
+df_bloques_FDT$pct_bloque_2018[4] <- 0
+
+df_bloques_FDT <- df_bloques_FDT %>% 
+  select(bloque.y, voto.y, cant_2018, cant_2020, pct_bloque_2018, pct_bloque_2020) %>% 
+  mutate(
+    cant_2018 = coalesce(cant_2018, 0),
+    cambio = parse_number(pct_bloque_2020) - parse_number(pct_bloque_2018)
+  ) #%>% 
+  # mutate(
+  #   cambio = case_when(
+  #     cambio > 0 ~ paste0("↑", as.character(abs(cambio)), "%"),
+  #     cambio < 0 ~ paste0("↓", as.character(abs(cambio)), "%"),
+  #     cambio == 0 ~ as.character(abs(cambio))
+  #   ) 
+  # )
+
+#####
+
+# reactable(df_bloques_FDT,
+#           columns = list(
+#             cambio = colDef(
+#               cell = function(value) {
+#                 if (value >= 0) paste0("+", value) else value
+#               },
+#               style = function(value) {
+#                 color <- if (value > 0) {
+#                   "#008000"
+#                 } else if (value < 0) {
+#                   "#e00000"
+#                 }
+#                 list(fontWeight = 600, color = color)
+#               }
+#             )
+#           ))
+#           
+df_bloques <- rbind(df_bloques_FDT, df_bloques_PRO) %>% 
+  rename(
+    "bloque" = bloque.y,
+    "voto" = voto.y
+  )
+          
+          
+reactable(
+  df_bloques,
+  style = list(fontFamily = "Work Sans, sans-serif", fontSize = "14px"),
+  columns = list(
+    bloque = colDef(
+      name = "Bloque",
+      style = JS("function(rowInfo, colInfo, state) {
+        var firstSorted = state.sorted[0]
+        if (!firstSorted || firstSorted.id === 'bloque') {
+          var prevRow = state.pageRows[rowInfo.viewIndex - 1]
+          if (prevRow && rowInfo.row['bloque'] === prevRow['bloque']) {
+            return { visibility: 'hidden' }
+          }
+        }
+      }")
+    ),
+    voto = colDef(
+      name = "Voto",
+      cell = function(value) {
+        class <- paste0("tag status-", tolower(value))
+        htmltools::div(class = class, value)
+      }
+    ),
+    cant_2018 = colDef(
+      name = "Votos"
+    ),
+    cant_2020 = colDef(
+      name = "Votos"
+    ),
+    pct_bloque_2018 = colDef(
+      name = "% bloque"
+    ),
+    pct_bloque_2020 = colDef(
+      name = "% bloque"
+    ),
+    cambio = colDef(
+      name = "Cambio %",
+      cell = function(value) {
+                if (value >= 0) paste0("+", value, "%") else paste0(value, "%")
+              },
+              style = function(value) {
+                color <- if (value > 0) {
+                  "#008000"
+                } else if (value < 0) {
+                  "#e00000"
+                }
+                list(fontWeight = 600, color = color)
+              }
+            )
+  ),
+    columnGroups = list(
+    colGroup(name = "2018", columns = c("cant_2018", "pct_bloque_2018")),
+    colGroup(name = "2020", columns = c("cant_2020", "pct_bloque_2020"))
+  ),
+  outlined = TRUE
+)          
+          
+
+```
+
+```{r}
+## ¿Algun diputado cambio su voto respecto a 2018?
+
+cambio_voto <- df_2020 %>%
+  #select(diputado, voto) %>% 
+  left_join(df_2018, by = "diputado") %>% 
+  select(diputado, voto.x, voto.y) %>% 
+  rename(
+    voto_2018 = voto.y,
+    voto_2020 = voto.x
+  ) %>% 
+  mutate(
+    cambio_voto = case_when(
+      voto_2018 == voto_2020 ~ "no_cambio",
+      voto_2018 != voto_2020 ~ "cambio",
+      is.na(voto_2018) ~ "nuevo_mandato",
+    )
+  )
+
+cambio_voto %>% 
+  filter(
+    cambio_voto == "cambio"
+  ) %>% 
+  left_join(df_2020, by = "diputado")
+
+cambio_voto <- cambio_voto %>% 
+  filter(
+    cambio_voto == "cambio"
+  ) %>%
+  left_join(df_2020, by = "diputado") %>% 
+  select(diputado, bloque, provincia, voto_2018, voto_2020)
+
+
+
+reactable(
+  cambio_voto,
+  defaultSorted = list(bloque = "desc"),
+  style = list(fontFamily = "Work Sans, sans-serif", fontSize = "14px"),
+  columns = list(
+    diputado = colDef(
+      name = "Diputado",
+      cell = function(value, index) {
+        prov <- cambio_voto$provincia[index]
+        tagList(
+          div(style = list(fontWeight = 600), value),
+          div(style = list(fontSize = 12), prov)
+        )
+      }),
+    bloque = colDef(
+      name = "Bloque",
+      style = JS("function(rowInfo, colInfo, state) {
+        var firstSorted = state.sorted[0]
+        if (!firstSorted || firstSorted.id === 'bloque') {
+          var prevRow = state.pageRows[rowInfo.viewIndex - 1]
+          if (prevRow && rowInfo.row['bloque'] === prevRow['bloque']) {
+            return { visibility: 'hidden' }
+          }
+        }
+      }")
+    ),
+    #provincia = colDef(name = "Provincia"),
+    provincia = colDef(show = FALSE),
+    voto_2018 = colDef(name = "2018",
+      cell = function(value) {
+        class <- paste0("tag status-", tolower(value))
+        htmltools::div(class = class, value)
+      }),
+    voto_2020 = colDef(name = "2020",
+      cell = function(value) {
+        class <- paste0("tag status-", tolower(value))
+        htmltools::div(class = class, value)
+      })
+  ),
+  columnGroups = list(
+    colGroup(name = "Voto", columns = c("voto_2018", "voto_2020"))
+  ),
+  striped = F
+)
+```
+
+```{r}
+### Como votaron los diputados nuevos?
+
+voto_nuevos_diputados <-  df_2020 %>%
+  left_join(df_2018, by = "diputado") %>% 
+  select(diputado, voto.x, voto.y, bloque.x) %>% 
+  rename(
+    voto_2018 = voto.y,
+    voto_2020 = voto.x,
+    bloque = bloque.x
+  ) %>% 
+  mutate(
+    cambio_voto = case_when(
+      voto_2018 == voto_2020 ~ "no_cambio",
+      voto_2018 != voto_2020 ~ "cambio",
+      is.na(voto_2018) ~ "nuevo_mandato"
+    )
+  ) %>% 
+  filter(
+    cambio_voto == "nuevo_mandato"
+  ) %>% 
+  select(diputado, voto_2020, bloque) %>% 
+  count(voto_2020, sort = T) %>% 
+  mutate(
+    pct_total_nuevos = scales::percent(n/sum(n) *100, scale = 1)
+  )
+
+
+
+voto_nuevos_diputados_bloque <-  df_2020 %>%
+  left_join(df_2018, by = "diputado") %>% 
+  select(diputado, voto.x, voto.y, bloque.x) %>% 
+  rename(
+    voto_2018 = voto.y,
+    voto_2020 = voto.x,
+    bloque = bloque.x
+  ) %>% 
+  mutate(
+    cambio_voto = case_when(
+      voto_2018 == voto_2020 ~ "no_cambio",
+      voto_2018 != voto_2020 ~ "cambio",
+      is.na(voto_2018) ~ "nuevo_mandato",
+    )
+  ) %>% 
+  filter(
+    cambio_voto == "nuevo_mandato"
+  ) %>% 
+  select(diputado, voto_2020, bloque) %>% 
+  count(voto_2020, bloque, sort = T)
+
+#cols <- c("#b5b6b5", "#00a32a","#4c5b61","#00a3e4")
+#name = c("Abstencion", "Afirmativo", "Ausente", "Negativo")
+
+highchart() %>%
+  hc_add_series(voto_nuevos_diputados,
+                type = "pie",
+                innerSize = 200,
+                #size = "60%", 
+                #center = c(1, 5),
+                hcaes(x = voto_2020, y = n,)) %>%
+  hc_colors(c("#00a32a", "#00a3e4","#b5b6b5")) %>% 
+  hc_tooltip(headerFormat = "<b>{point.key}</b><br>",
+             pointFormat = "<b>{point.n}</b> votos - <b>{point.pct_total_nuevos}</b> de votos nuevos mandatos<br>"
+             ) 
+
+voto_nuevos_diputados_bloque %>%
+  mutate(
+    pct_total_nuevos = scales::percent(n/sum(n) *100, scale = 1)
+  ) %>% 
+  hchart(
+    type = "bar", 
+    name = c("Abstencion", "Afirmativo", "Negativo"),
+    hcaes(x = bloque, y = n, group = voto_2020)
+    ) %>%
+  hc_colors(c("#b5b6b5", "#00a32a","#00a3e4")) %>%
+  hc_tooltip(crosshairs = T, shared = T,
+             headerFormat = "<b>{point.key}</b><br>",
+             pointFormat = "<b>{point.voto_2020}</b>: {point.n} votos - <b>{point.pct_total_nuevos}</b> de votos nuevos mandatos<br> "
+             ) %>%
+  hc_yAxis(title = "") %>% 
+  hc_xAxis(title = "") %>% 
+    hc_legend(
+    align = "right",
+    verticalAlign = "bottom"
+    ) 
+
+
+```
+
+
+### Plots
+```{r}
+
+### Votos por bloque
+plot_bloques <- df_bloques_2020 %>%
+  filter(
+    bloque %in% c("Frente de Todos", "PRO", "Unión Cívica Radical", "Coalición Cívica", "Córdoba Federal")
+  ) %>% 
+  ggplot(
+    aes(x = reorder(bloque, n), y = n, fill = voto, text = paste0("Voto: ", voto, "\nCantidad votos: ", n, "\nPorcentaje: ", pct_total))
+  ) +
+  geom_col(position = "dodge") +
+  geom_text(aes(label = ifelse(parse_number(pct_total) > 7, paste0(n," | ", pct_total), "")), position = position_dodge(width = 0.9), hjust = 2, size = 3.5, color = "white") +
+  geom_text(aes(label = ifelse(parse_number(pct_total) < 7, paste0(n," | ", pct_total), "")), position = position_dodge(width = 0.9), hjust = -1, size = 3.5) +
+  coord_flip() +
+  ylim(0,110) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    axis.title = element_blank())
+
+ggplotly(plot_bloques, tooltip = "text")
+
+### Votos por provincia
+df_prov_2020 %>% 
+  filter(
+    provincia %in% c("Buenos Aires", "C.A.B.A.", "Córdoba", "Santa Fe", "Chaco")
+  ) %>% 
+  mutate(
+    pct_total = scales::percent(n/sum(n) *100, scale = 1)
+  ) %>% 
+  ggplot(
+    aes(x = reorder(provincia, n), y = n, fill = voto)
+  ) +
+  geom_col(position = "dodge") +
+  geom_text(aes(label = ifelse(parse_number(pct_total) > 7, paste0(n," | ", pct_total), "")),position = position_dodge(width = 0.9), hjust = 1.2, size = 3.5, color = "white") +
+  geom_text(aes(label = ifelse(parse_number(pct_total) < 7, paste0(n," | ", pct_total), "")), position = position_dodge(width = 0.9), hjust = -0.2, size = 3.5) +
+  coord_flip() +
+  #ylim(0,110) +
+  theme_minimal()
+
+```
+
+```{r}
+
+cols <- c("#b5b6b5", "#00a32a","#4c5b61","#00a3e4")
+
+#tt_bloques <- tooltip_table(c("Voto", "n", "pc_total"), c("{point.voto}", "{point.n}", "{point.pct_total}"))
+
+df_bloques_2020 %>%
+  filter(
+    bloque %in% c("Frente de Todos", "PRO", "Unión Cívica Radical", "Coalición Cívica", "Córdoba Federal")
+  ) %>% 
+  hchart(
+    type = "bar", 
+    hcaes(x = bloque, y = n, group = voto),
+    name = c("Abstencion", "Afirmativo", "Ausente", "Negativo")
+    ) %>%
+  hc_colors(cols) %>%
+  hc_tooltip(crosshairs = T, shared = T,
+             headerFormat = "<b>{point.key}</b><br>",
+             pointFormat = "<b>{point.voto}</b>: {point.n} votos - <b>{point.pct_total}</b> del total<br> "
+             ) %>%
+  #hc_tooltip(pointFormat = tt_bloques, useHTML = T) %>% 
+  hc_yAxis(title = "") %>% 
+  hc_xAxis(title = "") %>% 
+    hc_legend(
+    align = "right",
+    verticalAlign = "bottom"
+    ) 
+```
+
+```{r}
+df_prov_2020 %>% 
+  filter(
+    provincia %in% c("Buenos Aires", "C.A.B.A.", "Córdoba", "Santa Fe", "Mendoza")
+  ) %>% 
+  mutate(
+    pct_total = scales::percent(n/sum(n) *100, scale = 1)
+  ) %>%
+  hchart(
+    type = "bar", 
+    hcaes(x = provincia, y = n, group = voto),
+    name = c("Abstencion", "Afirmativo", "Ausente", "Negativo")
+    ) %>%
+  hc_colors(cols) %>% 
+  hc_tooltip(crosshairs = T, shared = T, 
+             headerFormat = "<b>{point.key}</b><br>",
+             pointFormat = "<b>{point.voto}</b>: {point.n} votos - <b>{point.pct_total}</b> del total<br> "
+             ) %>% 
+  hc_yAxis(title = "") %>% 
+  hc_xAxis(title = "") %>% 
+    hc_legend(
+    align = "right",
+    verticalAlign = "bottom"
+    ) 
+```
+
+
+## exporto env
+```{r}
+save.image(file = "./data/global.RData")
+```
+
+
+

@@ -1,0 +1,27 @@
+.tag {
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.status-afirmativo {
+  background: #00a32a;
+  color: #264653;
+}
+
+.status-negativo {
+  background: #00a3e4;
+  color: #006f9c;
+}
+
+.status-abstencion {
+  background: #b5b6b5;
+  color: #777877;
+}
+
+.status-ausente {
+  background: #4c5b61;
+  color: #000000;
+}

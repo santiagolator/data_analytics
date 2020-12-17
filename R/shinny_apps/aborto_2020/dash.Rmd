@@ -1,0 +1,327 @@
+---
+title: "Aborto 2020"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+    theme: flatly
+    source_code: embed
+    css: www/style.css
+    social: menu
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(reactable)
+library(highcharter)
+library(htmltools)
+library(ggplot2)
+library(plotly)
+```
+
+
+```{r}
+## Cargar dataset
+load(file = "./data/global.RData")
+```
+
+
+
+Votacion Diputados {data-icon="fa-check-square"}
+=======================================================================
+
+> Luego de una maratonica sesión de mas de 20hs, el 11/12/2020 a las 07:23 se realizó la votacion sobre el proyecto de "Ley de regulacion del acceso a la I.V.E. y a la atencion posaborto", obteniendo media sancion.
+
+Row
+-----------------------------------------------------------------------
+
+### Votos afirmativos {.value-box}
+
+```{r}
+renderValueBox({
+  valueBox(
+    value = votos_afirmativos,
+    icon = "fa-plus",
+    color = "#00a32a",
+    caption = "Votos afirmativos"
+  )
+})
+```
+
+### Votos negativos {.value-box}
+
+```{r}
+renderValueBox({
+  valueBox(
+    value = votos_negativos,
+    icon = "fa-minus",
+    color = "#00a3e4"
+  )
+})
+```
+
+### Abstenciones {.value-box}
+
+```{r}
+renderValueBox({
+  valueBox(
+    value = votos_abstencion,
+    icon = "fa-question",
+    color = "#b5b6b5"
+  )
+})
+```
+
+### Ausentes {.value-box}
+
+```{r}
+renderValueBox({
+  valueBox(
+    value = votos_ausente,
+    icon = "fa-user-slash",
+    color = "#4c5b61"
+  )
+})
+```
+
+
+
+Row
+-----------------------------------------------------------------------
+
+### Voto por bloque (TOP 5 Cantidad de diputados/as)
+
+```{r}
+df_bloques_2020 %>%
+  filter(
+    bloque %in% c("Frente de Todos", "PRO", "Unión Cívica Radical", "Coalición Cívica", "Córdoba Federal")
+  ) %>% 
+  hchart(
+    type = "bar", 
+    hcaes(x = bloque, y = n, group = voto),
+    name = c("Abstencion", "Afirmativo", "Ausente", "Negativo")
+    ) %>%
+  hc_colors(cols) %>%
+  hc_tooltip(crosshairs = T, shared = T, 
+             headerFormat = "<b>{point.key}</b><br>",
+             pointFormat = "<b>{point.voto}</b>: {point.n} votos - <b>{point.pct_total}</b> del total<br> "
+             ) %>% 
+  hc_yAxis(title = "") %>% 
+  hc_xAxis(title = "") %>% 
+    hc_legend(
+    align = "right",
+    verticalAlign = "bottom"
+    )
+```
+
+### Voto por provincia (TOP 5 por habitantes)
+
+```{r}
+df_prov_2020 %>% 
+  filter(
+    provincia %in% c("Buenos Aires", "C.A.B.A.", "Córdoba", "Santa Fe", "Mendoza")
+  ) %>% 
+  mutate(
+    pct_total = scales::percent(n/sum(n) *100, scale = 1)
+  ) %>%
+  hchart(
+    type = "bar", 
+    hcaes(x = provincia, y = n, group = voto),
+    name = c("Abstencion", "Afirmativo", "Ausente", "Negativo")
+    ) %>%
+  hc_colors(cols) %>% 
+  hc_tooltip(crosshairs = T, shared = T, 
+             headerFormat = "<b>{point.key}</b><br>",
+             pointFormat = "<b>{point.voto}</b>: {point.n} votos - <b>{point.pct_total}</b> del total<br> "
+             ) %>% 
+  hc_yAxis(title = "") %>% 
+  hc_xAxis(title = "") %>% 
+    hc_legend(
+    align = "right",
+    verticalAlign = "bottom"
+    ) 
+```
+
+
+
+Row {.tabset}
+-----------------------------------------------------------------------
+
+### Cambios en la votacion del bloque entre 2018 y 2020
+
+```{r}
+reactable(
+  df_bloques,
+  style = list(fontFamily = "Work Sans, sans-serif", fontSize = "14px"),
+  columns = list(
+    bloque = colDef(
+      name = "Bloque",
+      style = JS("function(rowInfo, colInfo, state) {
+        var firstSorted = state.sorted[0]
+        if (!firstSorted || firstSorted.id === 'bloque') {
+          var prevRow = state.pageRows[rowInfo.viewIndex - 1]
+          if (prevRow && rowInfo.row['bloque'] === prevRow['bloque']) {
+            return { visibility: 'hidden' }
+          }
+        }
+      }")
+    ),
+    voto = colDef(
+      name = "Voto",
+      cell = function(value) {
+        class <- paste0("tag status-", tolower(value))
+        htmltools::div(class = class, value)
+      }
+    ),
+    cant_2018 = colDef(
+      name = "Votos"
+    ),
+    cant_2020 = colDef(
+      name = "Votos"
+    ),
+    pct_bloque_2018 = colDef(
+      name = "% bloque"
+    ),
+    pct_bloque_2020 = colDef(
+      name = "% bloque"
+    ),
+    cambio = colDef(
+      name = "Cambio %",
+      cell = function(value) {
+                if (value >= 0) paste0("+", value, "%") else paste0(value, "%")
+              },
+              style = function(value) {
+                color <- if (value > 0) {
+                  "#008000"
+                } else if (value < 0) {
+                  "#e00000"
+                }
+                list(fontWeight = 600, color = color)
+              }
+            )
+  ),
+    columnGroups = list(
+    colGroup(name = "2018", columns = c("cant_2018", "pct_bloque_2018")),
+    colGroup(name = "2020", columns = c("cant_2020", "pct_bloque_2020"))
+  ),
+  outlined = TRUE
+) 
+```
+
+
+### Diputados/as que cambiaron su voto en 2020 respecto a 2018
+```{r}
+reactable(
+  cambio_voto,
+  defaultSorted = list(bloque = "desc"),
+  style = list(fontFamily = "Work Sans, sans-serif", fontSize = "14px"),
+  columns = list(
+    diputado = colDef(
+      name = "Diputado",
+      cell = function(value, index) {
+        prov <- cambio_voto$provincia[index]
+        tagList(
+          div(style = list(fontWeight = 600), value),
+          div(style = list(fontSize = 12), prov)
+        )
+      }),
+    bloque = colDef(
+      name = "Bloque",
+      style = JS("function(rowInfo, colInfo, state) {
+        var firstSorted = state.sorted[0]
+        if (!firstSorted || firstSorted.id === 'bloque') {
+          var prevRow = state.pageRows[rowInfo.viewIndex - 1]
+          if (prevRow && rowInfo.row['bloque'] === prevRow['bloque']) {
+            return { visibility: 'hidden' }
+          }
+        }
+      }")
+    ),
+    #provincia = colDef(name = "Provincia"),
+    provincia = colDef(show = FALSE),
+    voto_2018 = colDef(name = "2018",
+      cell = function(value) {
+        class <- paste0("tag status-", tolower(value))
+        htmltools::div(class = class, value)
+      }),
+    voto_2020 = colDef(name = "2020",
+      cell = function(value) {
+        class <- paste0("tag status-", tolower(value))
+        htmltools::div(class = class, value)
+      })
+  ),
+  columnGroups = list(
+    colGroup(name = "Voto", columns = c("voto_2018", "voto_2020"))
+  ),
+  striped = F
+)
+```
+
+### ¿Como votaron los/as nuevos/as diputados/as?
+
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:center;'>
+
+<div>
+```{r}
+highchart() %>%
+  hc_add_series(voto_nuevos_diputados,
+                type = "pie",
+                innerSize = 200,
+                #size = "60%", 
+                #center = c(1, 5),
+                hcaes(x = voto_2020, y = n,)) %>%
+  hc_colors(c("#00a32a", "#00a3e4","#b5b6b5")) %>% 
+  hc_tooltip(headerFormat = "<b>{point.key}</b><br>",
+             pointFormat = "<b>{point.n}</b> votos - <b>{point.pct_total_nuevos}</b> votos nuevos mandatos<br>"
+             ) 
+```
+</div>
+
+<div>
+```{r}
+voto_nuevos_diputados_bloque %>%
+  mutate(
+    pct_total_nuevos = scales::percent(n/sum(n) *100, scale = 1)
+  ) %>% 
+  hchart(
+    type = "bar", 
+    name = c("Abstencion", "Afirmativo", "Negativo"),
+    hcaes(x = bloque, y = n, group = voto_2020)
+    ) %>%
+  hc_colors(c("#b5b6b5", "#00a32a","#00a3e4")) %>%
+  hc_tooltip(crosshairs = T, shared = T,
+             headerFormat = "<b>{point.key}</b><br>",
+             pointFormat = "<b>{point.voto_2020}</b>: {point.n} votos - <b>{point.pct_total_nuevos}</b> votos nuevos mandatos<br> "
+             ) %>%
+  hc_yAxis(title = "") %>% 
+  hc_xAxis(title = "") %>% 
+    hc_legend(
+    align = "right",
+    verticalAlign = "bottom"
+    )
+```
+</div>
+
+</div>
+
+
+
+
+Votacion Senadores {data-icon="fa-square"}
+=======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+### Timer {.no-title}
+
+```{r, echo=FALSE}
+htmltools::includeHTML("www/timer.html")
+```
+
+
+Acerca {data-icon="robot"}
+=======================================================================
+
