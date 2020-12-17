@@ -1,8 +1,11 @@
 ## Dashboard sobre la votacion de la *Ley de regulacion del acceso a la I.V.E. y a la atencion posaborto*
 
+🚧 Trabajo en progreso 🚧
+
+![](https://github.com/santiagolator/data_analytics/raw/master/R/shiny_apps/aborto_2020/app_screen.gif)
+
 ### [Link a shinyapps](https://santiago-lator.shinyapps.io/aborto_2020/)
 
-🚧 Trabajo en progreso 🚧
 
 <br>
 
