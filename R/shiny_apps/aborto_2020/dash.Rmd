@@ -5,7 +5,7 @@ output:
     orientation: rows
     vertical_layout: scroll
     theme: flatly
-    source_code: embed
+    source_code: "https://github.com/santiagolator/data_analytics/tree/master/R/shiny_apps/aborto_2020"
     css: www/style.css
     social: menu
 runtime: shiny
