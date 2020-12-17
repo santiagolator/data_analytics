@@ -8,20 +8,20 @@
 
 .status-afirmativo {
   background: #00a32a;
-  color: #264653;
+  color: #ffffff;
 }
 
 .status-negativo {
   background: #00a3e4;
-  color: #006f9c;
+  color: #ffffff;
 }
 
 .status-abstencion {
   background: #b5b6b5;
-  color: #777877;
+  color: #ffffff;
 }
 
 .status-ausente {
   background: #4c5b61;
-  color: #000000;
+  color: #ffffff;
 }

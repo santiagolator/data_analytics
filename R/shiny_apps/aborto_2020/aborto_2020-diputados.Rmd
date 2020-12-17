@@ -27,9 +27,19 @@ library(reactable)
 #library(waffle)
 #library(patchwork)
 library(htmltools)
+library(icon)
+library(shiny)
+library(crosstalk)
 
 here()
 ```
+
+
+```{r}
+load(file = "./data/global.RData")
+```
+
+
 
 ## Dataset 2018 y 2020
 ```{r}
@@ -349,11 +359,11 @@ reactable(
     colGroup(name = "2020", columns = c("cant_2020", "pct_bloque_2020"))
   ),
   outlined = TRUE
-)          
-          
+)   
+
+
 
 ```
-
 ```{r}
 ## ¿Algun diputado cambio su voto respecto a 2018?
 
@@ -387,6 +397,8 @@ cambio_voto <- cambio_voto %>%
   select(diputado, bloque, provincia, voto_2018, voto_2020)
 
 
+sticky_style <- list(position = "sticky", left = 0, background = "#fff", zIndex = 1,
+                     borderRight = "1px solid #eee")
 
 reactable(
   cambio_voto,
@@ -395,13 +407,16 @@ reactable(
   columns = list(
     diputado = colDef(
       name = "Diputado",
+      style = sticky_style,
+      headerStyle = sticky_style,
       cell = function(value, index) {
         prov <- cambio_voto$provincia[index]
         tagList(
           div(style = list(fontWeight = 600), value),
           div(style = list(fontSize = 12), prov)
         )
-      }),
+      }
+    ),
     bloque = colDef(
       name = "Bloque",
       style = JS("function(rowInfo, colInfo, state) {
@@ -414,18 +429,22 @@ reactable(
         }
       }")
     ),
-    #provincia = colDef(name = "Provincia"),
+    # provincia = colDef(name = "Provincia"),
     provincia = colDef(show = FALSE),
-    voto_2018 = colDef(name = "2018",
+    voto_2018 = colDef(
+      name = "2018",
       cell = function(value) {
         class <- paste0("tag status-", tolower(value))
         htmltools::div(class = class, value)
-      }),
-    voto_2020 = colDef(name = "2020",
+      }
+    ),
+    voto_2020 = colDef(
+      name = "2020",
       cell = function(value) {
         class <- paste0("tag status-", tolower(value))
         htmltools::div(class = class, value)
-      })
+      }
+    )
   ),
   columnGroups = list(
     colGroup(name = "Voto", columns = c("voto_2018", "voto_2020"))
@@ -433,6 +452,73 @@ reactable(
   striped = F
 )
 ```
+
+
+
+```{r, eval=FALSE}
+
+df_2020_filter <- as.data.frame(df_2020)
+
+data <- SharedData$new(df_2020_filter)
+
+bscols(
+  widths = c(3, 8),
+  list(
+    filter_checkbox("voto", "Voto", data, ~voto),
+    filter_select("bloque", "Bloque", data, ~bloque),
+    filter_select("provincia", "Provincia", data, ~provincia)
+  ),
+  reactable(data,
+    compact = T,
+    # minRows = 10,
+    pagination = T,
+    searchable = T,
+    defaultSorted = list(bloque = "asc"),
+    style = list(fontFamily = "Work Sans, sans-serif", fontSize = "14px"),
+    showSortable = T,
+    columns = list(
+      diputado = colDef(
+        name = "Diputado",
+        style = sticky_style,
+        headerStyle = sticky_style,
+        cell = function(value, index) {
+          prov <- df_2020_filter$provincia[index]
+          tagList(
+            div(style = list(fontWeight = 600), value),
+            div(style = list(fontSize = 12), prov)
+          )
+        }
+      ),
+      provincia = colDef(show = F),
+      bloque = colDef(
+        name = "Bloque",
+        style = JS("function(rowInfo, colInfo, state) {
+        var firstSorted = state.sorted[0]
+        if (!firstSorted || firstSorted.id === 'bloque') {
+          var prevRow = state.pageRows[rowInfo.viewIndex - 1]
+          if (prevRow && rowInfo.row['bloque'] === prevRow['bloque']) {
+            return { visibility: 'hidden' }
+          }
+        }
+      }")
+      ),
+      voto = colDef(
+        name = "Voto",
+        cell = function(value) {
+          class <- paste0("tag status-", tolower(value))
+          htmltools::div(class = class, value)
+        }
+      )
+    )
+  )
+)
+
+```
+
+
+
+
+
 
 ```{r}
 ### Como votaron los diputados nuevos?
@@ -522,6 +608,13 @@ voto_nuevos_diputados_bloque %>%
 
 
 ```
+
+
+
+
+
+
+
 
 
 ### Plots
