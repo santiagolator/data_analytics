@@ -3,7 +3,7 @@
 
 - [Link directo en Shinyapps](https://santiago-lator.shinyapps.io/proyecto-final-EANT)
 
-![](https://github.com/santiagolator/data_analytics/raw/master/R/shinny_apps/proyecto-final-EANT/app_shiny.gif)
+![](https://github.com/santiagolator/data_analytics/raw/master/R/shiny_apps/proyecto-final-EANT/app_shiny.gif)
 
 ## Abstract
 ### Problema
@@ -62,7 +62,7 @@ Acotamos el estudio a la Ciudad Autónoma de Buenos Aires e incluimos algunos da
 
 ## Repositorio
 
-- [Github](https://github.com/santiagolator/data_analytics/tree/master/R/shinny_apps/proyecto-final-EANT)
+- [Github](https://github.com/santiagolator/data_analytics/tree/master/R/shiny_apps/proyecto-final-EANT)
 
 ## Paleta de colores
 
