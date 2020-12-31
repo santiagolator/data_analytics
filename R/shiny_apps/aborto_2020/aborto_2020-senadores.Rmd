@@ -1,0 +1,147 @@
+---
+title: "aborto_diputados"
+output: 
+  html_document:
+    css: "www/style.css"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Librerias    
+
+```{r}
+library(tidyverse)
+library(tabulizer)
+library(ggplot2)
+library(janitor)
+library(here)
+#library(leaflet)
+#library(hrbrthemes)
+library(highcharter)
+library(reactable)
+#library(waffle)
+#library(patchwork)
+library(htmltools)
+library(icon)
+library(shiny)
+library(crosstalk)
+
+here()
+```
+
+```{r}
+load(file = "./data/global_senadores.RData")
+```
+
+
+## Dataset 2018 y 2020
+```{r}
+### SCRAPING PDF!!!!
+
+#### Identifico areas
+
+areas_tabla_1 <- locate_areas(here("data","Acta 1 Sesion 2020-12-29.pdf"),pages = 1)
+areas_tabla_2 <- locate_areas(here("data","Acta 1 Sesion 2020-12-29.pdf"),pages = 1)
+
+#Extraigo las tablas en 2 bloques/areas debido al formato del pdf original
+
+tabla_1 <- extract_tables(here("data","Acta 1 Sesion 2020-12-29.pdf"),
+             output = "data.frame",
+             pages = 1, 
+             area = areas_tabla_1,
+             guess = FALSE,
+             encoding = "UTF-8"
+             )
+
+tabla_2 <- extract_tables(here("data","Acta 1 Sesion 2020-12-29.pdf"),
+             output = "data.frame",
+             pages = 1, 
+             area = areas_tabla_2,
+             guess = FALSE,
+             encoding = "UTF-8"
+             )
+
+### transformo a dataframe
+tabla_1_clean <- reduce(tabla_1, bind_rows)
+tabla_2_clean <- reduce(tabla_2, bind_rows)
+
+### merge en tabla final
+tabla_clean <- bind_rows(tabla_1_clean, tabla_2_clean)
+
+
+#renombro las columnas
+names(tabla_clean)[1] <- 'nombre'
+names(tabla_clean)[2] <- 'voto'
+
+## Saco los prefijos (numero y punto)
+df_voto_2020_sen <- tabla_clean %>% 
+  mutate(
+    nombre = str_replace(tabla_clean$nombre, "[0-9]+.\\s+","" )
+  )
+
+rm(list=(ls()[ls()!="df_voto_2020_sen"])) ## borro todos los objetos excepto la tabla final
+
+```
+
+```{r}
+### El acta de votacion no inclluye datos sobre bloque ni provincia, para eso tenemos que unir con el listado de senadores
+lista_senadores <- readxl::read_excel(here("data","ListadoDeSenadores.xls"))
+
+library(snakecase)
+
+lista_senadores <- lista_senadores %>% 
+  select(BLOQUE, APELLIDO, NOMBRE, PROVINCIA) %>% 
+  mutate(
+    NOMBRE = to_title_case(NOMBRE),
+    APELLIDO = to_title_case(APELLIDO),
+    nombre = paste0(APELLIDO, ", ", NOMBRE)
+  )
+
+
+### Arreglo algunas inconsistencias entre dataframes
+df_voto_2020_sen <- df_voto_2020_sen %>%
+  mutate(
+    APELLIDO = sub(",.*", "", nombre),
+    APELLIDO = sub("Elias de Perez", "Elías De Pérez", APELLIDO),
+    APELLIDO = sub("Gimenez", "Giménez", APELLIDO),
+    APELLIDO = sub("Ledesma", "Ledesma Abdala De Zamora", APELLIDO),
+    APELLIDO = sub("Olalla de Moreira", "Olalla", APELLIDO)
+    
+  )
+
+## Hago el join entre la lista de senadores y el acta de votacion
+df_voto_2020_sen <- left_join(df_voto_2020_sen, lista_senadores, by = "APELLIDO", keep = F) %>% 
+  select("nombre" = nombre.x, voto, BLOQUE, PROVINCIA) %>% 
+  clean_names()
+
+```
+
+## PLOTS
+
+```{r}
+df_voto_2020_sen %>% 
+  count(bloque, voto, sort = T) %>% 
+    hchart(
+    type = "bar", 
+    hcaes(x = bloque, y = n, group = voto)
+    )
+```
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+## exporto env
+```{r}
+save.image(file = "./data/global_senadores.RData")
+```
