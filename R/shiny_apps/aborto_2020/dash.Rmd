@@ -25,6 +25,7 @@ library(crosstalk)
 ```{r dataset, include=FALSE}
 ## Cargar dataset
 load(file = "./data/global.RData")
+load(file = "./data/global_senadores.RData")
 ```
 
 
@@ -418,10 +419,63 @@ Votacion Senadores {data-icon="fa-square"}
 Row
 -----------------------------------------------------------------------
 
-### Timer {.no-title}
-```{r, echo=FALSE}
-htmltools::includeHTML("www/timer.html")
+<!-- ### Timer {.no-title} -->
+<!-- ```{r, echo=FALSE} -->
+<!-- htmltools::includeHTML("www/timer.html") -->
+<!-- ``` -->
+
+
+### Votos afirmativos {.value-box}
+```{r}
+renderValueBox({
+  valueBox(
+    value = votos_afirmativos_sen,
+    icon = "fa-plus",
+    color = "#00a32a",
+    caption = "Votos afirmativos"
+  )
+})
 ```
+
+
+### Votos negativos {.value-box}
+```{r}
+renderValueBox({
+  valueBox(
+    value = votos_negativos_sen,
+    icon = "fa-minus",
+    color = "#00a3e4"
+  )
+})
+```
+
+
+### Abstenciones {.value-box}
+```{r}
+renderValueBox({
+  valueBox(
+    value = votos_abstencion_sen,
+    icon = "fa-question",
+    color = "#b5b6b5"
+  )
+})
+```
+
+
+### Ausentes {.value-box}
+```{r}
+renderValueBox({
+  valueBox(
+    value = votos_ausente_sen,
+    icon = "fa-user-slash",
+    color = "#4c5b61"
+  )
+})
+```
+
+
+
+
 
 
 Acerca {data-icon="robot"}

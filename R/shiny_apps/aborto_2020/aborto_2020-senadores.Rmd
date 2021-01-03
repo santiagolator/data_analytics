@@ -37,6 +37,8 @@ load(file = "./data/global_senadores.RData")
 
 
 ## Dataset 2018 y 2020
+
+### 2020
 ```{r}
 ### SCRAPING PDF!!!!
 
@@ -79,11 +81,59 @@ names(tabla_clean)[2] <- 'voto'
 df_voto_2020_sen <- tabla_clean %>% 
   mutate(
     nombre = str_replace(tabla_clean$nombre, "[0-9]+.\\s+","" )
-  )
+  ) %>% 
+  tibble::rowid_to_column("ID") ### Agrego columna de indice par el join
 
-rm(list=(ls()[ls()!="df_voto_2020_sen"])) ## borro todos los objetos excepto la tabla final
+#rm(list=(ls()[ls()!="df_voto_2020_sen"])) ## borro todos los objetos excepto la tabla final
+
+rm(list= ls()[!(ls() %in% c("df_voto_2018_sen", "df_voto_2020_sen", "lista_senadores"))]) ### borro todoe le nv excepto los df finales
 
 ```
+
+### 2018
+```{r}
+
+areas_tabla_3 <- locate_areas(here("data","ACTA 1 08-08-2018.pdf"),pages = 1)
+areas_tabla_4 <- locate_areas(here("data","ACTA 1 08-08-2018.pdf"),pages = 1)
+
+tabla_3 <- extract_tables(here("data","ACTA 1 08-08-2018.pdf"),
+             output = "data.frame",
+             pages = 1, 
+             area = areas_tabla_3,
+             guess = FALSE,
+             encoding = "UTF-8"
+             )
+
+tabla_4 <- extract_tables(here("data","ACTA 1 08-08-2018.pdf"),
+             output = "data.frame",
+             pages = 1, 
+             area = areas_tabla_4,
+             guess = FALSE,
+             encoding = "UTF-8"
+             )
+
+### transformo a dataframe
+tabla_3_clean <- reduce(tabla_3, bind_rows)
+tabla_4_clean <- reduce(tabla_4, bind_rows)
+
+### merge en tabla final
+tabla2_clean <- bind_rows(tabla_3_clean, tabla_4_clean)
+
+## Saco los prefijos (numero y punto)
+df_voto_2018_sen <- tabla2_clean %>% 
+  mutate(
+    nombre = paste0(X,Nombre.Completo),
+  ) %>% 
+  tibble::rowid_to_column("ID") %>% ### Agrego columna de indice par el join
+  select(ID, nombre, Voto) %>% 
+  mutate(
+    nombre = str_replace(nombre, ".*[0-9]+.(\\s|)+","" )
+  ) %>% 
+  clean_names()
+```
+
+
+
 
 ```{r}
 ### El acta de votacion no inclluye datos sobre bloque ni provincia, para eso tenemos que unir con el listado de senadores
@@ -97,37 +147,143 @@ lista_senadores <- lista_senadores %>%
     NOMBRE = to_title_case(NOMBRE),
     APELLIDO = to_title_case(APELLIDO),
     nombre = paste0(APELLIDO, ", ", NOMBRE)
-  )
+  ) %>% 
+  tibble::rowid_to_column("ID")
 
 
 ### Arreglo algunas inconsistencias entre dataframes
-df_voto_2020_sen <- df_voto_2020_sen %>%
-  mutate(
-    APELLIDO = sub(",.*", "", nombre),
-    APELLIDO = sub("Elias de Perez", "Elías De Pérez", APELLIDO),
-    APELLIDO = sub("Gimenez", "Giménez", APELLIDO),
-    APELLIDO = sub("Ledesma", "Ledesma Abdala De Zamora", APELLIDO),
-    APELLIDO = sub("Olalla de Moreira", "Olalla", APELLIDO)
-    
-  )
+# df_voto_2020_sen <- df_voto_2020_sen %>%
+#   mutate(
+#     APELLIDO = sub(",.*", "", nombre),
+#     APELLIDO = sub("Elias de Perez", "Elías De Pérez", APELLIDO),
+#     APELLIDO = sub("Gimenez", "Giménez", APELLIDO),
+#     APELLIDO = sub("Ledesma", "Ledesma Abdala De Zamora", APELLIDO),
+#     APELLIDO = sub("Olalla de Moreira", "Olalla", APELLIDO)
+#   )
 
 ## Hago el join entre la lista de senadores y el acta de votacion
-df_voto_2020_sen <- left_join(df_voto_2020_sen, lista_senadores, by = "APELLIDO", keep = F) %>% 
+df_voto_2020_sen <- left_join(df_voto_2020_sen, lista_senadores, by = "ID", keep = F) %>% 
   select("nombre" = nombre.x, voto, BLOQUE, PROVINCIA) %>% 
-  clean_names()
+  clean_names() %>% 
+  mutate(
+    voto = case_when(
+      voto == "SI" ~ "Afirmativo",
+      voto == "NO" ~ "Negativo",
+      voto == "AUSENTE" ~ to_title_case(voto),
+      voto == "ABS" ~ "Abstencion"
+    )
+  )
+
+df_voto_2020_sen %>% 
+  count(voto, sort = T)
 
 ```
 
 ## PLOTS
 
 ```{r}
-df_voto_2020_sen %>% 
-  count(bloque, voto, sort = T) %>% 
-    hchart(
-    type = "bar", 
-    hcaes(x = bloque, y = n, group = voto)
-    )
+df_voto_2020_sen_count <- df_voto_2020_sen %>% 
+  count(voto, sort = T)
+
+votos_afirmativos_sen <-  df_voto_2020_sen_count %>% 
+  filter(
+    voto == "Afirmativo"
+  )
+votos_afirmativos_sen <- votos_afirmativos_sen$n
+
+votos_negativos_sen <-  df_voto_2020_sen_count %>% 
+  filter(
+    voto == "Negativo"
+  )
+votos_negativos_sen <- votos_negativos_sen$n
+
+votos_abstencion_sen <-  df_voto_2020_sen_count %>% 
+  filter(
+    voto == "Abstencion"
+  )
+votos_abstencion_sen <- votos_abstencion_sen$n
+
+votos_ausente_sen <-  df_voto_2020_sen_count %>% 
+  filter(
+    voto == "Ausente"
+  )
+votos_ausente_sen <-  votos_ausente_sen$n
 ```
+
+
+```{r}
+
+cols <- c("#b5b6b5", "#00a32a","#4c5b61","#00a3e4")
+
+### Distribucion de votos
+df_voto_2020_sen %>% 
+  count(voto, sort = T) %>% 
+    hchart(
+    type = "item", 
+    hcaes(x = voto, y = n),
+    dataLabels = list(
+        enabled = TRUE),
+    #center = c(1, "88"),
+    #size = "100%",
+    startAngle = -100,
+    endAngle = 100
+    )
+
+# df_voto_2020_sen_count <- df_voto_2020_sen %>% 
+#   count(voto, sort = T)
+# 
+# df_voto_2020_sen_count_bloque <- df_voto_2020_sen %>% 
+#   count(bloque, voto, sort = T)
+
+highchart() %>%
+  hc_xAxis(
+    categories = df_voto_2020_sen_count_bloque$bloque,
+    title = list(text = "Distribucion de voto por bloque", margin = 20)
+  ) %>%
+  hc_plotOptions(column = list(stacking = "normal")) %>%
+  hc_add_series(df_voto_2020_sen_count_bloque,
+    type = "column",
+    # startAngle = -100,
+    # endAngle = 100,
+    # innerSize = "40%",
+    color = cols,
+    stack = "voto",
+    hcaes(x = bloque, y = n, group = voto)
+  ) %>%
+  hc_add_series(df_voto_2020_sen_count,
+    type = "item",
+    # center = c(100,5),
+    startAngle = -100,
+    endAngle = 100,
+    # color = cols,
+    hcaes(x = voto, y = n, color = c("#00a32a", "#00a3e4", "#4c5b61", "#b5b6b5")),
+    showInLegend = F
+  ) %>%
+  hc_legend(
+    align = "right",
+    verticalAlign = "middle",
+    layout = "vertical"
+  ) %>%
+  hc_title(
+    # text = "This is a title with <i>margin</i> and <b>Strong or bold text</b>",
+    text = "Distribucion de voto",
+    margin = 20,
+    align = "center",
+    style = list(useHTML = TRUE)
+  )
+
+# >%
+  # hc_colors(c("#00a32a", "#00a3e4","#b5b6b5")) %>% 
+  # hc_tooltip(headerFormat = "<b>{point.key}</b><br>",
+  #            pointFormat = "<b>{point.n}</b> votos - <b>{point.pct_total_nuevos}</b> de votos nuevos mandatos<br>"
+  #            ) 
+```
+
+
+```{r}
+
+```
+
  
 
 
