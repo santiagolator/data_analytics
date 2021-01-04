@@ -179,7 +179,7 @@ df_voto_2020_sen %>%
 
 ```
 
-## PLOTS
+## VALORES PARA LOS VALUEBOX
 
 ```{r}
 df_voto_2020_sen_count <- df_voto_2020_sen %>% 
@@ -208,6 +208,97 @@ votos_ausente_sen <-  df_voto_2020_sen_count %>%
     voto == "Ausente"
   )
 votos_ausente_sen <-  votos_ausente_sen$n
+```
+
+## PLOTS
+
+```{r}
+## Voto por bloque (TOP 3 bloques)
+
+df_bloques_2020_sen <- df_voto_2020_sen %>% 
+  count(bloque, voto, sort = T) %>% 
+  mutate(
+    pct_total = scales::percent(n/sum(n) *100, scale = 1)
+  )
+
+df_voto_2020_sen %>% 
+  count(
+    bloque, sort = T
+  )
+
+# FRENTE DE TODOS	41			
+# UNIÓN CÍVICA RADICAL	14			
+# FRENTE PRO	8			
+# AVANZAR SAN LUIS	1			
+# FRENTE CÍVICO Y SOCIAL DE CATAMARCA	1	
+
+#df_bloques_2020_sen_filter <- df_voto_2020_sen %>% 
+#   mutate(
+#     bloque = case_when(
+#       n > 1 ~ bloque,
+#       n <= 1 ~ "Resto (bloque de 1 banca)"
+#     )
+#   ) %>% 
+#   count(
+#     bloque
+#   )
+
+
+df_bloques_2020_sen %>%
+  filter(
+    bloque %in% c("FRENTE DE TODOS", "UNIÓN CÍVICA RADICAL", "FRENTE PRO")
+  ) %>%
+  hchart(
+    type = "bar",
+    hcaes(x = bloque, y = n, group = voto),
+    name = c("Abstencion", "Afirmativo", "Ausente", "Negativo")
+  ) %>%
+  hc_colors(cols) %>%
+  hc_tooltip(
+    crosshairs = T, shared = T,
+    headerFormat = "<b>{point.key}</b><br>",
+    pointFormat = "<b>{point.voto}</b>: {point.n} votos - <b>{point.pct_total}</b> del total<br> "
+  ) %>%
+  hc_yAxis(title = "") %>%
+  hc_xAxis(title = "") %>%
+  hc_legend(
+    align = "right",
+    verticalAlign = "bottom"
+  )
+
+```
+
+```{r}
+## Voto por provincia (TOP 5 por habitantes)
+
+df_prov_2020_sen <- df_voto_2020_sen %>% 
+  count(provincia, voto, sort = T)
+
+
+df_prov_2020_sen %>%
+  filter(
+    provincia %in% c("BUENOS AIRES", "CIUDAD AUTÓNOMA de BUENOS AIRES", "CÓRDOBA", "SANTA FE", "MENDOZA")
+  ) %>%
+  mutate(
+    pct_total = scales::percent(n / sum(n) * 100, scale = 1)
+  ) %>%
+  hchart(
+    type = "bar",
+    hcaes(x = provincia, y = n, group = voto),
+    name = c("Abstencion", "Afirmativo", "Ausente", "Negativo")
+  ) %>%
+  hc_colors(cols) %>%
+  hc_tooltip(
+    crosshairs = T, shared = T,
+    headerFormat = "<b>{point.key}</b><br>",
+    pointFormat = "<b>{point.voto}</b>: {point.n} votos - <b>{point.pct_total}</b> del total<br> "
+  ) %>%
+  hc_yAxis(title = "") %>%
+  hc_xAxis(title = "") %>%
+  hc_legend(
+    align = "right",
+    verticalAlign = "bottom"
+  )
 ```
 
 

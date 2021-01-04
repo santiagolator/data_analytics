@@ -158,7 +158,7 @@ Row {.tabset data-height=500}
 -----------------------------------------------------------------------
 
 
-### Diputado/a por diputado/a {}
+### Diputado/a por diputado/a
 
 ```{r}
 bscols(
@@ -474,11 +474,39 @@ renderValueBox({
 ```
 
 
+Row
+-----------------------------------------------------------------------
+
+### Voto por bloque (TOP 3 bloques con mas de 1 banca)
+
+```{r}
+df_bloques_2020_sen %>%
+  filter(
+    bloque %in% c("FRENTE DE TODOS", "UNIÓN CÍVICA RADICAL", "FRENTE PRO")
+  ) %>%
+  hchart(
+    type = "bar",
+    hcaes(x = bloque, y = n, group = voto),
+    name = c("Abstencion", "Afirmativo", "Ausente", "Negativo")
+  ) %>%
+  hc_colors(cols) %>%
+  hc_tooltip(
+    crosshairs = T, shared = T,
+    headerFormat = "<b>{point.key}</b><br>",
+    pointFormat = "<b>{point.voto}</b>: {point.n} votos - <b>{point.pct_total}</b> del total<br> "
+  ) %>%
+  hc_yAxis(title = "") %>%
+  hc_xAxis(title = "") %>%
+  hc_legend(
+    align = "right",
+    verticalAlign = "bottom"
+  )
+```
 
 
 
 
-Acerca {data-icon="robot"}
+Creditos {data-icon="robot"}
 =======================================================================
 
 Column {data-width="50%"}
