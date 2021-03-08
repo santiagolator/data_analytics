@@ -274,6 +274,8 @@ df_bloques_2020_sen %>%
 df_prov_2020_sen <- df_voto_2020_sen %>% 
   count(provincia, voto, sort = T)
 
+#cols <- c("#b5b6b5", "#00a32a","#4c5b61","#00a3e4")
+#c("Abstencion", "Afirmativo", "Ausente", "Negativo")
 
 df_prov_2020_sen %>%
   filter(
@@ -285,9 +287,9 @@ df_prov_2020_sen %>%
   hchart(
     type = "bar",
     hcaes(x = provincia, y = n, group = voto),
-    name = c("Abstencion", "Afirmativo", "Ausente", "Negativo")
+    name = c("Afirmativo", "Ausente", "Negativo")
   ) %>%
-  hc_colors(cols) %>%
+  hc_colors(c("#00a32a","#4c5b61","#00a3e4")) %>%
   hc_tooltip(
     crosshairs = T, shared = T,
     headerFormat = "<b>{point.key}</b><br>",
@@ -372,9 +374,55 @@ highchart() %>%
 
 
 ```{r}
+### Prueba mapas
+
+
+hcmap("countries/ar/ar-all", showInLegend = F)
+
+mapdata <- get_data_from_map(download_map_data("countries/ar/ar-all"))
+
+code_prov <- sort(mapdata$`hc-a2`)
+#length(mapdata$`hc-a2`)
+
+df_prov_2020_sen <- df_prov_2020_sen %>% 
+  mutate(
+    code = case_when(
+      provincia == "BUENOS AIRES" ~ "BA",
+      provincia == "CATAMARCA" ~ "CT",
+      provincia == "CHACO" ~ "CC",
+      provincia == "CHUBUT" ~ "CH",
+      provincia == "CIUDAD AUTÓNOMA de BUENOS AIRES" ~ "DF",
+      provincia == "CÓRDOBA" ~ "CB",
+      provincia == "CORRIENTES" ~ "CN",
+      provincia == "ENTRE RÍOS" ~ "ER",
+      provincia == "FORMOSA" ~ "FM"
+      
+    )
+  )
+
+hcmap(
+  map = "countries/ar/ar-all",
+  data = df_prov_2020_sen,
+  value = "n",
+  joinBy = c("hc-a2", "code"),
+  dataLabels = list(enabled = TRUE)
+)
+ 
+
 
 ```
 
+
+
+```{r}
+library(geofaceteAR)
+
+grid_ar <- get_grid("ARGENTINA")
+
+grid_preview(grid_ar)
+
+
+```
  
 
 

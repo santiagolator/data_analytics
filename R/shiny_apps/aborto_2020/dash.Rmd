@@ -413,7 +413,7 @@ voto_nuevos_diputados_bloque %>%
 
 
 
-Votacion Senadores {data-icon="fa-square"}
+Votacion Senadores {data-icon="fa-check-square"}
 =======================================================================
 
 Row
@@ -503,6 +503,33 @@ df_bloques_2020_sen %>%
   )
 ```
 
+### Voto por provincia (TOP 5 cantidad de habitantes)
+```{r}
+df_prov_2020_sen %>%
+  filter(
+    provincia %in% c("BUENOS AIRES", "CIUDAD AUTÓNOMA de BUENOS AIRES", "CÓRDOBA", "SANTA FE", "MENDOZA")
+  ) %>%
+  mutate(
+    pct_total = scales::percent(n / sum(n) * 100, scale = 1)
+  ) %>%
+  hchart(
+    type = "bar",
+    hcaes(x = provincia, y = n, group = voto),
+    name = c("Afirmativo", "Ausente", "Negativo")
+  ) %>%
+  hc_colors(c("#00a32a","#4c5b61","#00a3e4")) %>%
+  hc_tooltip(
+    crosshairs = T, shared = T,
+    headerFormat = "<b>{point.key}</b><br>",
+    pointFormat = "<b>{point.voto}</b>: {point.n} votos - <b>{point.pct_total}</b> del total<br> "
+  ) %>%
+  hc_yAxis(title = "") %>%
+  hc_xAxis(title = "") %>%
+  hc_legend(
+    align = "right",
+    verticalAlign = "bottom"
+  )
+```
 
 
 
