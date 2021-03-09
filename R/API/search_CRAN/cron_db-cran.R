@@ -10,7 +10,8 @@ db_min <- db %>%
     Package, Version, Description
   ) %>% 
   mutate(
-    url_pkg = paste0("https://cran.r-project.org/web/packages/",Package,"/index.html")
+    url_pkg = paste0("https://cran.r-project.org/web/packages/",Package,"/index.html"),
+    tokens = removeWords(Description, stopwords(kind = "en"))
   )
 
 ### Genero dataframe con los detalles de la db creada

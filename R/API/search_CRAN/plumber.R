@@ -17,14 +17,15 @@ db_status <- readr::read_rds("./data/db_status.rds")
 function(keyword) {
   result <- db_min %>%
     filter(
-      str_detect(Description, as.character(keyword))
+      str_detect(tokens, as.character(keyword))
     ) %>%
     mutate(
       Description = ifelse(nchar(Description) > 13, paste0(strtrim(Description, 100), "..."), Description)
     ) %>% 
     slice_head(n = 10)
   
-  return(result)
+  return(result %>% 
+           select(-tokens))
 }
 
 
@@ -35,13 +36,14 @@ function(keyword) {
 function(keyword) {
   result <- db_min %>%
     filter(
-      str_detect(Description, as.character(keyword))
+      str_detect(tokens, as.character(keyword))
     ) %>%
     mutate(
       Description = ifelse(nchar(Description) > 13, paste0(strtrim(Description, 100), "..."), Description)
     )
   
-  return(result)
+  return(result %>% 
+           select(-tokens))
 }
 
 
@@ -57,7 +59,8 @@ function(keyword) {
       Description = ifelse(nchar(Description) > 13, paste0(strtrim(Description, 100), "..."), Description)
     )
   
-  return(result)
+  return(result %>% 
+           select(-tokens))
 }
 
 #* Obtener ultima actualizacion y cantidad de paquetes en base de datos
