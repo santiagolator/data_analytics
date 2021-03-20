@@ -1,5 +1,8 @@
-library(tidyverse)
-library(tools)
+### Cargo librerias necesarias
+
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, tools, tm)
+
 
 ### Cargo el dataframe con los paquetes en CRAN
 db <- tools::CRAN_package_db()
@@ -25,6 +28,5 @@ rm(list = c("total_pkg","last_update_db", "db"))
 
 
 ### Guardo el dataframe en un archivo para usar en la API
-#save.image(file = "./data/db_cran.RData")
 write_rds(db_min, "./data/db_cran.rds")
 write_rds(db_status, "./data/db_status.rds")

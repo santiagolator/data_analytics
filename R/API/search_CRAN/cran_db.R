@@ -65,7 +65,7 @@ last_update_db <- file.info("./data/db_cran.rds")$mtime
 
 
 ## Pruebo la funcion
-search_package("interactive")
+search_package("machine learning")
 
 search_package_name("ggplot")
 
